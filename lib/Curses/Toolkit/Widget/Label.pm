@@ -1,0 +1,354 @@
+# 
+# This file is part of Curses-Toolkit
+# 
+# This software is copyright (c) 2008 by Damien "dams" Krotkine.
+# 
+# This is free software; you can redistribute it and/or modify it under
+# the same terms as the Perl 5 programming language system itself.
+# 
+use warnings;
+use strict;
+
+package Curses::Toolkit::Widget::Label;
+our $VERSION = '0.092920';
+
+
+# ABSTRACT: a container with two panes arranged horizontally
+
+use parent qw(Curses::Toolkit::Widget);
+
+use Params::Validate qw(:all);
+use List::Util qw(min max);
+
+
+sub new {
+	my $class = shift;
+	my $self = $class->SUPER::new();
+	$self->{text} = '';
+	$self->{justification} = 'left';
+	$self->{wrap_method} = 'word';
+	$self->{wrap_mode} = 'lazy';
+	return $self;
+}
+
+
+sub set_text {
+	my $self = shift;
+	
+	my ($text) = validate_pos( @_, { type => SCALAR } );
+	$self->{text} = $text;
+	$self->needs_redraw();
+	return $self;
+
+}
+
+
+sub get_text {
+	my ($self) = @_;
+	return $self->{text};
+}
+
+
+sub set_justify {
+	my $self = shift;
+	my ($justification) = validate_pos( @_, { regex => qr/^(?:left|center|right)$/ } );
+	$self->{justification} = $justification;
+	return $self;
+}
+
+
+sub get_justify {
+	my ($self) = @_;
+	return $self->{justification};
+}
+
+
+sub set_wrap_mode {
+	my $self = shift;
+	my ($wrap_mode) = validate_pos( @_, { regex => qr/^(?:never|active|lazy)$/ } );
+	$self->{wrap_mode} = $wrap_mode;
+	return $self;
+}
+
+
+sub get_wrap_mode {
+	my ($self) = @_;
+	return $self->{wrap_mode};
+}
+
+
+sub set_wrap_method {
+	my $self = shift;
+	my ($wrap_method) = validate_pos( @_, { regex => qr/^(?:word|letter)$/ } );
+	$self->{wrap_method} = $wrap_method;
+	return $self;
+}
+
+
+sub get_wrap_method {
+	my ($self) = @_;
+	return $self->{wrap_method};
+}
+
+sub draw {
+	my ($self) = @_;
+	my $theme = $self->get_theme();
+	my $c = $self->get_coordinates();
+	my $text = $self->get_text();
+
+	my $justify = $self->get_justify();
+
+	my $wrap_method = $self->get_wrap_method();
+
+	my @text = _textwrap($text, $c->width());
+
+	foreach my $y ( 0..min($#text, $c->height() - 1) ) {
+		my $t = $text[$y];
+		$t =~ s/^\s+//g;
+		$t =~ s/\s+$//g;
+		if ($justify eq 'left') {
+			$theme->draw_string($c->x1(), $c->y1() + $y, $t);
+		}
+		if ($justify eq 'center') {
+			$theme->draw_string($c->x1() + ($c->width() - length $t ) / 2,
+								$c->y1() + $y,
+								$t);
+		}
+		if ($justify eq 'right') {
+			$theme->draw_string($c->x1() + $c->width() - length $t,
+								$c->y1() + $y,
+								$t);
+		}
+	}
+}
+
+
+sub _textwrap {
+  my $text = shift;
+  my $columns = shift || 1;
+  my (@tmp, @rv, $p);
+
+  # Early exit if no text was passed
+  return unless (defined $text && length($text));
+
+  # Split the text into paragraphs, but preserve the terminating newline
+  @tmp = split(/\n/, $text);
+  foreach (@tmp) { $_ .= "\n" };
+  chomp($tmp[$#tmp]) unless $text =~ /\n$/;
+
+  # Split each paragraph into lines, according to whitespace
+  for $p (@tmp) {
+
+    # Snag lines that meet column limits (not counting newlines
+    # as a character)
+    if (length($p) <= $columns || (length($p) - 1 <= $columns &&
+      $p =~ /\n$/s)) {
+      push(@rv, $p);
+      next;
+    }
+
+    # Split the line
+    while (length($p) > $columns) {
+      if (substr($p, 0, $columns) =~ /^(.+\s)(\S+)$/) {
+        push(@rv, $1);
+        $p = $2 . substr($p, $columns);
+      } else {
+        push(@rv, substr($p, 0, $columns));
+        substr($p, 0, $columns) = '';
+      }
+    }
+    push(@rv, $p);
+  }
+
+  if ($text =~ /\S\n(\n+)/) {
+    $p = length($1);
+    foreach (1..$p) { push(@rv, "\n") };
+  }
+
+  return @rv;
+}
+
+
+
+sub get_desired_space {
+	my $self = shift;
+	return $self->get_minimum_space(@_);
+}
+
+
+sub get_minimum_space {
+	my ($self, $available_space) = @_;
+
+	my $minimum_space = $available_space->clone();
+	my $wrap_mode = $self->get_wrap_mode();
+	my $text = $self->get_text();
+	if ($wrap_mode eq 'never') {
+		$text =~ s/\n(\s)/$1/g;
+		$text =~ s/\n/ /g;
+		$minimum_space->set( x2 => $available_space->x1() + length $text,
+							 y2 => $available_space->y1() + 1,
+						   );
+		return $minimum_space;
+	} elsif ($wrap_mode eq 'active') {
+		my $width = 1;
+		while (1) {
+			my @text = _textwrap($self->get_text(), $width);
+			if ($width >= length($self->get_text())) {
+				$minimum_space->set( x2 => $minimum_space->x1() + length($self->get_text()) + 1,
+									 y2 => $minimum_space->y1() + 1 );
+				last;
+			}
+			if (@text < 1  || @text > $available_space->height()) {
+				$width++;
+				next;
+			}
+			$minimum_space->set( x2 => $minimum_space->x1() + max(map { length } @text ) + 1,
+								 y2 => $minimum_space->y1() + scalar(@text) );
+			last;
+		}
+		return $minimum_space;
+	} elsif ($wrap_mode eq 'lazy') {
+		my @text = _textwrap($self->get_text(), max($available_space->width(), 1));
+		$minimum_space->set( y2 => $minimum_space->y1() + scalar(@text) );
+		$minimum_space->set( x2 => $minimum_space->x1() + max(map { length } @text ) );
+		return $minimum_space;
+	}
+	die;
+}
+1;
+
+__END__
+
+=pod
+
+=head1 NAME
+
+Curses::Toolkit::Widget::Label - a container with two panes arranged horizontally
+
+=head1 VERSION
+
+version 0.092920
+
+=head1 DESCRIPTION
+
+This widget consists of a text label
+
+=head1 CONSTRUCTOR
+
+=head2 new
+
+  input : none
+  output : a Curses::Toolkit::Widget::Label object
+
+
+
+=head1 METHODS
+
+=head2 set_text
+
+Set the text of the label
+
+  input  : the text
+  output : the label object
+
+
+
+=head2 get_text
+
+Get the text of the Label
+
+  input  : none
+  output : STRING, the Label text
+
+
+
+=head2 set_justify
+
+Set the text justification inside the label widget.
+
+  input  : STRING, one of 'left', 'right', 'center'
+  output : the label object
+
+
+
+=head2 get_justify
+
+Get the text justification inside the label widget.
+
+  input  : none
+  output : STRING, one of 'left', 'right', 'center'
+
+
+
+=head2 set_wrap_mode
+
+Set the wrap mode. 'never' means the label stay on one line (cut if not enough
+space is available), paragraphs are not interpreted. 'active' means the label tries to occupy space vertically
+(thus wrapping instead of extending to the right). 'lazy' means the label wraps
+if it is obliged to (not enough space to display on the same line), and on paragraphs
+
+  input  : STRING, one of 'never', 'active', 'lazy'
+  output : the label widget
+
+
+
+=head2 get_wrap_mode
+
+Get the text wrap mode ofthe label widget.
+
+  input  : none
+  output : STRING, one of 'never', 'active', 'lazy'
+
+
+
+=head2 set_wrap_method
+
+Set the wrap method used. 'word' (the default) wraps on word. 'letter' makes
+the label wrap but at any point.
+
+  input  : STRING, one of 'word', 'letter'
+  output : the label widget
+
+
+
+=head2 get_wrap_method
+
+Get the text wrap method inside the label widget.
+
+  input  : none
+  output : STRING, one of 'word', 'letter'
+
+
+
+=head2 get_desired_space
+
+Given a coordinate representing the available space, returns the space desired
+The Label desires the minimum space that lets it display entirely
+
+  input : a Curses::Toolkit::Object::Coordinates object
+  output : a Curses::Toolkit::Object::Coordinates object
+
+
+
+=head2 get_minimum_space
+
+Given a coordinate representing the available space, returns the minimum space
+needed to properly display itself
+
+  input : a Curses::Toolkit::Object::Coordinates object
+  output : a Curses::Toolkit::Object::Coordinates object
+
+
+
+=head1 AUTHOR
+
+  Damien "dams" Krotkine
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2008 by Damien "dams" Krotkine.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
+=cut 

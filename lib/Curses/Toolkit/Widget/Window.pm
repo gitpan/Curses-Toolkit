@@ -1,0 +1,767 @@
+# 
+# This file is part of Curses-Toolkit
+# 
+# This software is copyright (c) 2008 by Damien "dams" Krotkine.
+# 
+# This is free software; you can redistribute it and/or modify it under
+# the same terms as the Perl 5 programming language system itself.
+# 
+use warnings;
+use strict;
+
+package Curses::Toolkit::Widget::Window;
+our $VERSION = '0.092920';
+
+
+# ABSTRACT: a window
+
+use parent qw(Curses::Toolkit::Widget::Border);
+
+use Params::Validate qw(:all);
+
+use List::MoreUtils qw(any none);
+use List::Util qw(min sum max);
+
+
+
+sub new {
+	my $class = shift;
+	my $self = $class->SUPER::new(@_);
+	# set window stack by default
+	$self->set_property(window => stack => -1);
+	$self->set_property(window => resizable => 1);
+	# set_default title
+	$self->set_title('');
+	$self->set_type('normal');
+	$self->{_title_offset} = 0;
+	$self->{_title_animation_direction} = '';
+#	$self->set_focused_widget($self);
+
+	# listen to the Mouse Click for focus switch
+	$self->add_event_listener(
+		Curses::Toolkit::EventListener->new(
+			accepted_events => {
+				'Curses::Toolkit::Event::Mouse::Click' => sub { 
+					my ($event) = @_;
+					$event->{type} eq 'clicked' or return 0;
+					$event->{button} eq 'button1' or return 0;
+					return 1;
+				},
+			},
+			code => sub {
+				my ($event, $window) = @_;
+
+				# get the root window
+				my $root_window = $window->get_root_window();
+				defined $root_window or return;
+
+				# get the currently focused widget, unfocus it
+				my $current_focused_widget = $root_window->get_focused_widget();
+				if (defined $current_focused_widget && $current_focused_widget->can('set_focus')) {
+					$current_focused_widget->set_focus(0);
+				}
+
+				# bring the window to the front
+				$window->bring_to_front();
+				# focus the window or one of its component
+				my $next_focused_widget = $window->get_next_focused_widget(1); # 1 means "consider if $window is focusable"
+				defined $next_focused_widget and 
+				  $next_focused_widget->set_focus(1);
+				return;
+			},
+		)
+	);
+
+	# listen to the Mouse for moving the window
+	$self->add_event_listener(
+		Curses::Toolkit::EventListener->new(
+			accepted_events => {
+				'Curses::Toolkit::Event::Mouse::Click' => sub { 
+					my ($event) = @_;
+					$event->{button} eq 'button1' or return 0;
+					$self->{_move_pressed} && $event->{type} eq 'released'
+					  and return 1;
+					my $c = $event->{coordinates};
+					my $wc = $self->get_coordinates();
+					! $self->{_move_pressed}
+					&& $event->{type} eq 'pressed'
+					&& $c->y1() == $wc->y1()
+					  and return 1;
+					return 0;
+				},
+			},
+			code => sub {
+				my ($event, $window) = @_;
+
+				if ($self->{_move_pressed}) {
+					# means we released it
+					$window->unset_modal();
+					my $c = $event->{coordinates}; # event coord
+					my $oc = $self->{_move_coord}; # click-origin coord
+					my $wc = $window->get_coordinates(); # window coord
+					my $rc = $self->get_root_window()->get_shape(); # root coord
+					$wc += { x1 => $c->x1() - $oc->x1(), x2 => $c->x1() - $oc->x1(),
+							 y1 => $c->y1() - $oc->y1(), y2 => $c->y1() - $oc->y1(),
+						   }; 
+					$wc->y1() < 0
+					  and $wc->translate_down( $wc->y1() );
+					$wc->y1() > $rc->height() - 1
+					  and $wc->translate_up( $wc->y1() - $rc->height() + 1  );
+					$wc->x1() < - $wc->width() + 1
+					  and $wc->translate_right( - $wc->width() + 1 - $wc->x1() );
+					$wc->x1() > $rc->width() - 1
+					  and $wc->translate_left( - $wc->x1() - $rc->width() + 1 );
+
+					$window->set_coordinates($wc);
+					$window->needs_redraw();
+					$self->{_move_pressed} = 0;
+					$self->{_move_coord} = undef;
+				} else {
+					# means we pressed it
+					$window->set_modal();
+					$self->{_move_pressed} = 1;
+					$self->needs_redraw();
+					$self->{_move_coord} = $event->{coordinates};
+				}
+				return;
+			},
+		)
+	);
+
+	# listen to the Mouse for resizing
+	$self->add_event_listener(
+		Curses::Toolkit::EventListener->new(
+			accepted_events => {
+				'Curses::Toolkit::Event::Mouse::Click' => sub {
+					my ($event) = @_;
+					$event->{button} eq 'button1' or return 0;
+					$self->{_resize_pressed} && $event->{type} eq 'released'
+					  and return 1;
+					my $c = $event->{coordinates};
+					my $wc = $self->get_coordinates();
+					! $self->{_resize_pressed}
+					&& $event->{type} eq 'pressed'
+					&& $c->x2() == $wc->x2()-1
+					&& $c->y2() == $wc->y2()-1
+					  and return 1;
+					return 0;
+				},
+			},
+			code => sub {
+				my ($event, $window) = @_;
+
+				if ($self->{_resize_pressed}) {
+					# means we released it
+					$window->unset_modal();
+					my $c = $event->{coordinates};
+					my $wc = $window->get_coordinates();
+					$wc->set( x2 => $c->x2() + 1, y2 => $c->y2() + 1 );
+					$window->set_coordinates($wc);
+					$window->needs_redraw();
+					$self->{_resize_pressed} = 0;
+				} else {
+					# means we pressed it
+					$window->set_modal();
+					$self->needs_redraw();
+					$self->{_resize_pressed} = 1;					
+				}
+				return;
+			},
+		)
+	);
+	return $self;
+}
+
+
+sub set_title {
+	my $self = shift;
+	my ($title) = validate_pos( @_, { type => SCALAR,
+									}
+							  );
+	$self->{title} = $title;
+	return $self;
+}
+
+
+sub get_title {
+	my ($self) = @_;
+	return $self->{title};
+}
+
+
+sub set_coordinates {
+	my $self = shift;
+	use Curses::Toolkit::Object::Coordinates;
+	use Data::Dumper;
+	if ( ! ref($_[0])) {
+		my %params = @_;
+		foreach my $x (qw(x1 x2)) {
+			if ($params{$x} =~ /^(.+)%$/ ) {
+				my $percent = $1;
+				$params{$x} = sub { return $self->get_root_window()
+									  ? sprintf( "%.0f", $self->get_root_window()->get_shape()->width() * $percent / 100)
+									  : 0;
+								   };
+			}
+		}
+		foreach my $y (qw(y1 y2)) {
+			if ($params{$y} =~ /^(.+)%$/ ) {
+				my $percent = $1;
+				$params{$y} = sub { return $self->get_root_window()
+									  ? sprintf( "%.0f", $self->get_root_window()->get_shape()->height() * $percent / 100)
+								      : 0;
+								  };
+			}
+		}
+		if (defined $params{width} && $params{width} =~ /^(.+)%$/ ) {
+			my $percent = $1;
+			$params{x2} = sub {
+				my ($coord) = @_;
+				$coord->x1() + ($self->get_root_window() and $self->get_root_window()->get_shape()->width() * $percent / 100);
+			};
+			delete $params{width};
+		}
+		if (defined $params{height} && $params{height} =~ /^(.+)%$/ ) {
+			my $percent = $1;
+			$params{y2} = sub {
+				my ($coord) = @_;
+				$coord->y1() + ($self->get_root_window() and $self->get_root_window()->get_shape()->height() * $percent / 100);
+			};
+			delete $params{height};
+		}
+		$self->{coordinates} = Curses::Toolkit::Object::Coordinates->new(%params);
+	} else {
+		$self->{coordinates} = Curses::Toolkit::Object::Coordinates->new(@_);
+	}
+	$self->_set_relatives_coordinates($self->{coordinates});
+	# needs to take care of rebuilding coordinates from top to bottom
+	$self->rebuild_all_coordinates();
+	return $self;
+}
+
+
+sub set_root_window {
+	my ($self, $root_window) = @_;
+	$self->{root_window} = $root_window;
+	return $self;
+}
+
+
+sub get_root_window {
+	my ($self) = @_;
+	return $self->{root_window};
+}
+
+
+sub bring_to_front {
+	my ($self) = @_;
+	my $root_window = $self->get_root_window();
+	defined $root_window or return;
+	my $last_stack = $root_window->{last_stack};
+	$root_window->{last_stack}++;
+	$self->set_property(window => 'stack', $root_window->{last_stack});
+	$self->needs_redraw();
+	return $self;
+}
+
+
+# sub bring_to_front {
+# 	my ($self) = @_;
+# 	$self->
+# }
+
+
+sub set_focused_widget {
+	my $self = shift;
+	my ($widget) = validate_pos( @_, { isa => 'Curses::Toolkit::Widget',
+									   callbacks => { 'must be focusable' => sub { $_[0]->isa('Curses::Toolkit::Role::Focusable') }
+													}
+									 } );
+	my $current_focused_widget = $self->get_focused_widget();
+	if (defined $current_focused_widget && $current_focused_widget->can('set_focus')) {
+		$current_focused_widget->set_focus(0);
+	}
+	$self->{focused_widget} = $widget;
+	return $self;
+}
+
+
+sub get_focused_widget {
+	my ($self) = @_;
+	my $focused_widget = $self->{focused_widget};
+	if (defined $focused_widget && $focused_widget->can('is_focused') && $focused_widget->is_focused()) {
+		return $focused_widget;
+	}
+	return;
+}
+
+
+# <--------------- w1 ----------->
+#  <-------------- w2 ---------->
+#            <---- w3 --->
+#              <-- w4 ->
+# |----------[ the title ]-------|
+#            w5         w6 
+#             |--- + ---|
+#                  = w7
+# --- o1 ----^ 
+#
+#        the complete title   <- the original title
+#        -- o2 ->lete title   <- the displayed title
+#
+# in case of left position :
+# |--------[ the title ]------------|
+#  -- o3 --^ 
+#
+# in case of right position :
+# |--------[ the title ]--------|
+#                      ^-- o4 --
+
+
+sub draw {
+	my ($self) = @_;
+	$self->SUPER::draw();
+
+	$self->get_theme_property('border_width') > 0 or return;
+
+	my ($c, $w1, $w2, $w3, $w4, $w5, $w6, $w7, $o3, $o4) = $self->_compute_draw_informations();
+
+	my $title = $self->get_title();
+	my @title_brackets_characters = @{$self->get_theme_property('title_brackets_characters')};
+	my $title_position = $self->get_theme_property('title_position');
+	
+
+ 	if ($w4 < length $title && $self->{_title_animation_direction} eq '') {
+		# no animation were in place, we put one
+		$self->{_title_animation_direction} = 'right';
+		$self->{_title_offset} = 0;
+		$self->_start_animation();
+	}
+
+	my $o2 = $self->{_title_offset};
+
+	my $title_to_display = substr($title, $o2, $w4 );
+	
+
+	my $o1 = 0;
+	if ($title_position eq 'center') {
+		$o1 = ($w1 - $w3) / 2;
+	} elsif ($title_position eq 'left') {
+		$o1 = 1 + $o3; # TODO : needs to change that with variable border width
+		$o1 = min($o1, $w1 - $w3 - 1)# TODO : needs to change that with variable border width
+	} else { # right
+		$o1 = $w1 - $w3 - 1 - $o4;  # TODO : needs to change that with variable border width
+		$o1 = max($o1, 1); # TODO : needs to change that with variable border width
+	}
+
+	my $theme = $self->get_theme();
+	if (length $title_to_display) {
+		$theme->draw_title($c->x1() + $o1, $c->y1(),
+						   join($title_to_display, @title_brackets_characters),
+						   { clicked => $self->{_move_pressed} }
+						  );
+	}
+
+#	$theme->draw_corner_lr($c->x2() - 1, $c->y2() - 1);
+	$theme->draw_resize($c->x2() - 1, $c->y2() - 1, { clicked => $self->{_resize_pressed} } );
+}
+
+sub _compute_draw_informations {
+	my ($self) = @_;
+
+	my $title_width = $self->get_theme_property('title_width');
+	my $c = $self->get_coordinates();
+	my $title = $self->get_title();
+	my @title_brackets_characters = @{$self->get_theme_property('title_brackets_characters')};
+
+	my $o3 = $self->get_theme_property('title_left_offset');
+	my $o4 = $self->get_theme_property('title_right_offset');
+
+	my $w1 = $c->width();
+	my $w2 = $w1 - 2; # TODO : needs to change that with variable border width
+	my ($w5, $w6) = map { length } @title_brackets_characters;
+	my $w7 = $w5 + $w6;
+	my $w3 = min ( length($title) + $w7, $w2 * $title_width / 100 );
+	my $w4 = $w3 - $w7;
+
+	return ($c, $w1, $w2, $w3, $w4, $w5, $w6, $w7, $o3, $o4);
+}
+
+sub _start_animation {
+	my ($self) = @_;
+	my $root_window = $self->get_root_window();
+
+	my $delay_sub;
+	$delay_sub = sub {
+		my ($c, $w1, $w2, $w3, $w4, $w5, $w6, $w7, $o3, $o4) = $self->_compute_draw_informations();
+		my $title = $self->get_title();
+
+		if ($w4 >= length $title) {
+			# stop the animation
+			$self->{_title_offset} = 0;
+			$self->{_title_animation_direction} = '';		
+			return;
+		}
+
+		# continue the animation
+		my $total_second = $self->get_theme_property('title_loop_duration') / 2; # TODO : reimplement
+		my $nb_step = length($title) - $w4 + 1;
+		my $delay = $total_second / $nb_step;
+		if ($self->{_title_animation_direction} eq 'right') {
+			# animation goes to the right
+			$self->{_title_offset}++;
+		} else {
+			# animation goes to the left
+			$self->{_title_offset}--;
+		}
+# 		# now check the boundaries
+ 		if ($self->{_title_offset} < 0) {
+ 			$self->{_title_animation_direction} = 'right';
+ 			$self->{_title_offset} = 0;
+			$delay = $self->get_theme_property('title_loop_pause');
+ 		}
+ 		if ($self->{_title_offset} > length($title) - $w4 + 1) {
+ 			$self->{_title_offset} = length($title) - $w4 + 1;
+ 			$self->{_title_animation_direction} = 'left';
+			$delay = $self->get_theme_property('title_loop_pause');
+ 		}
+		$self->needs_redraw();
+		my $root_window = $self->get_root_window();
+#		$delay = 1/4;
+		$root_window->add_delay($delay, $delay_sub);
+	};
+
+	# launch the animation in 1 second
+	$root_window->add_delay(1, $delay_sub);
+	return;
+}
+
+
+my @possible_types = qw( normal menu );
+sub set_type {
+	my $self = shift;
+	my ($type) = validate_pos( @_, { type => SCALAR,
+									 callbacks => { "one of @possible_types" => sub {
+														my ($arg) = @_;
+														any { $arg eq $_ } @possible_types;
+													}
+												  }
+								   } );
+
+	$self->{type} = $type;
+	return $self;
+}
+
+
+sub get_type {
+	my ($self) = @_;
+	return $self->{type};
+}
+
+
+my @title_bar_positions = qw(top bottom left right);
+my @title_positions = qw(left center right);
+
+sub _get_theme_properties_definition {
+	my ($self) = @_;
+	return { %{$self->SUPER::_get_theme_properties_definition() },
+			 title_width => {
+			   optional => 1,
+			   callbacks => { "should be between 0 and 100 (percent)" => sub {
+								  $_[0] <= 100 && $_[0] >= 0;
+							  }
+							}
+			 },
+			 title_bar_position => {
+			   optional => 1,
+			   callbacks => { "should be one of @title_bar_positions" => sub {
+								  my ($arg) = @_;
+								  any { $arg eq $_ } @title_bar_positions;
+							  }
+							}
+			 },
+			 title_position => {
+			   optional => 1,
+			   callbacks => { "should be one of @title_positions" => sub {
+								  my ($arg) = @_;
+								  any { $arg eq $_ } @title_positions;
+							  }
+							}
+			 },
+			 title_brackets_characters => {
+			   optional => 1,
+			   type => ARRAYREF,
+			   callbacks => { "should contain 2 strings" => sub {
+								  @{$_[0]} == 2 && none { ref } @{$_[0]};
+							  }
+							}
+			 },
+			 title_left_offset => {
+			   optional => 1,
+			   type => SCALAR,
+			   callbacks => { "positive integer" => sub { $_[0] >= 0 } }
+			 },
+			 title_right_offset => {
+			   optional => 1,
+			   type => SCALAR,
+			   callbacks => { "positive integer" => sub { $_[0] >= 0 } }
+			 },
+			 title_animation => {
+			   optional => 1,
+			   type => BOOLEAN,
+			   callbacks => { "1 or 0" => sub { $_[0] =~ /^1|0$/ } },
+			 },
+			 title_loop_duration => {
+			   optional => 1,
+			   type => SCALAR,
+			   callbacks => { "strictly positive float (seconds)" => sub { $_[0] > 0 } }
+			 },
+			 title_loop_pause => {
+			   optional => 1,
+			   type => SCALAR,
+			   callbacks => { "positive float (seconds)" => sub { $_[0] >= 0 } }
+			 },
+		   }
+}
+
+1;
+
+__END__
+
+=pod
+
+=head1 NAME
+
+Curses::Toolkit::Widget::Window - a window
+
+=head1 VERSION
+
+version 0.092920
+
+=head1 DESCRIPTION
+
+This is a window widget
+
+=head1 CONSTRUCTOR
+
+=head2 new
+
+  input : none
+  output : a Curses::Toolkit::Widget::Window
+
+
+
+=head2 set_title
+
+Set the title of the window
+
+  input  : the title
+  output : the window widget
+
+
+
+=head2 get_title
+
+Get the title of the window
+
+  input  : none
+  output : the window title
+
+
+
+=head2 set_coordinates
+
+Set the coordinates (see L<Curses::Toolkit::Object::Coordinates> )
+
+You can also set coordinates in percent of the root window width / height :
+
+  input  : x1 : top left x (can be in percent ( ex : '42%' ) )
+           y1 : top left y (can be in percent ( ex : '42%' ) )
+           x2 : right bottom x (can be in percent ( ex : '42%' ) )
+           y2 : right bottom y (can be in percent ( ex : '42%' ) )
+    OR
+  input  : x1 : top left x (can be in percent ( ex : '42%' ) )
+           y1 : top left y (can be in percent ( ex : '42%' ) )
+           width : width (can be in percent ( ex : '42%' ) )
+           height : heigth (can be in percent ( ex : '42%' ) )
+    OR
+  input  : x1 : sub { ... } # returns top left x
+           y1 : sub { ... } # returns top left y
+           x2 : sub { ... } # returns right bottom x
+           y2 : sub { ... } # returns right bottom y
+    OR
+  input  : a Curses::Toolkit::Object::Coordinates object
+
+
+
+=head2 set_root_window
+
+Sets the root window ( the root toolkit object) to which this window is added 
+
+  input  : the root toolkit object (Curses::Toolkit)
+  output : the window
+
+
+
+=head2 get_root_window
+
+Get the root window
+
+  input  : none
+  output : the root toolkit object (Curses::Toolkit)
+
+
+
+=head2 bring_to_front()
+
+  $window->bring_to_front()
+
+Bring the window to front
+
+  input : none
+  output : the window widget
+
+
+
+=head2 bring_to_back()
+
+  $window->bring_to_back()
+
+Bring the window to the back
+
+  input : none
+  output : none
+
+
+
+=head2 set_focused_widget
+
+  $window->set_focused_widget($widget);
+
+Set the widget that has focus.
+
+  input : a Curses::Toolkit::Widget that is into this window
+  output : the window
+
+
+
+=head2 get_focused_widget
+
+  my $widget = $window->get_focused_widget();
+
+Gets the focused widget.
+
+  input : none
+  output : the focused Curses::Toolkit::Widget
+
+
+
+=head2 draw
+
+Draw the widget. You shouldn't use that, the mainloop will take care of it. If
+you are not using any mainloop, you should call draw() on the root window. See
+Curses::Toolkit
+
+
+
+=head2 set_type
+
+Set the type of the window. Default is 'normal'.
+Can be : 
+
+  input  : SCALAR : the type, one of 'normal', 'menu'
+  output : the window widget
+
+
+
+=head2 get_type
+
+Get the type of the window
+
+  input : none
+  output : the type
+
+
+
+=head1 Theme related properties
+
+To set/get a theme properties, you should do :
+
+$window->set_theme_property(property_name => $property_value);
+$value = $window->get_theme_property('property_name')
+
+Here is the list of properties related to the window, that can be changed in
+the associated theme. See the Curses::Toolkit::Theme class used for the default
+(default class to look at is Curses::Toolkit::Theme::Default)
+
+Don't forget to look at properties from the parent class, as these are also
+inherit of !
+
+=head2 title_width
+
+The width (or the height if the title is displayed vertically) of the window
+that will be use to display the title, in percent.
+
+Example :
+  # the title can take up to 80% of the windows border
+  $window->set_theme_property(title_width => 80 );
+
+=head2 title_bar_position
+
+Can be 'top', 'bottom', 'left', 'right', sets the position of the title bar on the window border
+Example :
+  # The title will appear on the left
+  $window->set_theme_property(title_position => 'left');
+
+=head2 title_position
+
+Specifies if the title should be on the left/top, center or right/bottom on the title bar. Can be 'left', 'center' or 'right'
+
+=head2 title_brackets_characters
+
+An ARRAYREF of 2 strings (usually 1 character long), the first one is displayed
+before the title, the second one is used after the title.
+
+Example :
+  # The title will appear <like that>
+  $window->set_theme_property(title_brackets_characters => [ '<', '>' ]);
+
+=head2 title_left_offset
+
+If title_position is 'left', this offset will be used to move the title on the right
+
+=head2 title_right_offset
+
+If title_position is 'right', this offset will be used to move the title on the left
+
+=head2 title_animation
+
+If set to 1, when the title is too big to be displayed in the window title bar,
+an animation will make the title loop back and forth.
+
+=head2 title_loop_duration
+
+If the title is too big to be displayed in the window title bar, an animation
+will make the title loop back and forth. This properties let's you specify what
+should be the complete animation duration. It's in seconds, but fractions are
+accepted
+
+=head2 title_loop_pause
+
+This sets the duration the loop animation should pause before going to the
+other direction. It's in seconds, but fractions are accepted
+
+
+
+=head1 AUTHOR
+
+  Damien "dams" Krotkine
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2008 by Damien "dams" Krotkine.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
+=cut 

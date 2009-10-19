@@ -1,0 +1,179 @@
+# 
+# This file is part of Curses-Toolkit
+# 
+# This software is copyright (c) 2008 by Damien "dams" Krotkine.
+# 
+# This is free software; you can redistribute it and/or modify it under
+# the same terms as the Perl 5 programming language system itself.
+# 
+use warnings;
+use strict;
+
+package Curses::Toolkit::Widget::HPaned;
+our $VERSION = '0.092920';
+
+
+# ABSTRACT: a container with two panes arranged horizontally
+
+use parent qw(Curses::Toolkit::Widget::Paned);
+
+use Params::Validate qw(:all);
+
+
+
+sub _p1 {
+	my ($self, $c) = @_;
+	return $c->x1();
+}
+
+sub _p2 {
+	my ($self, $c) = @_;
+	return $c->y2();
+}
+
+sub _p3 {
+	my ($self, $c) = @_;
+	return $c->width();
+}
+
+sub _p4 {
+	my ($self, $c, $gp) = @_;
+	return (x2 => $c->x1() + $gp);
+}
+
+sub _p5 {
+	my ($self, $c, $gp, $gw) = @_;
+	return (x1 => $c->x1() + $gp + $gw);
+}
+
+sub _p6 {
+	my ($self, $gp, $gw) = @_;
+	return (x2 => $gp + $gw, y2 => 1);
+}
+
+sub _p7 {
+	my ($self, $theme, $c, $i, $gp, $attr) = @_;
+	$theme->draw_vline($c->x1() + $gp + $i, $c->y1(), $c->height(), $attr);
+	return;
+}
+
+sub _p8 {
+	my ($self, $c, $gp, $gw) = @_;
+	return (x2 => $c->x1() + $gp + $gw);
+}
+
+sub _p9 {
+	my ($self, $c) = @_;
+	return (y2 => $c->y2());
+}
+
+sub _p10 {
+	my ($self, $c) = @_;
+	return (x1 => $c->x1());
+}
+
+sub _p11 {
+	my ($self, $c1, $c2) = @_;
+	return (x2 => $c1->x1() + $c1->width() + $c2->width());
+}
+
+sub _p12 {
+	my ($self, $c) = @_;
+	return (y2 => $c->y1() + 1);
+}
+
+sub _p13 {
+	my ($self, $c1, $c2) = @_;
+	use List::Util qw(max);
+	return (y2 => max($c1->y2(), $c2->y2()));
+}
+
+
+1;
+
+__END__
+
+=pod
+
+=head1 NAME
+
+Curses::Toolkit::Widget::HPaned - a container with two panes arranged horizontally
+
+=head1 VERSION
+
+version 0.092920
+
+=head1 DESCRIPTION
+
+This widget contain 2 widgets. The children are packed horizontally.
+
+
+
+=head1 CONSTRUCTOR
+
+=head2 new
+
+  input : none
+  output : a Curses::Toolkit::Widget::HPaned
+
+
+
+=head1 METHODS
+
+=head2 add1
+
+Add a widget in the left box
+
+  input  : the child widget
+  output : the current widget (not the child widget)
+
+=head2 add2
+
+Add a widget in the right box
+
+  input  : the child widget
+  output : the current widget (not the child widget)
+
+=head2 set_gutter_position
+
+Set the position of the gutter from the left
+
+  input  : the position (an integer)
+  output : the current widget (not the child widget)
+
+=head2 get_gutter_position
+
+Return the position of the gutter from the left
+
+  input  : none
+  output : the current gutter position
+
+=head2 get_desired_space
+
+Given a coordinate representing the available space, returns the space desired
+
+  input : a Curses::Toolkit::Object::Coordinates object
+  output : a Curses::Toolkit::Object::Coordinates object
+
+=head2 get_minimum_space
+
+Given a coordinate representing the available space, returns the minimum space
+needed to properly display itself
+
+  input : a Curses::Toolkit::Object::Coordinates object
+  output : a Curses::Toolkit::Object::Coordinates object
+
+
+
+=head1 AUTHOR
+
+  Damien "dams" Krotkine
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2008 by Damien "dams" Krotkine.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
+=cut 
