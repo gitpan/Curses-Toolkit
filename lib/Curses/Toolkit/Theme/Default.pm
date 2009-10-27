@@ -10,7 +10,7 @@ use warnings;
 use strict;
 
 package Curses::Toolkit::Theme::Default;
-our $VERSION = '0.092920';
+our $VERSION = '0.093000';
 
 
 # ABSTRACT: default widget theme
@@ -198,7 +198,7 @@ Curses::Toolkit::Theme::Default - default widget theme
 
 =head1 VERSION
 
-version 0.092920
+version 0.093000
 
 =head1 DESCRIPTION
 

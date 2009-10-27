@@ -10,7 +10,7 @@ use warnings;
 use strict;
 
 package Curses::Toolkit::Widget::Container;
-our $VERSION = '0.092920';
+our $VERSION = '0.093000';
 
 
 # ABSTRACT: a container widget
@@ -118,7 +118,7 @@ Curses::Toolkit::Widget::Container - a container widget
 
 =head1 VERSION
 
-version 0.092920
+version 0.093000
 
 =head1 DESCRIPTION
 

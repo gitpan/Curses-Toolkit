@@ -10,7 +10,7 @@ use warnings;
 use strict;
 
 package Curses::Toolkit::Event::Key;
-our $VERSION = '0.092920';
+our $VERSION = '0.093000';
 
 
 # ABSTRACT: event that is related to keystrokes
@@ -91,7 +91,7 @@ Curses::Toolkit::Event::Key - event that is related to keystrokes
 
 =head1 VERSION
 
-version 0.092920
+version 0.093000
 
 =head1 DESCRIPTION
 

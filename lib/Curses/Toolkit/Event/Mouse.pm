@@ -10,18 +10,16 @@ use warnings;
 use strict;
 
 package Curses::Toolkit::Event::Mouse;
-our $VERSION = '0.092920';
+our $VERSION = '0.093000';
 
 
 # ABSTRACT: base class for mouse events
 
 use parent qw(Curses::Toolkit::Event);
 
-
-
 1;
 
-__END__
+
 
 =pod
 
@@ -31,17 +29,15 @@ Curses::Toolkit::Event::Mouse - base class for mouse events
 
 =head1 VERSION
 
-version 0.092920
+version 0.093000
 
 =head1 DESCRIPTION
 
-Base class for mouse events
+Base class for mouse events.
 
 =head1 CONSTRUCTOR
 
-None, this is an abstract class
-
-
+None, this is an abstract class.
 
 =head1 AUTHOR
 
@@ -55,3 +51,7 @@ This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut 
+
+
+
+__END__

@@ -10,7 +10,7 @@ use warnings;
 use strict;
 
 package Curses::Toolkit::Role;
-our $VERSION = '0.092920';
+our $VERSION = '0.093000';
 
 
 # ABSTRACT: base class for roles, before migrating to Moose
@@ -34,7 +34,7 @@ Curses::Toolkit::Role - base class for roles, before migrating to Moose
 
 =head1 VERSION
 
-version 0.092920
+version 0.093000
 
 =head1 DESCRIPTION
 

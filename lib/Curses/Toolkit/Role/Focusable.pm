@@ -10,7 +10,7 @@ use warnings;
 use strict;
 
 package Curses::Toolkit::Role::Focusable;
-our $VERSION = '0.092920';
+our $VERSION = '0.093000';
 
 
 # ABSTRACT: This role implements the fact that a widget can have focus
@@ -84,7 +84,7 @@ Curses::Toolkit::Role::Focusable - This role implements the fact that a widget c
 
 =head1 VERSION
 
-version 0.092920
+version 0.093000
 
 =head1 DESCRIPTION
 

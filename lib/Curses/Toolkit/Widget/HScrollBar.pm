@@ -10,15 +10,16 @@ use warnings;
 use strict;
 
 package Curses::Toolkit::Widget::HScrollBar;
-our $VERSION = '0.092920';
+our $VERSION = '0.093000';
 
 
 # ABSTRACT: a horizontal scrollbar widget
 
+use parent qw{ Curses::Toolkit::Widget };
 
 1;
 
-__END__
+
 
 =pod
 
@@ -28,7 +29,15 @@ Curses::Toolkit::Widget::HScrollBar - a horizontal scrollbar widget
 
 =head1 VERSION
 
-version 0.092920
+version 0.093000
+
+=head1 SYNOPSIS
+
+    # FIXME: not yet implemented
+
+=head1 DESCRIPTION
+
+This widget is a horizontal scrollbar.
 
 =head1 AUTHOR
 
@@ -42,3 +51,7 @@ This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut 
+
+
+
+__END__

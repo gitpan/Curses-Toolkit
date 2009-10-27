@@ -10,7 +10,7 @@ use warnings;
 use strict;
 
 package Curses::Toolkit::Event::Mouse::Click;
-our $VERSION = '0.092920';
+our $VERSION = '0.093000';
 
 
 # ABSTRACT: event that is related to mouse click
@@ -96,7 +96,7 @@ Curses::Toolkit::Event::Mouse::Click - event that is related to mouse click
 
 =head1 VERSION
 
-version 0.092920
+version 0.093000
 
 =head1 DESCRIPTION
 

@@ -10,7 +10,7 @@ use warnings;
 use strict;
 
 package Curses::Toolkit::Widget::Paned;
-our $VERSION = '0.092920';
+our $VERSION = '0.093000';
 
 
 # ABSTRACT: generic paned widget
@@ -18,7 +18,6 @@ our $VERSION = '0.092920';
 use parent qw(Curses::Toolkit::Widget::Container);
 
 use Params::Validate qw(:all);
-
 
 sub new {
     my $class = shift;
@@ -284,7 +283,7 @@ sub draw {
 
 1;
 
-__END__
+
 
 =pod
 
@@ -294,13 +293,20 @@ Curses::Toolkit::Widget::Paned - generic paned widget
 
 =head1 VERSION
 
-version 0.092920
+version 0.093000
+
+=head1 SYNOPSIS
+
+    # don't use this widget directly
 
 =head1 DESCRIPTION
 
-Don't use this widget. Please see L<Curses::Toolkit::Widget::HPaned> and L<Curses::Toolkit::Widget::VPaned>
+A paned widget is a widget containing 2 other widgets. It is used to
+stack them horizontally or vertically.
 
-
+Don't use this widget directly. Please see
+L<Curses::Toolkit::Widget::HPaned> and
+L<Curses::Toolkit::Widget::VPaned>.
 
 =head1 AUTHOR
 
@@ -314,3 +320,7 @@ This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut 
+
+
+
+__END__

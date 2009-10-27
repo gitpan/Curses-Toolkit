@@ -10,7 +10,7 @@ use warnings;
 use strict;
 
 package Curses::Toolkit::Theme::Default::Color;
-our $VERSION = '0.092920';
+our $VERSION = '0.093000';
 
 
 # ABSTRACT: base class for default coloured widgets themes
@@ -33,7 +33,7 @@ Curses::Toolkit::Theme::Default::Color - base class for default coloured widgets
 
 =head1 VERSION
 
-version 0.092920
+version 0.093000
 
 =head1 DESCRIPTION
 

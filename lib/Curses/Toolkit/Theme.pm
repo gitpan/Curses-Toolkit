@@ -10,7 +10,7 @@ use warnings;
 use strict;
 
 package Curses::Toolkit::Theme;
-our $VERSION = '0.092920';
+our $VERSION = '0.093000';
 
 
 # ABSTRACT: base class for widgets themes
@@ -183,7 +183,7 @@ sub _attrset {
 
 1;
 
-__END__
+
 
 =pod
 
@@ -193,7 +193,7 @@ Curses::Toolkit::Theme - base class for widgets themes
 
 =head1 VERSION
 
-version 0.092920
+version 0.093000
 
 =head1 DESCRIPTION
 
@@ -300,6 +300,38 @@ can contain these keys:
 
 
 
+=begin Pod::Coverage
+
+BLANK_CLICKED
+BLANK_FOCUSED
+BLANK_NORMAL
+CORNER_CLICKED
+CORNER_FOCUSED
+CORNER_NORMAL
+HLINE
+HLINE_CLICKED
+HLINE_FOCUSED
+HLINE_NORMAL
+LLCORNER
+LRCORNER
+RESIZE_CLICKED
+RESIZE_FOCUSED
+RESIZE_NORMAL
+STRING_CLICKED
+STRING_FOCUSED
+STRING_NORMAL
+ULCORNER
+URCORNER
+TITLE_CLICKED
+TITLE_FOCUSED
+TITLE_NORMAL
+VLINE
+VLINE_CLICKED
+VLINE_FOCUSED
+VLINE_NORMAL
+
+=end Pod::Coverage
+
 =head1 AUTHOR
 
   Damien "dams" Krotkine
@@ -312,3 +344,7 @@ This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut 
+
+
+
+__END__

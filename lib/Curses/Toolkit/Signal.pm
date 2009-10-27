@@ -6,13 +6,13 @@
 # This is free software; you can redistribute it and/or modify it under
 # the same terms as the Perl 5 programming language system itself.
 # 
-package Curses::Toolkit::Signal;
-our $VERSION = '0.092920';
-
-
-
 use warnings;
 use strict;
+
+package Curses::Toolkit::Signal;
+our $VERSION = '0.093000';
+
+
 
 use Params::Validate qw(:all);
 
@@ -37,7 +37,7 @@ __END__
 
 =head1 VERSION
 
-version 0.092920
+version 0.093000
 
 =head1 NAME
 
