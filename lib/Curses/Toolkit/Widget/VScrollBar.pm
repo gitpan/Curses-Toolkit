@@ -10,7 +10,7 @@ use warnings;
 use strict;
 
 package Curses::Toolkit::Widget::VScrollBar;
-our $VERSION = '0.093000';
+our $VERSION = '0.093020';
 
 
 # ABSTRACT: a vertical scrollbar widget
@@ -60,7 +60,7 @@ Curses::Toolkit::Widget::VScrollBar - a vertical scrollbar widget
 
 =head1 VERSION
 
-version 0.093000
+version 0.093020
 
 =head1 DESCRIPTION
 

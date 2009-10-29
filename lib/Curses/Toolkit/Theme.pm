@@ -10,7 +10,7 @@ use warnings;
 use strict;
 
 package Curses::Toolkit::Theme;
-our $VERSION = '0.093000';
+our $VERSION = '0.093020';
 
 
 # ABSTRACT: base class for widgets themes
@@ -193,7 +193,7 @@ Curses::Toolkit::Theme - base class for widgets themes
 
 =head1 VERSION
 
-version 0.093000
+version 0.093020
 
 =head1 DESCRIPTION
 

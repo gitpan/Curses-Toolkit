@@ -10,7 +10,7 @@ use warnings;
 use strict;
 
 package Curses::Toolkit::Theme::Default::Color::Pink;
-our $VERSION = '0.093000';
+our $VERSION = '0.093020';
 
 
 # ABSTRACT: default widget theme with pink-ish color, made for Book
@@ -74,7 +74,7 @@ Curses::Toolkit::Theme::Default::Color::Pink - default widget theme with pink-is
 
 =head1 VERSION
 
-version 0.093000
+version 0.093020
 
 =head1 DESCRIPTION
 

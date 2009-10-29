@@ -10,7 +10,7 @@ use warnings;
 use strict;
 
 package Curses::Toolkit::Object::Flags;
-our $VERSION = '0.093000';
+our $VERSION = '0.093020';
 
 
 # ABSTRACT: simple collection of flags
@@ -39,7 +39,7 @@ Curses::Toolkit::Object::Flags - simple collection of flags
 
 =head1 VERSION
 
-version 0.093000
+version 0.093020
 
 =head1 DESCRIPTION
 

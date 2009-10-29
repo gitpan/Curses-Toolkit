@@ -10,7 +10,7 @@ use warnings;
 use strict;
 
 package POE::Component::Curses::MainLoop;
-our $VERSION = '0.093000';
+our $VERSION = '0.093020';
 
 
 # ABSTRACT: <FIXME to be filled>
@@ -183,7 +183,7 @@ POE::Component::Curses::MainLoop - <FIXME to be filled>
 
 =head1 VERSION
 
-version 0.093000
+version 0.093020
 
 =head1 SYNOPSIS
 

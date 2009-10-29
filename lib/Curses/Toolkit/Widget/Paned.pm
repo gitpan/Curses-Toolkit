@@ -10,7 +10,7 @@ use warnings;
 use strict;
 
 package Curses::Toolkit::Widget::Paned;
-our $VERSION = '0.093000';
+our $VERSION = '0.093020';
 
 
 # ABSTRACT: generic paned widget
@@ -293,7 +293,7 @@ Curses::Toolkit::Widget::Paned - generic paned widget
 
 =head1 VERSION
 
-version 0.093000
+version 0.093020
 
 =head1 SYNOPSIS
 

@@ -1,4 +1,8 @@
-0.093000  2009-10-27 10:55:29 UTC
+0.093020  2009-10-29 16:26:02 UTC
+
+0.093020
+	added UNIVERSAL::require prereq
+0.093000  2009-10-27 10:13:37 UTC
 	fix prereq
 0.092920 2009-10-19
 	Initial version
