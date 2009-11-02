@@ -10,7 +10,7 @@ use warnings;
 use strict;
 
 package Curses::Toolkit::Object;
-our $VERSION = '0.093020';
+our $VERSION = '0.093060';
 
 
 # ABSTRACT: base class for objects
@@ -34,7 +34,7 @@ Curses::Toolkit::Object - base class for objects
 
 =head1 VERSION
 
-version 0.093020
+version 0.093060
 
 =head1 DESCRIPTION
 

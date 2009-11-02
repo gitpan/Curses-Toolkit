@@ -10,7 +10,7 @@ use warnings;
 use strict;
 
 package Curses::Toolkit::Event::Focus;
-our $VERSION = '0.093020';
+our $VERSION = '0.093060';
 
 
 # ABSTRACT: base class for focus events
@@ -31,7 +31,7 @@ Curses::Toolkit::Event::Focus - base class for focus events
 
 =head1 VERSION
 
-version 0.093020
+version 0.093060
 
 =head1 DESCRIPTION
 

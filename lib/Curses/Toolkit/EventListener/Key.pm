@@ -10,7 +10,7 @@ use warnings;
 use strict;
 
 package Curses::Toolkit::EventListener::Key;
-our $VERSION = '0.093020';
+our $VERSION = '0.093060';
 
 
 # ABSTRACT: event listener listening for a keyboard action
@@ -33,7 +33,7 @@ Curses::Toolkit::EventListener::Key - event listener listening for a keyboard ac
 
 =head1 VERSION
 
-version 0.093020
+version 0.093060
 
 =head1 DESCRIPTION
 

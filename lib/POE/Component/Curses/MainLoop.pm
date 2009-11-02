@@ -10,7 +10,7 @@ use warnings;
 use strict;
 
 package POE::Component::Curses::MainLoop;
-our $VERSION = '0.093020';
+our $VERSION = '0.093060';
 
 
 # ABSTRACT: <FIXME to be filled>
@@ -131,6 +131,7 @@ sub event_key {
 
 	if ($params{type} eq 'stroke') {
 		use Curses::Toolkit::Event::Key;
+#		print STDERR " -- Mainloop stroke : [$params{key}] \n";
 		my $event = Curses::Toolkit::Event::Key->new( type => 'stroke',
 													  params => { key => $params{key}},
 													  root_window => $self->{toolkit_root},
@@ -183,7 +184,7 @@ POE::Component::Curses::MainLoop - <FIXME to be filled>
 
 =head1 VERSION
 
-version 0.093020
+version 0.093060
 
 =head1 SYNOPSIS
 

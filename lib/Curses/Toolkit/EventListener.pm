@@ -10,7 +10,7 @@ use warnings;
 use strict;
 
 package Curses::Toolkit::EventListener;
-our $VERSION = '0.093020';
+our $VERSION = '0.093060';
 
 
 # ABSTRACT: base class for event listeners
@@ -118,7 +118,7 @@ Curses::Toolkit::EventListener - base class for event listeners
 
 =head1 VERSION
 
-version 0.093020
+version 0.093060
 
 =head1 DESCRIPTION
 

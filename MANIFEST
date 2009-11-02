@@ -62,6 +62,7 @@ lib/Curses/Toolkit/Role.pm
 lib/Curses/Toolkit/Role/Focusable.pm
 lib/Curses/Toolkit/Signal.pm
 lib/Curses/Toolkit/Signal/Clicked.pm
+lib/Curses/Toolkit/Signal/Focused.pm
 lib/Curses/Toolkit/Theme.pm
 lib/Curses/Toolkit/Theme/Default.pm
 lib/Curses/Toolkit/Theme/Default/Color.pm

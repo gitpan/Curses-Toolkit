@@ -10,7 +10,7 @@ use warnings;
 use strict;
 
 package Curses::Toolkit;
-our $VERSION = '0.093020';
+our $VERSION = '0.093060';
 
 
 # ABSTRACT: a modern Curses toolkit
@@ -29,6 +29,12 @@ sub init_root_window {
 											   },
 								mainloop => { optional => 1
 												},
+								quit_key => { type => SCALAR,
+											  default => 'q',
+											},
+								switch_key => { type => SCALAR,
+												default => 'r',
+											  },
 							  }
                          );
 
@@ -132,20 +138,39 @@ sub init_root_window {
 			},
 		)
 	);
-	$self->add_event_listener(
-		Curses::Toolkit::EventListener->new(
-			accepted_events => {
-				'Curses::Toolkit::Event::Key' => sub { 
-					my ($event) = @_;
-					$event->{type} eq 'stroke' or return 0;
-					lc $event->{params}{key} eq 'q' or return 0;
+	if (defined $params{quit_key}) { 
+		$self->add_event_listener(
+			Curses::Toolkit::EventListener->new(
+				accepted_events => {
+					'Curses::Toolkit::Event::Key' => sub { 
+						my ($event) = @_;
+						$event->{type} eq 'stroke' or return 0;
+						lc $event->{params}{key} eq $params{quit_key} or return 0;
+					},
 				},
-			},
-			code => sub {
-				exit;
-			},
-		)
-	);
+				code => sub {
+					exit;
+				},
+			)
+		);
+	}
+	if (defined $params{switch_key}) { 
+		$self->add_event_listener(
+			Curses::Toolkit::EventListener->new(
+				accepted_events => {
+					'Curses::Toolkit::Event::Key' => sub { 
+						my ($event) = @_;
+						$event->{type} eq 'stroke' or return 0;
+						lc $event->{params}{key} eq $params{switch_key} or return 0;
+					},
+				},
+				code => sub {
+					
+				},
+			)
+		);
+	}
+
 	# key listener for TAB
 	$self->add_event_listener(
 		Curses::Toolkit::EventListener->new(
@@ -153,7 +178,7 @@ sub init_root_window {
 				'Curses::Toolkit::Event::Key' => sub {
 					my ($event) = @_;
 					$event->{type} eq 'stroke' or return 0;
-					$event->{params}{key} eq 'j' || $event->{params}{key} eq '<^I>' or return 0;
+					$event->{params}{key} eq '<^I>' or return 0;
 				},
 			},
 			code => sub {
@@ -168,6 +193,32 @@ sub init_root_window {
 					defined $next_focused_widget and 
 					  $next_focused_widget->set_focus(1);
 				}
+			},
+		)
+	);
+
+	# key listener for BACK TAB
+	$self->add_event_listener(
+		Curses::Toolkit::EventListener->new(
+			accepted_events => {
+				'Curses::Toolkit::Event::Key' => sub {
+					my ($event) = @_;
+					$event->{type} eq 'stroke' or return 0;
+					$event->{params}{key} eq 'KEY_BTAB' or return 0;
+				},
+			},
+			code => sub {
+#  				my $focused_widget = $self->get_focused_widget();
+#  				if (defined $focused_widget) {
+#  					my $prev_focused_widget = $focused_widget->get_prev_focused_widget();
+#  					defined $prev_focused_widget and 
+#  					  $prev_focused_widget->set_focus(1);
+#  				} else {
+#  					my $focused_window = $self->get_focused_window();
+#  					my $prev_focused_widget = $focused_window->get_prev_focused_widget();
+#  					defined $prev_focused_widget and 
+#  					  $prev_focused_widget->set_focus(1);
+#  				}
 			},
 		)
 	);
@@ -222,6 +273,18 @@ sub get_focused_window {
 	my $window = (sort { $b->get_property(window => 'stack') <=> $a->get_property(window => 'stack') } @windows)[0];
 	return $window;
 }
+
+
+# sub get_next_window {
+# 	my ($self) = @_;
+# 	my $iterator = $window->{window_iterator}
+# 	  or return;
+# 	$iterator->next();
+# 	my $sister_window = $iterator->value(); # might be undef
+# 	$iterator->prev();
+# 	defined $sister_window and return $sister_window;
+# 	return;
+# }
 
 
 sub set_mainloop {
@@ -449,7 +512,7 @@ Curses::Toolkit - a modern Curses toolkit
 
 =head1 VERSION
 
-version 0.093020
+version 0.093060
 
 =head1 SYNOPSIS
 
@@ -575,6 +638,8 @@ service.
   input  : clear_background  : optional, boolean, default 1 : if true, clears background
            theme_name        : optional, the name of them to use as default diosplay theme
            mainloop          : optional, the mainloop object that will be used for event handling
+           quit_key          : the key used to quit the whole application. Default to 'q'. If set to undef, it's disabled
+           switch_key        : the key used to switch between windows. Default to 'r'. If set to undef, it's disabled
   output : a Curses::Toolkit object
 
 
@@ -631,6 +696,17 @@ be a window.
   my $window = $root->get_focused_window();
 
 Returns the window currently focused.
+
+  input : none
+  output : a Curses::Toolkit::Widget::Window or void
+
+
+
+=head2 get_focused_window
+
+  my $window = $root->get_nexd_window();
+
+Returns the next window.
 
   input : none
   output : a Curses::Toolkit::Widget::Window or void

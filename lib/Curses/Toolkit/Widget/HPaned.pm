@@ -10,7 +10,7 @@ use warnings;
 use strict;
 
 package Curses::Toolkit::Widget::HPaned;
-our $VERSION = '0.093020';
+our $VERSION = '0.093060';
 
 
 # ABSTRACT: a container with two panes arranged horizontally
@@ -101,7 +101,7 @@ Curses::Toolkit::Widget::HPaned - a container with two panes arranged horizontal
 
 =head1 VERSION
 
-version 0.093020
+version 0.093060
 
 =head1 DESCRIPTION
 

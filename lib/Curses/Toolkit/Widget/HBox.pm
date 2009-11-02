@@ -10,7 +10,7 @@ use warnings;
 use strict;
 
 package Curses::Toolkit::Widget::HBox;
-our $VERSION = '0.093020';
+our $VERSION = '0.093060';
 
 
 # ABSTRACT: an horizontal box widget
@@ -205,7 +205,7 @@ Curses::Toolkit::Widget::HBox - an horizontal box widget
 
 =head1 VERSION
 
-version 0.093020
+version 0.093060
 
 =head1 DESCRIPTION
 

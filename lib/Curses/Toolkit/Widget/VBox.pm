@@ -10,7 +10,7 @@ use warnings;
 use strict;
 
 package Curses::Toolkit::Widget::VBox;
-our $VERSION = '0.093020';
+our $VERSION = '0.093060';
 
 
 # ABSTRACT: a vertical box widget
@@ -208,7 +208,7 @@ Curses::Toolkit::Widget::VBox - a vertical box widget
 
 =head1 VERSION
 
-version 0.093020
+version 0.093060
 
 =head1 DESCRIPTION
 

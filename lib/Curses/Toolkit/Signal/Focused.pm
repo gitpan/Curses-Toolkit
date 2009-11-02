@@ -9,15 +9,48 @@
 use warnings;
 use strict;
 
-package Curses::Toolkit::Event::Mouse::Click;
+package Curses::Toolkit::Signal::Focused;
 our $VERSION = '0.093060';
 
 
-# ABSTRACT: event that is related to mouse click
 
-use parent qw(Curses::Toolkit::Event::Mouse);
+use parent qw(Curses::Toolkit::Signal);
 
 use Params::Validate qw(:all);
+
+
+sub generate_listener {
+	my $class = shift;
+	my %args = validate( @_,
+						 { widget => { isa => 'Curses::Toolkit::Widget' },
+						   code_ref => { type => CODEREF },
+						 },
+					   );
+	my $widget = $args{widget};
+	my $code_ref = $args{code_ref};
+
+	return Curses::Toolkit::EventListener->new(
+		accepted_events => {
+			'Curses::Toolkit::Event::Key' => sub { 
+				my ($event) = @_;
+				$event->{type} eq 'stroke' or return 0;
+				$event->{params}{key} eq ' ' or return 0;
+				return 1;
+			},
+			'Curses::Toolkit::Event::Mouse::Click' => sub { 
+				my ($event) = @_;
+				$event->{type} eq 'clicked' or return 0;
+				$event->{button} eq 'button1' or return 0;
+				return 1;
+			},
+		},
+		code => sub {
+			$widget->can('set_focus') and $widget->set_focus(1);
+			$widget->can('flash') and $widget->flash();
+			$code_ref->();
+		},
+	);
+}
 
 
 sub new {
@@ -90,19 +123,21 @@ __END__
 
 =pod
 
-=head1 NAME
-
-Curses::Toolkit::Event::Mouse::Click - event that is related to mouse click
-
 =head1 VERSION
 
 version 0.093060
 
+=head1 NAME
+
+Curses::Toolkit::Signal::Focused
+
 =head1 DESCRIPTION
 
-Event that is related to mouse click
+Signal triggered when a widget is focused
 
 =head1 CONSTRUCTOR
+
+
 
 =head2 new
 

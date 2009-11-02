@@ -10,7 +10,7 @@ use warnings;
 use strict;
 
 package Curses::Toolkit::Widget::Window::Dialog;
-our $VERSION = '0.093020';
+our $VERSION = '0.093060';
 
 
 # ABSTRACT: a dialog window
@@ -29,7 +29,7 @@ Curses::Toolkit::Widget::Window::Dialog - a dialog window
 
 =head1 VERSION
 
-version 0.093020
+version 0.093060
 
 =head1 SYNOPSIS
 
