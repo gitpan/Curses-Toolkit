@@ -10,7 +10,7 @@ use warnings;
 use strict;
 
 package Curses::Toolkit::EventListener;
-our $VERSION = '0.093060';
+our $VERSION = '0.100320';
 
 
 # ABSTRACT: base class for event listeners
@@ -33,7 +33,18 @@ sub can_handle {
 	my $self = shift;
 	my ($event) = validate_pos( @_, { isa => 'Curses::Toolkit::Event' } );
 	my $event_class = ref $event;
-	exists $self->{accepted_events}{$event_class} or return;
+#	exists $self->{accepted_events}{$event_class} or return;
+	if (!exists $self->{accepted_events}{$event_class}) {
+		eval "require $event_class";
+		$@ and die "failed requireing event class '$event_class'";
+		my $found;
+		foreach my $class_name (keys %{$self->{accepted_events}}) {
+			$event_class->isa($class_name)
+			  and $found = $class_name;
+		}
+		defined $found or return;
+		$event_class = $found;
+	}
 	$self->{accepted_events}{$event_class}->($event) or return;
 	return 1;
 }
@@ -118,7 +129,7 @@ Curses::Toolkit::EventListener - base class for event listeners
 
 =head1 VERSION
 
-version 0.093060
+version 0.100320
 
 =head1 DESCRIPTION
 

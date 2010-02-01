@@ -10,7 +10,7 @@ use warnings;
 use strict;
 
 package Curses::Toolkit::Signal::Clicked;
-our $VERSION = '0.093060';
+our $VERSION = '0.100320';
 
 
 
@@ -24,17 +24,21 @@ sub generate_listener {
 	my %args = validate( @_,
 						 { widget => { isa => 'Curses::Toolkit::Widget' },
 						   code_ref => { type => CODEREF },
+						   arguments => { type => ARRAYREF },
 						 },
 					   );
 	my $widget = $args{widget};
 	my $code_ref = $args{code_ref};
+	my @arguments = @{$args{arguments}};
 
 	return Curses::Toolkit::EventListener->new(
 		accepted_events => {
 			'Curses::Toolkit::Event::Key' => sub { 
 				my ($event) = @_;
 				$event->{type} eq 'stroke' or return 0;
-				$event->{params}{key} eq ' ' or return 0;
+				   $event->{params}{key} eq ' '    # space key
+				|| $event->{params}{key} eq '<^M>' # enter key
+				   or return 0;
 				return 1;
 			},
 			'Curses::Toolkit::Event::Mouse::Click' => sub { 
@@ -47,7 +51,7 @@ sub generate_listener {
 		code => sub {
 			$widget->can('set_focus') and $widget->set_focus(1);
 			$widget->can('flash') and $widget->flash();
-			$code_ref->();
+			$code_ref->(@_, @arguments);
 		},
 	);
 }
@@ -60,7 +64,7 @@ __END__
 
 =head1 VERSION
 
-version 0.093060
+version 0.100320
 
 =head1 NAME
 

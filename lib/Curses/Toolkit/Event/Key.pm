@@ -10,7 +10,7 @@ use warnings;
 use strict;
 
 package Curses::Toolkit::Event::Key;
-our $VERSION = '0.093060';
+our $VERSION = '0.100320';
 
 
 # ABSTRACT: event that is related to keystrokes
@@ -91,7 +91,7 @@ Curses::Toolkit::Event::Key - event that is related to keystrokes
 
 =head1 VERSION
 
-version 0.093060
+version 0.100320
 
 =head1 DESCRIPTION
 
@@ -103,6 +103,7 @@ Event that is related to keystrokes
 
   input : type   : a type of Key Event. STRING, should be one of Curses::Toolkit::Event::Key->get_types()
           params : parameter of the event. Can be optional or mandatory. Call Curses::Toolkit::Event::Key->get_params_definition($type) to see
+          root_window : the root window
 
 
 

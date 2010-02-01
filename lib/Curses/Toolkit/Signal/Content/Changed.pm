@@ -9,12 +9,12 @@
 use warnings;
 use strict;
 
-package Curses::Toolkit::Signal::Focused;
+package Curses::Toolkit::Signal::Content::Changed;
 our $VERSION = '0.100320';
 
 
 
-use parent qw(Curses::Toolkit::Signal);
+use parent qw(Curses::Toolkit::Signal::Content);
 
 use Params::Validate qw(:all);
 
@@ -33,7 +33,7 @@ sub generate_listener {
 
 	return Curses::Toolkit::EventListener->new(
 		accepted_events => {
-			'Curses::Toolkit::Event::Focus' => sub { 
+			'Curses::Toolkit::Event::Content::Changed' => sub { 
 				my ($event) = @_;
 				return 1;
 			},
@@ -56,11 +56,11 @@ version 0.100320
 
 =head1 NAME
 
-Curses::Toolkit::Signal::Focused
+Curses::Toolkit::Signal::Content::Changed
 
 =head1 DESCRIPTION
 
-Signal triggered when a widget is focused
+Signal triggered when the content of a widget changes
 
 =head1 CONSTRUCTOR
 

@@ -1,5 +1,10 @@
-0.093060  2009-11-02 09:31:20 UTC
-
+0.100320  2010-02-01 09:20:08 UTC
+	more signals
+	additional examples
+	introducing "visible shape" concept
+0.100260
+	the Label widget now supports color, underline, bold, etc
+	more signals and events
 0.093060  2009-11-02 09:28:29 UTC
 	more signals, cleanup, preparing rework of focus / window switch
 0.093020

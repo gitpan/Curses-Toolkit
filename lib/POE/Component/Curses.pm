@@ -10,7 +10,7 @@ use warnings;
 use strict;
 
 package POE::Component::Curses;
-our $VERSION = '0.093060';
+our $VERSION = '0.100320';
 
 
 # ABSTRACT: the ( currently only ) loader for Curses::toolkit
@@ -149,7 +149,7 @@ sub spawn {
 				$kernel->yield('window_resize');
 				$kernel->delay(window_resize => 1/10);
 			},
-			window_resize => sub { 
+			window_resize => sub {
 				my ($kernel, $heap) = @_[ KERNEL, HEAP];
 				$heap->{mainloop}->event_resize();
 			},
@@ -170,6 +170,10 @@ sub spawn {
 			delay_handler => sub {
 				my $code = $_[ARG0];
 				$code->(@_[ARG1..$#_]);
+			},
+			stack_event => sub {
+				my ($kernel, $heap) = @_[KERNEL, HEAP];
+				$heap->{mainloop}->event_generic(@_[ARG0..$#_]);
 			}
         }
 	);
@@ -188,7 +192,7 @@ POE::Component::Curses - the ( currently only ) loader for Curses::toolkit
 
 =head1 VERSION
 
-version 0.093060
+version 0.100320
 
 =head1 SYNOPSIS
 

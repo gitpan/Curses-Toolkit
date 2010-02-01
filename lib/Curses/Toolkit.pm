@@ -10,12 +10,14 @@ use warnings;
 use strict;
 
 package Curses::Toolkit;
-our $VERSION = '0.093060';
+our $VERSION = '0.100320';
 
 
 # ABSTRACT: a modern Curses toolkit
 
 use Params::Validate qw(:all);
+
+use Curses::Toolkit::Theme;
 
 
 sub init_root_window {
@@ -50,37 +52,11 @@ sub init_root_window {
 
 	if (has_colors) {
 		start_color();
-# 		print STDERR "color is supported\n";
-# 		print STDERR "colors number : " . COLORS . "\n";
-# 		print STDERR "colors pairs : " . COLOR_PAIRS . "\n";
-# 		print STDERR "can change colors ? : " . Curses::can_change_color() . "\n";
+#  		print STDERR "color is supported\n";
+#  		print STDERR "colors number : " . COLORS . "\n";
+#  		print STDERR "colors pairs : " . COLOR_PAIRS . "\n";
+#  		print STDERR "can change colors ? : " . Curses::can_change_color() . "\n";
 
-#  	my $pair_nb = 1;
-#  	foreach my $bg_nb (0..COLORS()-1) {
-#  		foreach my $fg_nb (0..COLORS()-1) {
-#  #			print STDERR "color pairing : $pair_nb, $fg_nb, $bg_nb \n";
-#  			init_pair($pair_nb, $fg_nb, $bg_nb);
-#  			$pair_nb++;
-#  		}
-#  	}
-
-# 	my $curses = $curses_handler;
-# 	foreach my $x (0..7) {
-# 		$curses->addstr(0, ($x+1)*3, $x);
-# 	}
-# 	foreach my $y (0..7) {
-# 		$curses->addstr($y+1, 0, $y);
-# 	}
-
-# 	my $pair = 1;
-# 	foreach my $x (0..7) {
-# 		foreach my $y (0..7) {
-# 			COLOR_PAIR($pair);
-# 			$curses->attrset(COLOR_PAIR($pair));
-# 			$curses->addstr($y+1, ($x+1)*3, "$x$y");
-# 			$pair++;
-# 		}
-# 	}
 
 	}
 
@@ -89,27 +65,15 @@ sub init_root_window {
 	my $old_mouse_mask;
 	my $mouse_mask = mousemask(ALL_MOUSE_EVENTS | REPORT_MOUSE_POSITION, $old_mouse_mask); 
 
-    # curses basic init
-#    Curses::noecho();
-#    Curses::cbreak();
-#    curs_set(0);
-#    Curses::leaveok(1);
-
-#$curses_handler->erase();
-
     # erase the window if asked.
 #    print STDERR Dumper($params{clear}); use Data::Dumper;
 #    $params{clear} and $curses_handler->erase();
     
-#    use Curses::Toolkit::Widget::Container;
-#    my $container = Curses::Toolkit::Widget::Warper->new();
-
 	use Curses::Toolkit::Theme::Default;
 	use Curses::Toolkit::Theme::Default::Color::Yellow;
 	use Curses::Toolkit::Theme::Default::Color::Pink;
 	use Tie::Array::Iterable;
-#	$params{theme_name} ||= (has_colors() ? 'Curses::Toolkit::Theme::Default::Color::Pink' : 'Curses::Toolkit::Theme::Default');
-	$params{theme_name} ||= (has_colors() ? 'Curses::Toolkit::Theme::Default::Color::Yellow' : 'Curses::Toolkit::Theme::Default');
+	$params{theme_name} ||= Curses::Toolkit->get_default_theme_name();
 	my @windows = ();
     my $self = bless { initialized => 1, 
                        curses_handler => $curses_handler,
@@ -118,6 +82,7 @@ sub init_root_window {
 					   mainloop => $params{mainloop},
 					   last_stack => 0,
 					   event_listeners => [],
+					   window_iterator => undef,
                      }, $class;
 	$self->_recompute_shape();
 
@@ -165,7 +130,24 @@ sub init_root_window {
 					},
 				},
 				code => sub {
-					
+					my ($event, $widget) = @_;
+					defined $self->{window_iterator}
+					  or return;
+					my $window = $widget->{window_iterator}->next();
+					if ( ! defined $window ) {
+						$widget->{window_iterator}->to_start();
+						$window = $widget->{window_iterator}->value();
+					}
+					# get the currently focused widget, unfocus it
+					my $current_focused_widget = $self->get_focused_widget();
+					if (defined $current_focused_widget && $current_focused_widget->can('set_focus')) {
+						$current_focused_widget->set_focus(0);
+					}
+					$window->bring_to_front();
+					# focus the window or one of its component
+					my $next_focused_widget = $window->get_next_focused_widget(1); # 1 means "consider if $window is focusable"
+					defined $next_focused_widget and
+					  $next_focused_widget->set_focus(1);
 				},
 			)
 		);
@@ -223,9 +205,19 @@ sub init_root_window {
 		)
 	);
 
-#$self->{window_iterator}
     return $self;
 }
+
+sub get_default_theme_name {
+	my ($class) = @_;
+	return (has_colors() ?
+			  'Curses::Toolkit::Theme::Default::Color::Yellow'
+			: 'Curses::Toolkit::Theme::Default'
+		   );
+#			  'Curses::Toolkit::Theme::Default::Color::Yellow'
+#			  'Curses::Toolkit::Theme::Default::Color::Pink'
+}
+
 
 # destroyer
 DESTROY {
@@ -313,15 +305,40 @@ sub add_window {
 	$window->_set_curses_handler($self->{curses_handler});
 	$window->set_theme_name($self->{theme_name});
 	$window->set_root_window($self);
-	$self->{last_stack}++;
-	$window->set_property(window => 'stack', $self->{last_stack});
+	$self->bring_window_to_front($window);
 	# in case the window has proportional coordinates depending on the root window
 	# TODO : do that only if window has proportional coordinates, not always
 	$window->rebuild_all_coordinates();
     push @{$self->{windows}}, $window;
-	$self->{window_iterator} ||= $self->{windows}->forward_from(0);
+	$self->{window_iterator} ||= $self->{windows}->forward_from();
 	$self->needs_redraw();
 	return $self;
+}
+
+
+sub bring_window_to_front {
+	my $self = shift;
+    my ($window) = validate_pos( @_, { isa => 'Curses::Toolkit::Widget::Window' } );
+	$self->{last_stack}++;
+	$window->set_property(window => 'stack', $self->{last_stack});
+	my $last_stack = $self->{last_stack};
+	$last_stack % 5 == 0
+	  and $self->{last_stack} = $self->_cleanup_windows_stacks();
+
+	$self->needs_redraw();
+	return $self;
+}
+
+sub _cleanup_windows_stacks {
+	my ($self) = @_;
+
+	my @sorted_windows = sort { $a->get_property(window => 'stack') <=> $b->get_property(window => 'stack') }
+						 $self->get_windows();
+
+	foreach my $idx (0..@sorted_windows-1) {
+		$sorted_windows[$idx]->set_property(window => 'stack', $idx);
+	}
+	return @sorted_windows-1;
 }
 
 
@@ -393,10 +410,9 @@ sub display {
 
 sub dispatch_event {
 	my $self = shift;
-	my ($event, $widget, $dont_dispatch_further) = 
+	my ($event, $widget) = 
 	  validate_pos(@_, { isa => 'Curses::Toolkit::Event' },
 				       { isa => 'Curses::Toolkit::Widget', optional => 1 },
-				       { type => BOOLEAN, optional => 1 },
 				  );
 
 	if (! defined $widget) {
@@ -409,10 +425,13 @@ sub dispatch_event {
 	while ( 1 ) {
 		foreach my $listener (grep { $_->is_enabled() } $widget->get_event_listeners()) {
 			if ($listener->can_handle($event)) {
-				return $listener->send_event($event, $widget);
+				$listener->send_event($event, $widget);
+				$event->can_propagate()
+				  or return 1;
 			}
 		}
-		$dont_dispatch_further and return;
+		$event->restricted_to_widget()
+		  and return;
 		if ($widget->isa('Curses::Toolkit::Widget::Window')) {
 			$widget = $widget->get_root_window();
 		} elsif ($widget->isa('Curses::Toolkit::Widget')) {
@@ -423,6 +442,19 @@ sub dispatch_event {
 		defined $widget or return;
 	}
 	return;
+}
+
+
+sub fire_event {
+	my $self = shift;
+	my ($event, $widget) = 
+	  validate_pos(@_, { isa => 'Curses::Toolkit::Event' },
+				       { isa => 'Curses::Toolkit::Widget', optional => 1 },
+				  );
+	my $mainloop = $self->get_mainloop();
+	defined $mainloop or return $self;
+	$mainloop->stack_event($event, $widget);
+	return $self;
 }
 
 
@@ -512,7 +544,7 @@ Curses::Toolkit - a modern Curses toolkit
 
 =head1 VERSION
 
-version 0.093060
+version 0.100320
 
 =head1 SYNOPSIS
 
@@ -570,7 +602,8 @@ use. In this case you would do something like :
 
 =head1 WIDGETS
 
-Curses::Toolkit is based on a widget model, inspired by Gtk. I suggest you read the pod of the following widgets :
+Curses::Toolkit is based on a widget model, inspired by Gtk. I suggest you read
+the POD of the following widgets :
 
 =over 
 
@@ -584,7 +617,7 @@ Useful to read, it contains the common methods of all the widgets
 
 =item L<Curses::Toolkit::Widget::Label>
 
-To display simple text
+To display simple text, with text colors and attributes
 
 =item L<Curses::Toolkit::Widget::Button>
 
@@ -761,6 +794,17 @@ Adds a window on the root window. Returns the root window
 
 
 
+=head2 bring_window_to_front()
+
+  $root_window->bring_window_to_front($window)
+
+Brings the window to front
+
+  input : a Curses::Toolkit::Widget::Window
+  output : the root window
+
+
+
 =head2 needs_redraw
 
   $root->needs_redraw()
@@ -849,10 +893,25 @@ Refresh the screen.
   my $event = Curses::Toolkit::Event::SomeEvent->new(...)
   $root->dispatch_event($event);
 
-Given an event, dispatch it to the appropriate widgets / windows, or to the root window.
+Given an event, dispatch it to the appropriate widgets / windows, or to the
+root window. You probably don't want to use this method directly. Use Signals instead.
 
   input  : a Curses::Toolkit::Event
+           optional, a widget. if given, the event dispatching will start with this wisget (and not the focused one)
   output : true if the event were handled, false if not
+
+
+
+=head2 fire_event
+
+  $widget->fire_event($event, $widget);
+
+Sends an event to the mainloop so it gets dispatched. You probably don't want
+to use this method.
+
+  input  : a Curses::Toolkit::Event
+           optional, a widget. if given, the event dispatching will start with this wisget (and not the focused one)
+  output : the root_window
 
 
 

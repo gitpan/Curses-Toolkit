@@ -9,18 +9,13 @@
 use warnings;
 use strict;
 
-package Curses::Toolkit::Role;
+package Curses::Toolkit::Signal::Content;
 our $VERSION = '0.100320';
 
 
-# ABSTRACT: base class for roles, before migrating to Moose
 
+use Params::Validate qw(:all);
 
-sub new {
-    my ($class) = shift;
-    # TODO : use Exception;
-    $class eq __PACKAGE__ and die "abstract class";
-}
 
 1;
 
@@ -28,18 +23,17 @@ __END__
 
 =pod
 
-=head1 NAME
-
-Curses::Toolkit::Role - base class for roles, before migrating to Moose
-
 =head1 VERSION
 
 version 0.100320
 
+=head1 NAME
+
+Curses::Toolkit::Signal::Content - base class for signals that are related to content
+
 =head1 DESCRIPTION
 
-Base class for Roles. Thiw will disappear once I use Moose and don't need
-multiple inheriatance anmore.
+Base class for signals that are related to content
 
 =head1 CONSTRUCTOR
 

@@ -10,7 +10,7 @@ use warnings;
 use strict;
 
 package Curses::Toolkit::Event::Focus::In;
-our $VERSION = '0.093060';
+our $VERSION = '0.100320';
 
 
 # ABSTRACT: event that is related to in-focus
@@ -19,18 +19,6 @@ use parent qw(Curses::Toolkit::Event::Focus);
 
 use Params::Validate qw(:all);
 
-
-sub new {
-	my $class = shift;
-	my $self = $class->SUPER::new();
-	my %args = validate( @_,
-						 { 
-						   root_window => { isa => 'Curses::Toolkit' },
-						 }
-					   );
-	$self = bless(\%args, $class);
-	return $self;
-}
 
 # this event has to be dispatched on a specific widget, so get_matching_widget
 # returns void
@@ -48,7 +36,7 @@ Curses::Toolkit::Event::Focus::In - event that is related to in-focus
 
 =head1 VERSION
 
-version 0.093060
+version 0.100320
 
 =head1 DESCRIPTION
 
@@ -58,7 +46,8 @@ Event that is related to in-focus
 
 =head2 new
 
-  input : root_window : Curses::Toolkit : the root window object
+  input  : none
+  output : a Curses::Toolkit::Event::Focus::In object
 
 
 

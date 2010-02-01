@@ -9,18 +9,20 @@
 use warnings;
 use strict;
 
-package Curses::Toolkit::Role;
+package Curses::Toolkit::Event::Content::Changed;
 our $VERSION = '0.100320';
 
 
-# ABSTRACT: base class for roles, before migrating to Moose
+# ABSTRACT: event that is related to content change
+
+use parent qw(Curses::Toolkit::Event::Content);
+
+use Params::Validate qw(:all);
 
 
-sub new {
-    my ($class) = shift;
-    # TODO : use Exception;
-    $class eq __PACKAGE__ and die "abstract class";
-}
+# this event has to be dispatched on a specific widget, so get_matching_widget
+# returns void
+sub get_matching_widget { return }
 
 1;
 
@@ -30,7 +32,7 @@ __END__
 
 =head1 NAME
 
-Curses::Toolkit::Role - base class for roles, before migrating to Moose
+Curses::Toolkit::Event::Content::Changed - event that is related to content change
 
 =head1 VERSION
 
@@ -38,12 +40,14 @@ version 0.100320
 
 =head1 DESCRIPTION
 
-Base class for Roles. Thiw will disappear once I use Moose and don't need
-multiple inheriatance anmore.
+Event that is related to content change
 
 =head1 CONSTRUCTOR
 
-None, this is an abstract class
+=head2 new
+
+  input  : none
+  output : a Curses::Toolkit::Event::Content::Changed
 
 
 

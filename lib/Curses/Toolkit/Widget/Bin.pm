@@ -10,7 +10,7 @@ use warnings;
 use strict;
 
 package Curses::Toolkit::Widget::Bin;
-our $VERSION = '0.093060';
+our $VERSION = '0.100320';
 
 
 # ABSTRACT: a bin widget
@@ -29,8 +29,6 @@ sub add_widget {
 	  die 'there is already a child widget';
 	$self->_add_child($child_widget);
 	$child_widget->_set_parent($self);
-#	my $coordinates = $self->_get_available_space();
-#	$child_widget->_set_relatives_coordinates($coordinates);
 	# because it's a Bin container, needs to take care of rebuilding coordinates
 	# from top to bottom
 	$self->rebuild_all_coordinates();
@@ -78,7 +76,7 @@ Curses::Toolkit::Widget::Bin - a bin widget
 
 =head1 VERSION
 
-version 0.093060
+version 0.100320
 
 =head1 DESCRIPTION
 

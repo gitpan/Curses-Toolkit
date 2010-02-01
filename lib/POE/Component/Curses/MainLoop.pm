@@ -10,54 +10,33 @@ use warnings;
 use strict;
 
 package POE::Component::Curses::MainLoop;
-our $VERSION = '0.093060';
+our $VERSION = '0.100320';
 
 
 # ABSTRACT: <FIXME to be filled>
 
-use POE qw(Session);
+use Moose 0.92;
+use MooseX::FollowPBP;
+use POE;
 use Params::Validate qw(:all);
 
 use Curses::Toolkit;
 
 
-# OK so this creates the mainlopp object. It's the bridge between the POE
-# Component and the Curses Toolkit root object.
+# constructor arguments
+has session_name  => ( is => 'rw', isa => 'Str' );
+has args          => ( is => 'ro', isa => 'HashRef', default => sub{ {} } );
 
-sub new {
-	my $class = shift;
+has toolkit_root  => ( is => 'ro', isa => 'Curses::Toolkit', lazy_build => 1, init_arg => undef );
+has redraw_needed => ( is => 'rw', isa => 'Bool', default => 0, init_arg => undef );
 
-	my %params = validate( @_, { session_name => { optional => 1, type => SCALAR },
-								 args => { optional => 1, type => HASHREF, default => {} }
-							   }
-						 );
-	my $toolkit_root = Curses::Toolkit->init_root_window( %{$params{args}} );
-	my $self = bless( { toolkit_root => $toolkit_root,
-						session_name => $params{session_name},
-					  }, $class);
-	$toolkit_root->set_mainloop($self);
-	return $self;
-}
-
-sub set_session_name {
+sub _build_toolkit_root {
 	my $self = shift;
-	my ($session_name) = validate_pos( @_, { type => SCALAR } );
-	$self->{session_name} = $session_name;
-	return $self;
+	my $toolkit_root = Curses::Toolkit->init_root_window( %{ $self->get_args } );
+	$toolkit_root->set_mainloop($self);
+	return $toolkit_root;
 }
 
-sub get_toolkit_root {
-       my ($self) = @_;
-       return $self->{toolkit_root};
-}
-
-
-# sub set_session {
-# 	my $self = shift;
-# 	my ($session) = validate_pos( @_, { isa => 'POE::Session' } );
-# 	$self->{session} = $session;
-# 	return $self;
-# }
 
 
 #### Now implement the Mainloop API ####
@@ -65,25 +44,32 @@ sub get_toolkit_root {
 ## Methods called by the Curses::Toolkit objects ##
 ## They usually returns $self, or a return value
 
+# Curses::Toolkit requires a redraw to happen at smoe time
 sub needs_redraw {
 	my ($self) = @_;
 	# if redraw is already stacked, just quit
-	$self->{needs_redraw_bool} and return;
-	$self->{needs_redraw_bool} = 1;
-	$poe_kernel->post($self->{session_name}, 'redraw');
+	$self->get_redraw_needed
+	  and return;
+	$self->set_redraw_needed(1);
+	$poe_kernel->post($self->get_session_name, 'redraw');
 	return $self;
 }
 
+# Curses::Toolkit asks a code snipets to be after a delay
 sub add_delay {
 	my $self = shift;
 	my $seconds = shift;
 	my $code = shift;
-	$poe_kernel->call($self->{session_name}, 'add_delay_handler', $seconds, $code, @_);
+	$poe_kernel->call($self->get_session_name, 'add_delay_handler', $seconds, $code, @_);
 	return;
-#	return $poe_kernel->delay_set('delay_handler', $seconds, $code, @_);
-#	return $poe_kernel->delay_set('delay_handler', $seconds, $code, @_);
 }
 
+# Curses::Toolkit needs an event to pe stacked for dispatch
+sub stack_event {
+	my $self = shift;
+	$poe_kernel->post($self->get_session_name, 'stack_event', @_);
+	return;
+}
 
 ## Methods called by the POE Component session ##
 ## They usually return nothing
@@ -92,19 +78,19 @@ sub add_delay {
 
 sub event_rebuild_all {
 	my ($self) = @_;
-	$self->{toolkit_root}->_rebuild_all();	
+	$self->get_toolkit_root->_rebuild_all();	
 	return;
 }
 
 # POE::Component::Curses ordered a redraw
 sub event_redraw {
 	my ($self) = @_;
-	# set his to 0 so redraw requests that may appear in the mean time will be
-	# granted
-	$self->{needs_redraw_bool} = 0;
+	# unset this early so that redraw requests that may appear in the meantime will
+	# be granted
+	$self->set_redraw_needed(0);
 
-	$self->{toolkit_root}->render();
-	$self->{toolkit_root}->display();
+	$self->get_toolkit_root->render();
+	$self->get_toolkit_root->display();
 	return;
 }
 
@@ -113,9 +99,11 @@ sub event_resize {
 	my ($self) = @_;
 
 	use Curses::Toolkit::Event::Shape;
-	my $event = Curses::Toolkit::Event::Shape->new( type => 'change',
-													root_window => $self->{toolkit_root}, );
-	$self->{toolkit_root}->dispatch_event($event);
+	my $event = Curses::Toolkit::Event::Shape->new(
+		type        => 'change',
+		root_window => $self->get_toolkit_root
+	);
+	$self->get_toolkit_root->dispatch_event($event);
 	return;
 }
 
@@ -124,21 +112,20 @@ sub event_key {
 	my $self = shift;
 
 	my %params = validate( @_, {
-								type => 1,
-								key => 1 ,
-							   }
-						 );
+		type => 1,
+		key => 1 ,
+	} );
 
-	if ($params{type} eq 'stroke') {
-		use Curses::Toolkit::Event::Key;
+	$params{type} eq 'stroke'
+	  or return;
+
+	use Curses::Toolkit::Event::Key;
 #		print STDERR " -- Mainloop stroke : [$params{key}] \n";
-		my $event = Curses::Toolkit::Event::Key->new( type => 'stroke',
-													  params => { key => $params{key}},
-													  root_window => $self->{toolkit_root},
-													);
-		$self->{toolkit_root}->dispatch_event($event);
-	}
-	return;
+	my $event = Curses::Toolkit::Event::Key->new( type => 'stroke',
+		params      => { key => $params{key} },
+		root_window => $self->get_toolkit_root,
+	);
+	$self->get_toolkit_root->dispatch_event($event);
 }
 
 # POE::Component::Curses informed on a mouse event
@@ -146,31 +133,41 @@ sub event_mouse {
 	my $self = shift;
 
 	my %params = validate( @_, {
-								type => 1,
-								type2 => 1,
-								button => 1 ,
-								x => 1,
-								y => 1,
-								z => 1,
-							   }
-						 );
+		type => 1,
+		type2 => 1,
+		button => 1 ,
+		x => 1,
+		y => 1,
+		z => 1,
+	} );
 
-	if ($params{type} eq 'click') {
-		use Curses::Toolkit::Event::Mouse::Click;
-		$params{type} = delete $params{type2};
-		use Curses::Toolkit::Object::Coordinates;
-		$params{coordinates} = Curses::Toolkit::Object::Coordinates->new( x1 => $params{x},
-																		 x2 => $params{x},
-																		 y1 => $params{y},
-																		 y2 => $params{y},
-																	   );
-		delete @params{qw(x y z)};
-		my $event = Curses::Toolkit::Event::Mouse::Click->new( %params,
-															   root_window => $self->{toolkit_root} );
-		$self->{toolkit_root}->dispatch_event($event);
-	}
-	return;
+	$params{type} eq 'click'
+	  or return;
+	
+	use Curses::Toolkit::Event::Mouse::Click;
+	$params{type} = delete $params{type2};
+	use Curses::Toolkit::Object::Coordinates;
+	$params{coordinates} = Curses::Toolkit::Object::Coordinates->new(
+		x1 => $params{x},
+		x2 => $params{x},
+		y1 => $params{y},
+		y2 => $params{y},
+	);
+	delete @params{qw(x y z)};
+	my $event = Curses::Toolkit::Event::Mouse::Click->new(
+		%params, root_window => $self->get_toolkit_root );
+
+	$self->get_toolkit_root->dispatch_event($event);
 }
+
+# POE::Component::Curses informed on an event
+sub event_generic {
+	my $self = shift;
+	$self->get_toolkit_root->dispatch_event(@_);
+}
+
+no Moose;
+__PACKAGE__->meta->make_immutable;
 
 1;
 
@@ -184,7 +181,7 @@ POE::Component::Curses::MainLoop - <FIXME to be filled>
 
 =head1 VERSION
 
-version 0.093060
+version 0.100320
 
 =head1 SYNOPSIS
 

@@ -9,28 +9,23 @@
 use warnings;
 use strict;
 
-package Curses::Toolkit::Role;
+package Curses::Toolkit::Event::Content;
 our $VERSION = '0.100320';
 
 
-# ABSTRACT: base class for roles, before migrating to Moose
+# ABSTRACT: base class for content events
 
-
-sub new {
-    my ($class) = shift;
-    # TODO : use Exception;
-    $class eq __PACKAGE__ and die "abstract class";
-}
+use parent qw(Curses::Toolkit::Event);
 
 1;
 
-__END__
+
 
 =pod
 
 =head1 NAME
 
-Curses::Toolkit::Role - base class for roles, before migrating to Moose
+Curses::Toolkit::Event::Content - base class for content events
 
 =head1 VERSION
 
@@ -38,14 +33,11 @@ version 0.100320
 
 =head1 DESCRIPTION
 
-Base class for Roles. Thiw will disappear once I use Moose and don't need
-multiple inheriatance anmore.
+Base class for content events.
 
 =head1 CONSTRUCTOR
 
-None, this is an abstract class
-
-
+None, this is an abstract class.
 
 =head1 AUTHOR
 
@@ -59,3 +51,7 @@ This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut 
+
+
+
+__END__

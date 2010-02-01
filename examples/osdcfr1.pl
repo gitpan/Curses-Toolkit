@@ -77,10 +77,11 @@ sub main {
 	$b2->set_name('THE BUTTON 2');
 	$menu_vbox->pack_end($b2, { expand => 0 });
 	$b2->signal_connect(clicked => sub {
-							foreach my $w (@spawned_windows) {
-								$w->{theme} = $theme_switch ? Curses::Toolkit::Theme::Default::Color::Pink->new($w)
-								                            : Curses::Toolkit::Theme::Default->new($w);
-								$w->set_theme_property(title_width => 80 );
+							foreach my $w (@spawned_windows, $menu_vbox) {
+								$w->set_theme_name( ($theme_switch ? 'Curses::Toolkit::Theme::Default::Color::Pink'
+								                                   : 'Curses::Toolkit::Theme::Default'), 1);
+								defined $w->get_theme_property('title_width')
+								  and $w->set_theme_property(title_width => 80 );
 							}
 							$theme_switch = !$theme_switch;
 							$root->needs_redraw();
@@ -89,8 +90,8 @@ sub main {
 	$menu_vbox->pack_end($b3, { expand => 0 });
 	$b3->signal_connect(clicked => sub {
 							foreach my $w (@spawned_windows) {
-								$w->{theme} = $theme_switch ? Curses::Toolkit::Theme::Default::Color::Pink->new($w)
-								                            : Curses::Toolkit::Theme::Default->new($w);
+								$w->set_theme_name( ($theme_switch ? 'Curses::Toolkit::Theme::Default::Color::Pink'
+								                                   : 'Curses::Toolkit::Theme::Default'), 1);
 								$w->set_theme_property(title_width => 80 );
 								$theme_switch = !$theme_switch;
 							}

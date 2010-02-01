@@ -10,7 +10,7 @@ use warnings;
 use strict;
 
 package Curses::Toolkit::Object::Coordinates;
-our $VERSION = '0.093060';
+our $VERSION = '0.100320';
 
 
 # ABSTRACT: simple coordinates class
@@ -27,7 +27,7 @@ use overload
 
 sub _stringify {
 	my ($self) = @_;
-	return ref($self);
+	return $self->width . 'x' . $self->height . '+' . $self->x1 . 'x' . $self->y1;
 }
 
 sub _equals {
@@ -336,7 +336,7 @@ Curses::Toolkit::Object::Coordinates - simple coordinates class
 
 =head1 VERSION
 
-version 0.093060
+version 0.100320
 
 =head1 DESCRIPTION
 
@@ -540,7 +540,7 @@ Return true if the coordinates is inside the given coordinates
 
 =head2 is_in_widget
 
-Return true if the coordinates is in side the give widget
+Return true if the coordinates is inside the given widget
 
   input  : Curses::Toolkit::Widget : the widget
   output : true or false

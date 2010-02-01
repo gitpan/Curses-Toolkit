@@ -10,7 +10,7 @@ use warnings;
 use strict;
 
 package Curses::Toolkit::Widget::Window;
-our $VERSION = '0.093060';
+our $VERSION = '0.100320';
 
 
 # ABSTRACT: a window
@@ -257,10 +257,7 @@ sub bring_to_front {
 	my ($self) = @_;
 	my $root_window = $self->get_root_window();
 	defined $root_window or return;
-	my $last_stack = $root_window->{last_stack};
-	$root_window->{last_stack}++;
-	$self->set_property(window => 'stack', $root_window->{last_stack});
-	$self->needs_redraw();
+	$root_window->bring_window_to_front($self);
 	return $self;
 }
 
@@ -340,7 +337,9 @@ sub draw {
 
 	my $o2 = $self->{_title_offset};
 
-	my $title_to_display = substr($title, $o2, $w4 );
+	my $title_to_display = '';
+	$o2 < length $title
+	  and $title_to_display = substr($title, $o2, $w4 );
 	
 
 	my $o1 = 0;
@@ -364,6 +363,17 @@ sub draw {
 
 #	$theme->draw_corner_lr($c->x2() - 1, $c->y2() - 1);
 	$theme->draw_resize($c->x2() - 1, $c->y2() - 1, { clicked => $self->{_resize_pressed} } );
+}
+
+
+sub get_visible_shape {
+	my ($self) = @_;
+	my $shape = $self->get_coordinates->clone;
+	my $root_window = $self->get_root_window
+	  or return $shape;
+	my $root_shape = $root_window->get_shape;
+	$shape->restrict_to($root_shape);
+	return $shape;
 }
 
 sub _compute_draw_informations {
@@ -536,11 +546,53 @@ Curses::Toolkit::Widget::Window - a window
 
 =head1 VERSION
 
-version 0.093060
+version 0.100320
+
+=head1 Appearence
+
+  +-[ title ]------------+
+  |                      |
+  |                      |
+  |                      |
+  |                      |
+  |                      |
+  |                      |
+  |                      |
+  |                      |
+  +----------------------#
 
 =head1 DESCRIPTION
 
-This is a window widget
+This is a window widget. This widget is important, as it's the only one that
+you can add on the root window. So all your graphical interface should be
+contained in one or more window.
+
+=head1 SYNOPSIS
+
+  # create a window in the center of the screen
+  my $window = Curses::Toolkit::Widget::Window
+    ->new()
+    ->set_name('main_window')
+    ->set_title('This is a title');
+    ->set_coordinates(x1 => '25%', y1 => '25%'
+                      x2 => '75%', y2 => '75%');
+
+  # create a fullscreen window
+  my $window = Curses::Toolkit::Widget::Window
+    ->new()
+    ->set_name('main_window')
+    ->set_theme_property(border_width => 0); # set no border
+    ->set_coordinates(x1 => 0, y1 => 0
+                      x2 => '100%', y2 => '100%');
+
+  # add one widget to the window. You can add only one widget to the window.
+  # See L<Curses::Toolkit::Widget::VBox> and <Curses::Toolkit::Widget::HBox> to
+  # pack widgets
+  $window->add_widget($vbox)
+
+  # add the window to the root window. See L<Curses::Toolkit> to see how to
+  # spawn a root window
+  $root->add_window($window);
 
 =head1 CONSTRUCTOR
 
@@ -664,6 +716,15 @@ Curses::Toolkit
 
 
 
+=head2 get_visible_shape
+
+Gets the Coordinates of the part of the window which is visible
+
+  input  : none
+  output : the shape (Curses::Toolkit::Object::Coordinates)
+
+
+
 =head2 set_type
 
 Set the type of the window. Default is 'normal'.
@@ -687,15 +748,23 @@ Get the type of the window
 
 To set/get a theme properties, you should do :
 
-$window->set_theme_property(property_name => $property_value);
-$value = $window->get_theme_property('property_name')
+  $window->set_theme_property(property_name => $property_value);
+  $value = $window->get_theme_property('property_name');
 
 Here is the list of properties related to the window, that can be changed in
 the associated theme. See the Curses::Toolkit::Theme class used for the default
 (default class to look at is Curses::Toolkit::Theme::Default)
 
 Don't forget to look at properties from the parent class, as these are also
-inherit of !
+inherited from !
+
+=head2 border_width (inherited)
+
+The width of the border of the window.
+
+Example :
+  # set window to have no border
+  $button->set_theme_property(border_width => 0 );
 
 =head2 title_width
 

@@ -10,7 +10,7 @@ use warnings;
 use strict;
 
 package Curses::Toolkit::Widget;
-our $VERSION = '0.093060';
+our $VERSION = '0.100320';
 
 
 # ABSTRACT: base class for widgets
@@ -142,9 +142,19 @@ sub get_event_listeners {
 # given its index, unlink the event listener from the widget
 # input  : index
 # output : the widget
+
 sub _remove_event_listener {
 	my ($self, $index) = @_;
 	delete $self->{event_listeners}{$index};
+	return $self;
+}
+
+
+sub fire_event {
+	my $self = shift;
+	my $root_window = $self->get_root_window()
+	  or return $self;
+	$root_window->fire_event(@_);
 	return $self;
 }
 
@@ -179,10 +189,25 @@ sub get_parent {
 
 sub set_theme_name {
 	my $self = shift;
-    my ($theme_name) = validate_pos( @_, { type => SCALAR }
-									 # isa => 'Curses::Toolkit::Theme' }
-								   );
+    my ($theme_name, $recurse) = validate_pos( @_, { type => SCALAR },
+											       { type => BOOLEAN, optional => 1 },
+											 );
 	$self->{theme_name} = $theme_name;
+	$self->{theme} = undef;
+	if ($recurse) {
+		if ($self->isa('Curses::Toolkit::Widget::Container')) {		
+			my @children = $self->get_children();
+			# to avoid rebuilding coordinates at every stage of the recursion,
+			# rebuild them only at leaves
+			@children
+			  or $self->rebuild_all_coordinates();
+			foreach my $child (@children) {
+				$child->set_theme_name($theme_name, $recurse);
+			}
+		}
+	} else {
+		$self->rebuild_all_coordinates();
+	}
 	return $self;
 }
 
@@ -209,8 +234,8 @@ sub get_theme {
 		if (defined $theme_name) {
 			$self->{theme} = $self->get_theme_name()->new($self);
 		} else {
-use Curses::Toolkit::Theme::Default;
-return Curses::Toolkit::Theme::Default->new($self);
+			my $theme_name = Curses::Toolkit->get_default_theme_name();
+			return $theme_name->new($self);
 		}
 	}
 	return $self->{theme};
@@ -226,6 +251,17 @@ sub get_window {
 	}
 	return $widget;
 }
+
+
+sub get_root_window {
+	my ($self) = @_;
+	my $window = $self->get_window()
+	  or return;
+	my $root_window = $window->get_root_window()
+	  or return;
+	return $root_window;
+}
+
 # =head2 set_border_width
 
 # Sets the border width
@@ -266,6 +302,16 @@ sub get_relatives_coordinates {
 	defined $self->{relatives_coordinates} or
 	  die "widget of name '" . $self->get_name() . "' (type '" . ref($self) . "') has no relatives coordinate\n";
 	return $self->{relatives_coordinates};
+}
+
+
+sub get_visible_shape {
+	my ($self) = @_;
+	my $shape = $self->get_coordinates->clone;
+	my $parent = $self->get_parent;
+	defined $parent
+	  and $shape->restrict_to($parent->get_visible_shape);
+	return $shape;
 }
 
 
@@ -493,22 +539,48 @@ sub _recursive_f2 {
 # }
 
 
+
 # default widget signals
 sub possible_signals {
 	my ($self) = @_;
 	$self->isa('Curses::Toolkit::Role::Focusable')
-	  and return ( focused => 'Curses::Toolkit::Signal::Focused' );
+	  and return ( focus_changed => 'Curses::Toolkit::Signal::Focused',
+				   focused_in => 'Curses::Toolkit::Signal::Focused::In',
+				   focused_out => 'Curses::Toolkit::Signal::Focused::Out',
+				 );
 	return ();
 }
 
+
 sub signal_connect {
 	my $self = shift;
-	my ($signal_name, $code_ref) = validate_pos( @_, { type => SCALAR },
-												      { type => CODEREF },
-												);
-#	my %s = $self->_possible_signal_names();
-	
-	$self->_bind_signal($signal_name, $code_ref);
+	my ($signal_name, $code_ref, @arguments) = validate_pos( @_, { type => SCALAR },
+															     { type => CODEREF },
+															     (0) x (@_ - 2),
+														   );
+	$self->_bind_signal($signal_name, $code_ref, @arguments);
+	return $self;
+}
+
+sub _bind_signal {
+	my $self = shift;
+	my ($signal_name, $code_ref, @arguments) = validate_pos( @_, { type => SCALAR },
+															     { type => CODEREF },
+															     (0) x (@_ - 2),
+														   );
+	my %signals = $self->possible_signals();
+	my $signal_class = $signals{$signal_name};
+	defined $signal_class
+	  or die "signal '$signal_name' doesn't exists for widget of type " . ref($self) . ". Possible signals are : " . join(', ', keys %signals);
+
+	require UNIVERSAL::require;
+	$signal_class->require
+	  or die $@;
+	$self->add_event_listener($signal_class->generate_listener( widget => $self,
+																code_ref => $code_ref,
+																arguments => [ @arguments ],
+															  )
+							 );
 	return $self;
 }
 
@@ -524,7 +596,7 @@ Curses::Toolkit::Widget - base class for widgets
 
 =head1 VERSION
 
-version 0.093060
+version 0.100320
 
 =head1 DESCRIPTION
 
@@ -655,7 +727,8 @@ Return the theme property or the hash of theme properties of a widget.
   $widget->add_event_listener($event_listener);
 
 Adds an event listener to the widget. That allows the widget to respond to some
-events
+events. You probably don't want to use this method. Please see signal_connect
+and possible_signals instead.
 
   input : a Curses::Toolkit::EventListener
   output : the root window
@@ -670,6 +743,19 @@ Returns the list of listeners connected to this widget.
 
   input : none
   output : an ARRAY of Curses::Toolkit::EventListener
+
+
+
+=head2 fire_event
+
+  $widget->fire_event($event, $widget, 1);
+
+Sends an event to the mainloop so it gets dispatched. You probably don't want
+to use this method. Please see signal_connect and possible_signals instead.
+
+  input  : a Curses::Toolkit::Event
+           optional, a widget. if given, the event will apply on it only
+  output : the widget
 
 
 
@@ -704,6 +790,7 @@ Returns the parent of the widget
 Set a specific display theme name.
 
   input  : a STRING, name of a class inheriting from Curses::Toolkit::Theme
+           a BOOLEAN, if true, recursively sets the themes to the children
   output : the widget
 
 
@@ -733,10 +820,22 @@ from the widget's theme name (see L<get_theme_name>).
   my $window = $widget->get_window();
 
 If the widget has been added in a window, get_window() will return this window.
-If the widget is not part of window, undef is returned.
+If the widget is not part of window, void returned.
 
   input  : none
-  output : the window in which the widget is (Curses::Toolkit::Widget::Window), or undef
+  output : the window in which the widget is (Curses::Toolkit::Widget::Window), or void
+
+
+
+=head2 get_root_window
+
+  my $window = $widget->get_root_window();
+
+If the widget has been added in a window, get_root_window() will return the root window.
+If the widget is not part of window, void is returned.
+
+  input  : none
+  output : the root window (Curses::Toolkit), or void
 
 
 
@@ -755,6 +854,15 @@ Get the relative coordinates (see L<Curses::Toolkit::Object::Coordinates> )
 
   input  : none
   output : a Curses::Toolkit::Object::Coordinates object
+
+
+
+=head2 get_visible_shape
+
+Gets the Coordinates of the part of the widget which is visible
+
+  input  : none
+  output : the shape (Curses::Toolkit::Object::Coordinates) or void
 
 
 
@@ -797,6 +905,46 @@ Returns the widget next in the focus chain
 
   input : optional, a true value to start searching from $widget
   output : the next focused widget
+
+
+
+=head2 possible_signals
+
+my @signals = keys $widget->possible_signals();
+
+returns the possible signals that can be used. See S<signal_connect> to bind
+signals to action
+
+  input  : none
+  output : HASH, keys are signal names, values are signal classes
+
+
+
+=head2 possible_signals
+
+  # quick
+  $widget->signal_connect(
+      clicked => sub { do_something }
+  );
+
+  # additional args passed
+  $widget->signal_connect(
+      clicked => \&click_function, $additional, $arguments
+  );
+
+  # the corresponding method
+  sub click_function {
+    my ($event, $widget, $additional, $arguments) = @_;
+    print STDERR "the signal came from " . ref($widget) . "\n";
+    do_stuff(...)
+  }
+
+Connects an action to a signal.
+
+  input  : STRING, signal_name,
+           CODEREF, code reference to be executed,
+           LIST, additional arguments
+  output : HASH, keys are siagnal names, values are signal classes
 
 
 
