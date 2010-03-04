@@ -10,7 +10,8 @@ use warnings;
 use strict;
 
 package Curses::Toolkit::Widget::HPaned;
-our $VERSION = '0.100320';
+our $VERSION = '0.100630';
+
 
 
 # ABSTRACT: a container with two panes arranged horizontally
@@ -22,70 +23,70 @@ use Params::Validate qw(:all);
 
 
 sub _p1 {
-	my ($self, $c) = @_;
-	return $c->x1();
+    my ( $self, $c ) = @_;
+    return $c->x1();
 }
 
 sub _p2 {
-	my ($self, $c) = @_;
-	return $c->y2();
+    my ( $self, $c ) = @_;
+    return $c->y2();
 }
 
 sub _p3 {
-	my ($self, $c) = @_;
-	return $c->width();
+    my ( $self, $c ) = @_;
+    return $c->width();
 }
 
 sub _p4 {
-	my ($self, $c, $gp) = @_;
-	return (x2 => $c->x1() + $gp);
+    my ( $self, $c, $gp ) = @_;
+    return ( x2 => $c->x1() + $gp );
 }
 
 sub _p5 {
-	my ($self, $c, $gp, $gw) = @_;
-	return (x1 => $c->x1() + $gp + $gw);
+    my ( $self, $c, $gp, $gw ) = @_;
+    return ( x1 => $c->x1() + $gp + $gw );
 }
 
 sub _p6 {
-	my ($self, $gp, $gw) = @_;
-	return (x2 => $gp + $gw, y2 => 1);
+    my ( $self, $gp, $gw ) = @_;
+    return ( x2 => $gp + $gw, y2 => 1 );
 }
 
 sub _p7 {
-	my ($self, $theme, $c, $i, $gp, $attr) = @_;
-	$theme->draw_vline($c->x1() + $gp + $i, $c->y1(), $c->height(), $attr);
-	return;
+    my ( $self, $theme, $c, $i, $gp, $attr ) = @_;
+    $theme->draw_vline( $c->x1() + $gp + $i, $c->y1(), $c->height(), $attr );
+    return;
 }
 
 sub _p8 {
-	my ($self, $c, $gp, $gw) = @_;
-	return (x2 => $c->x1() + $gp + $gw);
+    my ( $self, $c, $gp, $gw ) = @_;
+    return ( x2 => $c->x1() + $gp + $gw );
 }
 
 sub _p9 {
-	my ($self, $c) = @_;
-	return (y2 => $c->y2());
+    my ( $self, $c ) = @_;
+    return ( y2 => $c->y2() );
 }
 
 sub _p10 {
-	my ($self, $c) = @_;
-	return (x1 => $c->x1());
+    my ( $self, $c ) = @_;
+    return ( x1 => $c->x1() );
 }
 
 sub _p11 {
-	my ($self, $c1, $c2) = @_;
-	return (x2 => $c1->x1() + $c1->width() + $c2->width());
+    my ( $self, $c1, $c2 ) = @_;
+    return ( x2 => $c1->x1() + $c1->width() + $c2->width() );
 }
 
 sub _p12 {
-	my ($self, $c) = @_;
-	return (y2 => $c->y1() + 1);
+    my ( $self, $c ) = @_;
+    return ( y2 => $c->y1() + 1 );
 }
 
 sub _p13 {
-	my ($self, $c1, $c2) = @_;
-	use List::Util qw(max);
-	return (y2 => max($c1->y2(), $c2->y2()));
+    my ( $self, $c1, $c2 ) = @_;
+    use List::Util qw(max);
+    return ( y2 => max( $c1->y2(), $c2->y2() ) );
 }
 
 
@@ -101,7 +102,7 @@ Curses::Toolkit::Widget::HPaned - a container with two panes arranged horizontal
 
 =head1 VERSION
 
-version 0.100320
+version 0.100630
 
 =head1 Appearence
 

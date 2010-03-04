@@ -1,0 +1,91 @@
+#!/usr/bin/perl
+# 
+# This file is part of Curses-Toolkit
+# 
+# This software is copyright (c) 2008 by Damien "dams" Krotkine.
+# 
+# This is free software; you can redistribute it and/or modify it under
+# the same terms as the Perl 5 programming language system itself.
+# 
+
+use strict;
+use warnings;
+
+use FindBin qw( $Bin );
+use lib "$Bin/../../lib";
+main() unless caller;
+
+sub main {
+    use POE::Component::Curses;
+
+    use Curses::Toolkit::Widget::Window;
+    use Curses::Toolkit::Widget::Label;
+    use Curses::Toolkit::Widget::HBox;
+    use Curses::Toolkit::Widget::VBox;
+    use Curses::Toolkit::Widget::Border;
+    use Curses::Toolkit::Widget::Button;
+    use Curses::Toolkit::Widget::HProgressBar;
+
+    my $root = POE::Component::Curses->spawn;
+
+    my $bar;
+    {
+        my $window1 =
+          Curses::Toolkit::Widget::Window->new->set_name('window')->set_title("manual progress bar")
+              ->set_coordinates( x1 => 0, y1 => 0, x2 => '100%', y2 => 7 );
+        $root->add_window($window1);
+
+        $window1->add_widget(
+          Curses::Toolkit::Widget::VBox->new
+          ->pack_end(
+            Curses::Toolkit::Widget::HBox->new
+            ->pack_end(
+              Curses::Toolkit::Widget::Border->new
+              ->add_widget(
+                Curses::Toolkit::Widget::VBox->new
+                ->pack_end(
+                  Curses::Toolkit::Widget::Label->new->set_text('Click to decrease'),
+                  { expand => 0 },
+                )
+                ->pack_end(
+                  Curses::Toolkit::Widget::Button->new_with_label('-')->signal_connect( clicked => 
+                      sub {
+                          $bar->set_position( $bar->get_position - 1 );
+                      }),
+                  { expand => 0 },
+                )
+              ),
+              { expand => 0 },
+            )
+            ->pack_end(
+              $bar  = Curses::Toolkit::Widget::HProgressBar->new,
+              { expand => 1 },
+            )
+            ->pack_end(
+              Curses::Toolkit::Widget::Border->new
+              ->add_widget(
+                Curses::Toolkit::Widget::VBox->new
+                ->pack_end(
+                  Curses::Toolkit::Widget::Label->new->set_text('Click to increase'),
+                  { expand => 0 },
+                )
+                ->pack_end(
+                  Curses::Toolkit::Widget::Button->new_with_label('+')->signal_connect( clicked =>
+                      sub {
+                          $bar->set_position( $bar->get_position + 1 );
+                      }),
+                  { expand => 0 },
+                )
+              ),
+              { expand => 0 },
+            ),
+            { expand => 1 },
+          )
+          ->pack_end(
+			Curses::Toolkit::Widget::Button->new_with_label('Exit')->signal_connect( clicked => sub {exit} ),
+			{ expand => 0 }
+          )
+        );
+    }
+    POE::Kernel->run();
+}

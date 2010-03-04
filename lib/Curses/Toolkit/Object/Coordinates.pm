@@ -10,7 +10,8 @@ use warnings;
 use strict;
 
 package Curses::Toolkit::Object::Coordinates;
-our $VERSION = '0.100320';
+our $VERSION = '0.100630';
+
 
 
 # ABSTRACT: simple coordinates class
@@ -20,101 +21,112 @@ use parent qw(Curses::Toolkit::Object);
 use Params::Validate qw(:all);
 
 use overload
-  '+' => '_clone_add',
-  '-' => '_clone_substract',
-  '""' => '_stringify',
-  '==' => '_equals';
+    '+'  => '_clone_add',
+    '-'  => '_clone_substract',
+    '""' => '_stringify',
+    '==' => '_equals';
 
 sub _stringify {
-	my ($self) = @_;
-	return $self->width . 'x' . $self->height . '+' . $self->x1 . 'x' . $self->y1;
+    my ($self) = @_;
+    return $self->width . 'x' . $self->height . '+' . $self->x1 . 'x' . $self->y1;
 }
 
 sub _equals {
-	my ($c1, $c2) = @_;
-	return $c1->x1() == $c2->x1() &&
-           $c1->y1() == $c2->y1() &&
-           $c1->x2() == $c2->x2() &&
-           $c1->y2() == $c2->y2()
+    my ( $c1, $c2 ) = @_;
+    return
+           $c1->x1() == $c2->x1()
+        && $c1->y1() == $c2->y1()
+        && $c1->x2() == $c2->x2()
+        && $c1->y2() == $c2->y2();
 }
 
 
 sub new {
-	my $class = shift;
+    my $class = shift;
 
-	if (ref($_[0]) eq __PACKAGE__) {
-		my $c = $_[0];
-		my $self = { x1 => $c->{x1}, y1 => $c->{y1},
-					 x2 => $c->{x2}, y2 => $c->{y2},
-				   };
-		return bless $self, $class;
-	}
-	my %params = @_;
-	if (exists $params{width} || exists $params{height}) {
-		validate(@_, { x1 => { type => SCALAR }, y1 => { type => SCALAR },
-					   width => { type => SCALAR }, height => { type => SCALAR },
-					   normalize => { optional => 1, type => BOOLEAN },
-					 }
-				);
-		$params{x2} = $params{x1} + $params{width};
-		$params{y2} = $params{y1} + $params{height};
-		defined $params{normalize} or $params{normalize} = 1;
-	} else {
-		validate(@_, { x1 => { type => SCALAR | CODEREF }, y1 => { type => SCALAR | CODEREF },
-					   x2 => { type => SCALAR | CODEREF }, y2 => { type => SCALAR | CODEREF },
-					   normalize => { optional => 1, type => BOOLEAN },
-					 }
-				);
-	}
-	my $self = bless \%params, $class;
-	$params{normalize} and $self->_normalize();
-	return $self; 
+    if ( ref( $_[0] ) eq __PACKAGE__ ) {
+        my $c    = $_[0];
+        my $self = {
+            x1 => $c->{x1}, y1 => $c->{y1},
+            x2 => $c->{x2}, y2 => $c->{y2},
+        };
+        return bless $self, $class;
+    }
+    my %params = @_;
+    if ( exists $params{width} || exists $params{height} ) {
+        validate(
+            @_,
+            {   x1        => { type     => SCALAR }, y1     => { type => SCALAR },
+                width     => { type     => SCALAR }, height => { type => SCALAR },
+                normalize => { optional => 1,        type   => BOOLEAN },
+            }
+        );
+        $params{x2} = $params{x1} + $params{width};
+        $params{y2} = $params{y1} + $params{height};
+        defined $params{normalize} or $params{normalize} = 1;
+    } else {
+        validate(
+            @_,
+            {   x1        => { type     => SCALAR | CODEREF }, y1   => { type => SCALAR | CODEREF },
+                x2        => { type     => SCALAR | CODEREF }, y2   => { type => SCALAR | CODEREF },
+                normalize => { optional => 1,                  type => BOOLEAN },
+            }
+        );
+    }
+    my $self = bless \%params, $class;
+    $params{normalize} and $self->_normalize();
+    return $self;
 }
 
 
 sub new_zero {
-	my ($class) = @_;
-	return $class->new( x1 => 0, y1 => 0,
-						x2 => 0, y2 => 0 );
+    my ($class) = @_;
+    return $class->new(
+        x1 => 0, y1 => 0,
+        x2 => 0, y2 => 0
+    );
 }
 
 
 sub clone {
-	my ($self) = @_;
-	return ref($self)->new($self);
+    my ($self) = @_;
+    return ref($self)->new($self);
 }
 
 
 sub set {
-	my $self = shift;
-	my %params = validate(@_, { x1 => { type => SCALAR | CODEREF, optional => 1 }, y1 => { type => SCALAR | CODEREF, optional => 1 },
-								x2 => { type => SCALAR | CODEREF, optional => 1 }, y2 => { type => SCALAR | CODEREF, optional => 1 },
-							  });
-	keys %params or die "One of (x1, y1, x2, y2) argument must be passed";
-	@{$self}{keys %params} = values %params;
-	$self->_normalize();
-	return $self;
+    my $self   = shift;
+    my %params = validate(
+        @_,
+        {   x1 => { type => SCALAR | CODEREF, optional => 1 }, y1 => { type => SCALAR | CODEREF, optional => 1 },
+            x2 => { type => SCALAR | CODEREF, optional => 1 }, y2 => { type => SCALAR | CODEREF, optional => 1 },
+        }
+    );
+    keys %params or die "One of (x1, y1, x2, y2) argument must be passed";
+    @{$self}{ keys %params } = values %params;
+    $self->_normalize();
+    return $self;
 }
 
 # make sure the coordinate is positive
 sub _normalize {
-	my ($self) = @_;
+    my ($self) = @_;
 
-	$self->x1() <= $self->x2() or ($self->{x1}, $self->{x2}) = ($self->{x2}, $self->{x1});
-	$self->y1() <= $self->y2() or ($self->{y1}, $self->{y2}) = ($self->{y2}, $self->{y1});
-	return;
+    $self->x1() <= $self->x2() or ( $self->{x1}, $self->{x2} ) = ( $self->{x2}, $self->{x1} );
+    $self->y1() <= $self->y2() or ( $self->{y1}, $self->{y2} ) = ( $self->{y2}, $self->{y1} );
+    return;
 }
 
 
 sub width {
-	my ($self) = @_;
-	return $self->x2() - $self->x1();
+    my ($self) = @_;
+    return $self->x2() - $self->x1();
 }
 
 
 sub height {
-	my ($self) = @_;
-	return $self->y2() - $self->y1();
+    my ($self) = @_;
+    return $self->y2() - $self->y1();
 }
 
 
@@ -125,35 +137,40 @@ sub y2 { my ($self) = @_; my $y2 = $self->{y2}; ref $y2 eq 'CODE' ? $y2->($self)
 
 
 sub add {
-	my ($self, $c) = @_;
+    my ( $self, $c ) = @_;
 
-	if (!ref $c) {
-		# argument is a constant
-		@{$self}{qw(x1 y1 x2 y2)} = ( $self->x1() + $c, $self->y1() + $c,
-									  $self->x2() + $c, $self->y2() + $c,
-									);
-	} elsif (ref $c eq __PACKAGE__) {
-		# argument is a coordinate object
-		@{$self}{qw(x1 x2 y1 y2)} = ( $self->x1() + $c->x1(), $self->y1() + $c->y1(),
-									  $self->x2() + $c->x2(), $self->y2() + $c->y2(),
-									);
-	} elsif (ref $c eq 'HASH') {
-		# argument is a hash
-		while ( my ($k, $v) = each %$c) {
-			$self->{$k} = $self->$k() + $v;
-		}
-	} else {
-		die "Argument type ('" . ref $c . "') is not supported in Coordinate addition";
-	}
-	$self->_normalize();
-	return $self;
+    if ( !ref $c ) {
+
+        # argument is a constant
+        @{$self}{qw(x1 y1 x2 y2)} = (
+            $self->x1() + $c, $self->y1() + $c,
+            $self->x2() + $c, $self->y2() + $c,
+        );
+    } elsif ( ref $c eq __PACKAGE__ ) {
+
+        # argument is a coordinate object
+        @{$self}{qw(x1 x2 y1 y2)} = (
+            $self->x1() + $c->x1(), $self->y1() + $c->y1(),
+            $self->x2() + $c->x2(), $self->y2() + $c->y2(),
+        );
+    } elsif ( ref $c eq 'HASH' ) {
+
+        # argument is a hash
+        while ( my ( $k, $v ) = each %$c ) {
+            $self->{$k} = $self->$k() + $v;
+        }
+    } else {
+        die "Argument type ('" . ref $c . "') is not supported in Coordinate addition";
+    }
+    $self->_normalize();
+    return $self;
 }
 
 sub _clone_add {
-	my $self = shift;
-	my $clone = $self->clone();
-	$clone->add(@_);
-	return $clone;
+    my $self  = shift;
+    my $clone = $self->clone();
+    $clone->add(@_);
+    return $clone;
 }
 
 # sub add {
@@ -165,7 +182,7 @@ sub _clone_add {
 # 							 );
 
 # 	# argument is a coordinate object
-# 	ref $c eq $self and 
+# 	ref $c eq $self and
 # 	  return $self->set( x1 => $self->x1() + $c->x1(), y1 => $self->y1() + $c->y1(),
 # 							   x2 => $self->x2() + $c->x2(), y2 => $self->y2() + $c->y2(),
 # 							 );
@@ -174,41 +191,46 @@ sub _clone_add {
 # 	  return $self->set( x1 => $self->x1() + $c->{x1}, y1 => $self->y1() + $c->{y1},
 # 							   x2 => $self->x2() + $c->{x2}, y2 => $self->y2() + $c->{y2},
 # 							 );
-	
+
 # 	die "Argument type ('" . ref $c . "') is not supported in Coordinate addition";
 # }
 
 
 sub substract {
-	my ($self, $c) = @_;
+    my ( $self, $c ) = @_;
 
-	if (!ref $c) {
-		# argument is a constant
-		@{$self}{qw(x1 y1 x2 y2)} = ( $self->x1() - $c, $self->y1() - $c,
-									  $self->x2() - $c, $self->y2() - $c,
-									);
-	} elsif (ref $c eq __PACKAGE__) {
-		# argument is a coordinate object
-		@{$self}{qw(x1 x2 y1 y2)} = ( $self->x1() - $c->x1(), $self->y1() - $c->y1(),
-									  $self->x2() - $c->x2(), $self->y2() - $c->y2(),
-									);
-	} elsif (ref $c eq 'HASH') {
-		# argument is a hash
-		while ( my ($k, $v) = each %$c) {
-			$self->{$k} = $self->$k() - $v;
-		}
-	} else {
-		die "Argument type ('" . ref $c . "') is not supported in Coordinate addition";
-	}
-	$self->_normalize();
-	return $self;
+    if ( !ref $c ) {
+
+        # argument is a constant
+        @{$self}{qw(x1 y1 x2 y2)} = (
+            $self->x1() - $c, $self->y1() - $c,
+            $self->x2() - $c, $self->y2() - $c,
+        );
+    } elsif ( ref $c eq __PACKAGE__ ) {
+
+        # argument is a coordinate object
+        @{$self}{qw(x1 x2 y1 y2)} = (
+            $self->x1() - $c->x1(), $self->y1() - $c->y1(),
+            $self->x2() - $c->x2(), $self->y2() - $c->y2(),
+        );
+    } elsif ( ref $c eq 'HASH' ) {
+
+        # argument is a hash
+        while ( my ( $k, $v ) = each %$c ) {
+            $self->{$k} = $self->$k() - $v;
+        }
+    } else {
+        die "Argument type ('" . ref $c . "') is not supported in Coordinate addition";
+    }
+    $self->_normalize();
+    return $self;
 }
 
 sub _clone_substract {
-	my $self = shift;
-	my $clone = $self->clone();
-	$clone->substract(@_);
-	return $clone;
+    my $self  = shift;
+    my $clone = $self->clone();
+    $clone->substract(@_);
+    return $clone;
 }
 
 # sub substract {
@@ -234,93 +256,113 @@ sub _clone_substract {
 
 
 sub restrict_to {
-	my $self = shift;
-	my ($c) = validate_pos( @_, { isa => 'Curses::Toolkit::Object::Coordinates' } );
-	$self->x1() < $c->x1() and $self->{x1} = $c->{x1};
-	$self->x1() > $c->x2() and $self->{x1} = $c->{x2};
+    my $self = shift;
+    my ($c) = validate_pos( @_, { isa => 'Curses::Toolkit::Object::Coordinates' } );
 
-	$self->x2() > $c->x2() and $self->{x2} = $c->{x2};
-	$self->x2() < $c->x1() and $self->{x2} = $c->{x1};
+    $self->x1() < $c->x1() and $self->{x1} = $c->{x1};
+    $self->x1() > $c->x2() and $self->{x1} = $c->{x2};
 
-	$self->y1() < $c->y1() and $self->{y1} = $c->{y1};
-	$self->y1() > $c->y2() and $self->{y1} = $c->{y2};
+    $self->x2() > $c->x2() and $self->{x2} = $c->{x2};
+    $self->x2() < $c->x1() and $self->{x2} = $c->{x1};
 
-	$self->y2() > $c->y2() and $self->{y2} = $c->{y2};
-	$self->y2() < $c->y1() and $self->{y2} = $c->{y1};
+    $self->y1() < $c->y1() and $self->{y1} = $c->{y1};
+    $self->y1() > $c->y2() and $self->{y1} = $c->{y2};
 
-	return $self;
+    $self->y2() > $c->y2() and $self->{y2} = $c->{y2};
+    $self->y2() < $c->y1() and $self->{y2} = $c->{y1};
+
+    return $self;
+}
+
+
+sub grow_to {
+    my $self = shift;
+    my ($c) = validate_pos( @_, { isa => 'Curses::Toolkit::Object::Coordinates' } );
+
+    $self->x1() > $c->x1() and $self->{x1} = $c->{x1};
+    $self->x2() < $c->x2() and $self->{x2} = $c->{x2};
+
+    $self->y1() > $c->y1() and $self->{y1} = $c->{y1};
+    $self->y2() < $c->y2() and $self->{y2} = $c->{y2};
+
+    return $self;
 }
 
 
 sub translate {
-	my $self = shift;
+    my $self = shift;
 
-	my %params = validate(@_, { x => { type => SCALAR, optional => 1 },
-								y => { type => SCALAR, optional => 1 },
-							  });
-	defined $params{x} || $params{y} or
-	  die "needs at least one of 'x' or 'y'";
+    my %params = validate(
+        @_,
+        {   x => { type => SCALAR, optional => 1 },
+            y => { type => SCALAR, optional => 1 },
+        }
+    );
+    defined $params{x} || $params{y}
+        or die "needs at least one of 'x' or 'y'";
 
-	if (defined $params{x}) {
-		$self->{x1} += $params{x};
-		$self->{x2} += $params{x};
-	}
-	if (defined $params{y}) {
-		$self->{y1} += $params{y};
-		$self->{y2} += $params{y};
-	}
-	return $self;
+    if ( defined $params{x} ) {
+        $self->{x1} += $params{x};
+        $self->{x2} += $params{x};
+    }
+    if ( defined $params{y} ) {
+        $self->{y1} += $params{y};
+        $self->{y2} += $params{y};
+    }
+    return $self;
 }
 
 
 sub translate_up {
-	my ($self, $value) = @_;
-	return $self->translate(y => - abs $value);
+    my ( $self, $value ) = @_;
+    return $self->translate( y => -abs $value );
 }
 
 
 sub translate_down {
-	my ($self, $value) = @_;
-	return $self->translate(y => abs $value);
+    my ( $self, $value ) = @_;
+    return $self->translate( y => abs $value );
 }
 
 
 sub translate_left {
-	my ($self, $value) = @_;
-	return $self->translate(x => - abs $value);
+    my ( $self, $value ) = @_;
+    return $self->translate( x => -abs $value );
 }
 
 
 sub translate_right {
-	my ($self, $value) = @_;
-	return $self->translate(x => abs $value);
+    my ( $self, $value ) = @_;
+    return $self->translate( x => abs $value );
 }
 
 
 sub contains {
-	my $self = shift;
-	my ($c) = validate_pos( @_, { isa => 'Curses::Toolkit::Object::Coordinates' } );
-	return $self->x1() <= $c->x1() &&
-	       $self->y1() <= $c->y1() &&
-		   $self->x2() >= $c->x2() &&
-		   $self->y2() >= $c->y2()
+    my $self = shift;
+    my ($c) = validate_pos( @_, { isa => 'Curses::Toolkit::Object::Coordinates' } );
+    return
+           $self->x1() <= $c->x1()
+        && $self->y1() <= $c->y1()
+        && $self->x2() >= $c->x2()
+        && $self->y2() >= $c->y2();
 }
 
 
 sub is_inside {
-	my $self = shift;
-	my ($c) = validate_pos( @_, { isa => 'Curses::Toolkit::Object::Coordinates' } );
-	return $c->contains($self);
+    my $self = shift;
+    my ($c) = validate_pos( @_, { isa => 'Curses::Toolkit::Object::Coordinates' } );
+    return $c->contains($self);
 }
 
 
 sub is_in_widget {
-	my ($self, $widget) = @_;
-	my $w_coord = $widget->get_coordinates();
-	return $w_coord->x1() <= $self->x1() &&
-	       $w_coord->x2() >= $self->x2() &&
-		   $w_coord->y1() <= $self->y1() &&
-		   $w_coord->y2() >= $self->y2();
+    my ( $self, $widget ) = @_;
+    my $w_coord = $widget->get_coordinates();
+    return
+           $w_coord->x1() <= $self->x1()
+        && $w_coord->x2() >= $self->x2()
+        && $w_coord->y1() <= $self->y1()
+        && $w_coord->y2() >= $self->y2();
 }
 
 
@@ -336,7 +378,7 @@ Curses::Toolkit::Object::Coordinates - simple coordinates class
 
 =head1 VERSION
 
-version 0.100320
+version 0.100630
 
 =head1 DESCRIPTION
 
@@ -464,6 +506,15 @@ output : the Curses::Toolkit::Object::Coordinates object
 =head2 restrict_to
 
 Force the coordinate to be inside the passed coordinate.
+
+  input  : a Curses::Toolkit::Object::Coordinates object
+  output : the object
+
+
+
+=head2 grow_to
+
+Force the coordinate to be at least as big as the passed coordinate.
 
   input  : a Curses::Toolkit::Object::Coordinates object
   output : the object

@@ -10,7 +10,7 @@ use warnings;
 use strict;
 
 package Curses::Toolkit::Signal;
-our $VERSION = '0.100320';
+our $VERSION = '0.100630';
 
 
 
@@ -20,13 +20,13 @@ use Params::Validate qw(:all);
 sub new {
     my $class = shift;
     $class eq __PACKAGE__ and die "abstract class";
-	return bless { }, $class;
+    return bless {}, $class;
 }
 
 # returns the type of the signal
 sub get_type {
-	my ($self) = @_;
-	return $self->{type};
+    my ($self) = @_;
+    return $self->{type};
 }
 
 1;
@@ -37,7 +37,7 @@ __END__
 
 =head1 VERSION
 
-version 0.100320
+version 0.100630
 
 =head1 NAME
 

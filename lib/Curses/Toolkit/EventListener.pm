@@ -10,7 +10,8 @@ use warnings;
 use strict;
 
 package Curses::Toolkit::EventListener;
-our $VERSION = '0.100320';
+our $VERSION = '0.100630';
+
 
 
 # ABSTRACT: base class for event listeners
@@ -19,82 +20,85 @@ use Params::Validate qw(:all);
 
 
 sub new {
-    my $class = shift;
-    my %params = validate(@_, { accepted_events => { type => HASHREF },
-								code => { type => CODEREF },
-							  }
-                         );
-	$params{enabled} = 1;
-	return bless { %params }, $class;
+    my $class  = shift;
+    my %params = validate(
+        @_,
+        {   accepted_events => { type => HASHREF },
+            code            => { type => CODEREF },
+        }
+    );
+    $params{enabled} = 1;
+    return bless {%params}, $class;
 }
 
 
 sub can_handle {
-	my $self = shift;
-	my ($event) = validate_pos( @_, { isa => 'Curses::Toolkit::Event' } );
-	my $event_class = ref $event;
-#	exists $self->{accepted_events}{$event_class} or return;
-	if (!exists $self->{accepted_events}{$event_class}) {
-		eval "require $event_class";
-		$@ and die "failed requireing event class '$event_class'";
-		my $found;
-		foreach my $class_name (keys %{$self->{accepted_events}}) {
-			$event_class->isa($class_name)
-			  and $found = $class_name;
-		}
-		defined $found or return;
-		$event_class = $found;
-	}
-	$self->{accepted_events}{$event_class}->($event) or return;
-	return 1;
+    my $self = shift;
+    my ($event) = validate_pos( @_, { isa => 'Curses::Toolkit::Event' } );
+    my $event_class = ref $event;
+
+    #	exists $self->{accepted_events}{$event_class} or return;
+    if ( !exists $self->{accepted_events}{$event_class} ) {
+        eval "require $event_class";
+        $@ and die "failed requireing event class '$event_class'";
+        my $found;
+        foreach my $class_name ( keys %{ $self->{accepted_events} } ) {
+            $event_class->isa($class_name)
+                and $found = $class_name;
+        }
+        defined $found or return;
+        $event_class = $found;
+    }
+    $self->{accepted_events}{$event_class}->($event) or return;
+    return 1;
 }
 
 
 sub send_event {
-	my $self = shift;
-	my ($event, $widget) = validate_pos( @_, { isa => 'Curses::Toolkit::Event' }, 1 );
-	return $self->{code}->($event, $widget);	
+    my $self = shift;
+    my ( $event, $widget ) = validate_pos( @_, { isa => 'Curses::Toolkit::Event' }, 1 );
+    return $self->{code}->( $event, $widget );
 }
 
 
 sub enable {
-	my ($self) = @_;
-	$self->{enabled} = 1;
-	return $self;
+    my ($self) = @_;
+    $self->{enabled} = 1;
+    return $self;
 }
 
 
 sub disable {
-	my ($self) = @_;
-	$self->{enabled} = 0;
-	return $self;
+    my ($self) = @_;
+    $self->{enabled} = 0;
+    return $self;
 }
 
 
 sub is_enabled {
-	my ($self) = @_;
-	return $self->{enabled} ? 1 : 0;
+    my ($self) = @_;
+    return $self->{enabled} ? 1 : 0;
 }
 
 
 sub is_attached {
-	my ($self) = @_;
-	defined $self->{attached_to} and return 1;
-	return;
+    my ($self) = @_;
+    defined $self->{attached_to} and return 1;
+    return;
 }
 
 
 sub detach {
-	my ($self) = @_;
-	$self->is_attached() or die "the event listener is not attached";
-	my $widget = $self->{attached_to};
-	my $index = $self->{attached_index};
-	if (defined $widget && defined $index) {
-		$widget->_remove_event_listener($index);
-	}
-	delete $self->{attached_to};
-	delete $self->{attached_index};
-	return $self;
+    my ($self) = @_;
+    $self->is_attached() or die "the event listener is not attached";
+    my $widget = $self->{attached_to};
+    my $index  = $self->{attached_index};
+    if ( defined $widget && defined $index ) {
+        $widget->_remove_event_listener($index);
+    }
+    delete $self->{attached_to};
+    delete $self->{attached_index};
+    return $self;
 }
 
 # set the widget to which the event listener is attached
@@ -102,19 +106,20 @@ sub detach {
 #          the index
 # output : the event listener
 sub _set_widget {
-	my $self = shift;
-	my ($widget, $index) = validate_pos( @_, { isa => 'Curses::Toolkit::Widget' },
-										     { type => BOOLEAN },
-									   );
-	$self->{attached_to} = $widget;
-	$self->{attached_index} = $index;
-	return $self;
+    my $self = shift;
+    my ( $widget, $index ) = validate_pos(
+        @_, { isa => 'Curses::Toolkit::Widget' },
+        { type => BOOLEAN },
+    );
+    $self->{attached_to}    = $widget;
+    $self->{attached_index} = $index;
+    return $self;
 }
 
 # destroyer
 DESTROY {
     my ($self) = @_;
-	$self->is_attached() and $self->detach();
+    $self->is_attached() and $self->detach();
 }
 
 1;
@@ -129,7 +134,7 @@ Curses::Toolkit::EventListener - base class for event listeners
 
 =head1 VERSION
 
-version 0.100320
+version 0.100630
 
 =head1 DESCRIPTION
 

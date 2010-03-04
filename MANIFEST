@@ -47,6 +47,7 @@ examples/test5.pl
 examples/test6.pl
 examples/test7.pl
 examples/test8.pl
+examples/widgets/progressbar.pl
 examples/yapc_eu.pl
 lib/Curses/Toolkit.pm
 lib/Curses/Toolkit/Event.pm
@@ -80,6 +81,7 @@ lib/Curses/Toolkit/Theme/Default.pm
 lib/Curses/Toolkit/Theme/Default/Color.pm
 lib/Curses/Toolkit/Theme/Default/Color/Pink.pm
 lib/Curses/Toolkit/Theme/Default/Color/Yellow.pm
+lib/Curses/Toolkit/Types.pm
 lib/Curses/Toolkit/Widget.pm
 lib/Curses/Toolkit/Widget/Bin.pm
 lib/Curses/Toolkit/Widget/Border.pm
@@ -89,11 +91,14 @@ lib/Curses/Toolkit/Widget/Entry.pm
 lib/Curses/Toolkit/Widget/GenericButton.pm
 lib/Curses/Toolkit/Widget/HBox.pm
 lib/Curses/Toolkit/Widget/HPaned.pm
+lib/Curses/Toolkit/Widget/HProgressBar.pm
 lib/Curses/Toolkit/Widget/HScrollBar.pm
 lib/Curses/Toolkit/Widget/Label.pm
 lib/Curses/Toolkit/Widget/Paned.pm
+lib/Curses/Toolkit/Widget/ProgressBar.pm
 lib/Curses/Toolkit/Widget/VBox.pm
 lib/Curses/Toolkit/Widget/VPaned.pm
+lib/Curses/Toolkit/Widget/VProgressBar.pm
 lib/Curses/Toolkit/Widget/VScrollBar.pm
 lib/Curses/Toolkit/Widget/Window.pm
 lib/Curses/Toolkit/Widget/Window/Dialog.pm
@@ -106,3 +111,5 @@ t/boilerplate.t
 t/release-meta-yaml.t
 t/release-pod-coverage.t
 t/release-pod-syntax.t
+tools/perltidyrc
+tools/tidy_project.pl

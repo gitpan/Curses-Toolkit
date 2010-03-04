@@ -10,7 +10,8 @@ use warnings;
 use strict;
 
 package Curses::Toolkit::Widget::VScrollBar;
-our $VERSION = '0.100320';
+our $VERSION = '0.100630';
+
 
 
 # ABSTRACT: a vertical scrollbar widget
@@ -21,30 +22,30 @@ use Params::Validate qw(:all);
 
 
 sub new {
-	my $class = shift;
-	my $self = $class->SUPER::new();
-	$self->{visibility_mode} = 'auto';
-	return $self;
+    my $class = shift;
+    my $self  = $class->SUPER::new();
+    $self->{visibility_mode} = 'auto';
+    return $self;
 }
 
 
 sub set_visibility_mode {
-	my $self = shift;
-	my ($visibility_mode) = validate_pos( @_, { regex => qr/^(?:auto|always)$/ } );
-	$self->{visibility_mode} = $visibility_mode;
-	return $self;
+    my $self = shift;
+    my ($visibility_mode) = validate_pos( @_, { regex => qr/^(?:auto|always)$/ } );
+    $self->{visibility_mode} = $visibility_mode;
+    return $self;
 }
 
 
 sub get_visibility_mode {
-	my ($self) = @_;
-	return $self->{visibility_mode};
+    my ($self) = @_;
+    return $self->{visibility_mode};
 }
 
 sub draw {
-	my ($self) = @_;
-	my $theme => $self->get_theme();
-	my $c = get_coordinates();
+    my ($self) = @_;
+    my $theme => $self->get_theme();
+    my $c = get_coordinates();
 }
 
 
@@ -60,7 +61,7 @@ Curses::Toolkit::Widget::VScrollBar - a vertical scrollbar widget
 
 =head1 VERSION
 
-version 0.100320
+version 0.100630
 
 =head1 DESCRIPTION
 

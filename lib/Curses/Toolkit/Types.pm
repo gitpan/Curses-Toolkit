@@ -6,38 +6,29 @@
 # This is free software; you can redistribute it and/or modify it under
 # the same terms as the Perl 5 programming language system itself.
 # 
-use warnings;
 use strict;
+use warnings;
 
-package Curses::Toolkit::Object::Flags;
+package Curses::Toolkit::Types;
 our $VERSION = '0.100630';
 
 
 
-# ABSTRACT: simple collection of flags
+# ABSTRACT: various types used within the dist
 
-use parent qw(Curses::Toolkit::Object);
+use Moose::Util::TypeConstraints;
 
-
-sub new {
-    my $class = shift;
-    my $self  = bless {
-        focused  => 0,
-        selected => 0,
-        clicked  => 0,
-    }, $class;
-    return $self;
-}
+enum PROGRESS_BAR_LABEL => qw( none value percent );
 
 1;
 
-__END__
+
 
 =pod
 
 =head1 NAME
 
-Curses::Toolkit::Object::Flags - simple collection of flags
+Curses::Toolkit::Types - various types used within the dist
 
 =head1 VERSION
 
@@ -45,21 +36,18 @@ version 0.100630
 
 =head1 DESCRIPTION
 
-Trivial class to hold widgets flags.
-The list of flags is :
+This module implements the specific types used by the distribution, and
+exports them (exporting is done directly by
+L<Moose::Util::TypeConstraints>.
 
-  focused  : BOOLEAN
-  selected : BOOLEAN
-  clicked  : BOOLEAN
+Current types defined:
 
-=head1 CONSTRUCTOR
+=over 4
 
-=head2 new
+=item * PROGRESS_BAR_LABEL - a simple enumeration, allowing only
+C<none>, C<value> or C<percent>.
 
-  input  : none
-  output : a Curses::Toolkit::Object::Flags object
-
-
+=back 
 
 =head1 AUTHOR
 
@@ -73,3 +61,7 @@ This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut 
+
+
+
+__END__

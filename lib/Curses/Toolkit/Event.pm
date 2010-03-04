@@ -10,7 +10,8 @@ use warnings;
 use strict;
 
 package Curses::Toolkit::Event;
-our $VERSION = '0.100320';
+our $VERSION = '0.100630';
+
 
 
 # ABSTRACT: base class for events
@@ -21,53 +22,54 @@ use Params::Validate qw(:all);
 sub new {
     my $class = shift;
     $class eq __PACKAGE__ and die "abstract class";
-	return bless { can_propagate => 1,
-				   restricted => 0,
-				 }, $class;
+    return bless {
+        can_propagate => 1,
+        restricted    => 0,
+    }, $class;
 }
 
 
 sub get_type {
-	my ($self) = @_;
-	return $self->{type};
+    my ($self) = @_;
+    return $self->{type};
 }
 
 
 sub enable_propagation {
-	my ($self) = @_;
-	$self->{can_propagate} = 1;
-	return $self;
+    my ($self) = @_;
+    $self->{can_propagate} = 1;
+    return $self;
 }
 
 
 sub disable_propagation {
-	my ($self) = @_;
-	$self->{can_propagate} = 0;
-	return $self;
+    my ($self) = @_;
+    $self->{can_propagate} = 0;
+    return $self;
 }
 
 
 sub can_propagate {
-	return shift->{can_propagate};
+    return shift->{can_propagate};
 }
 
 
 sub enable_restriction {
-	my ($self) = @_;
-	$self->{restricted} = 1;
-	return $self;
+    my ($self) = @_;
+    $self->{restricted} = 1;
+    return $self;
 }
 
 
 sub disable_restriction {
-	my ($self) = @_;
-	$self->{restricted} = 0;
-	return $self;
+    my ($self) = @_;
+    $self->{restricted} = 0;
+    return $self;
 }
 
 
 sub restricted_to_widget {
-	return shift->{restricted};
+    return shift->{restricted};
 }
 
 1;
@@ -82,7 +84,7 @@ Curses::Toolkit::Event - base class for events
 
 =head1 VERSION
 
-version 0.100320
+version 0.100630
 
 =head1 DESCRIPTION
 

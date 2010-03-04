@@ -10,7 +10,8 @@ use warnings;
 use strict;
 
 package Curses::Toolkit::Event::Content::Changed;
-our $VERSION = '0.100320';
+our $VERSION = '0.100630';
+
 
 
 # ABSTRACT: event that is related to content change
@@ -36,7 +37,7 @@ Curses::Toolkit::Event::Content::Changed - event that is related to content chan
 
 =head1 VERSION
 
-version 0.100320
+version 0.100630
 
 =head1 DESCRIPTION
 

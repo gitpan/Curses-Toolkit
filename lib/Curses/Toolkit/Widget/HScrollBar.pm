@@ -10,12 +10,13 @@ use warnings;
 use strict;
 
 package Curses::Toolkit::Widget::HScrollBar;
-our $VERSION = '0.100320';
+our $VERSION = '0.100630';
+
 
 
 # ABSTRACT: a horizontal scrollbar widget
 
-use parent qw{ Curses::Toolkit::Widget };
+use parent qw(Curses::Toolkit::Widget);
 
 1;
 
@@ -29,7 +30,7 @@ Curses::Toolkit::Widget::HScrollBar - a horizontal scrollbar widget
 
 =head1 VERSION
 
-version 0.100320
+version 0.100630
 
 =head1 SYNOPSIS
 

@@ -10,7 +10,8 @@ use warnings;
 use strict;
 
 package Curses::Toolkit::Role;
-our $VERSION = '0.100320';
+our $VERSION = '0.100630';
+
 
 
 # ABSTRACT: base class for roles, before migrating to Moose
@@ -18,6 +19,7 @@ our $VERSION = '0.100320';
 
 sub new {
     my ($class) = shift;
+
     # TODO : use Exception;
     $class eq __PACKAGE__ and die "abstract class";
 }
@@ -34,7 +36,7 @@ Curses::Toolkit::Role - base class for roles, before migrating to Moose
 
 =head1 VERSION
 
-version 0.100320
+version 0.100630
 
 =head1 DESCRIPTION
 

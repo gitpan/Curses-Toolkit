@@ -10,7 +10,8 @@ use warnings;
 use strict;
 
 package Curses::Toolkit::Widget::GenericButton;
-our $VERSION = '0.100320';
+our $VERSION = '0.100630';
+
 
 
 # ABSTRACT: a button widget that can hold any other widget
@@ -22,22 +23,19 @@ use Curses::Toolkit::Object::Coordinates;
 
 
 sub new_with_label {
-	my $class = shift;
-	my ($label_text) = validate_pos( @_, { type => SCALAR } );
-	my $self = $class->new();
-	$self->add_widget( Curses::Toolkit::Widget::Label
-					   ->new()
-					   ->set_text($label_text)
-					 );
-	return $self;
+    my $class = shift;
+    my ($label_text) = validate_pos( @_, { type => SCALAR } );
+    my $self = $class->new();
+    $self->add_widget( Curses::Toolkit::Widget::Label->new()->set_text($label_text) );
+    return $self;
 }
 
 # The difference with Border is that we don't want to expand when not
 # necessary. Meaning, when asked for desired_space, we return the minimum space
 
 sub get_desired_space {
-	my $self = shift;
-	return $self->get_minimum_space(@_);
+    my $self = shift;
+    return $self->get_minimum_space(@_);
 }
 
 1;
@@ -52,7 +50,7 @@ Curses::Toolkit::Widget::GenericButton - a button widget that can hold any other
 
 =head1 VERSION
 
-version 0.100320
+version 0.100630
 
 =head1 DESCRIPTION
 

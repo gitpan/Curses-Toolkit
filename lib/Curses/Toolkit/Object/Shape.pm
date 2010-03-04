@@ -10,7 +10,8 @@ use warnings;
 use strict;
 
 package Curses::Toolkit::Object::Shape;
-our $VERSION = '0.100320';
+our $VERSION = '0.100630';
+
 
 
 # ABSTRACT: simple shape class
@@ -22,17 +23,20 @@ use Params::Validate qw(:all);
 
 # Making it readonly
 
-sub set { _die() }
-sub add { _die() }
-sub substract { _die() }
+sub set         { _die() }
+sub add         { _die() }
+sub substract   { _die() }
 sub restrict_to { _die() }
-sub _die { die " You should not be calling '" . (caller(1))[3] . "' on a '" . __PACKAGE__ . "' object, as it's read only." }
+
+sub _die {
+    die " You should not be calling '" . ( caller(1) )[3] . "' on a '" . __PACKAGE__ . "' object, as it's read only.";
+}
 
 # private methods
 
 sub _set {
-	my $self = shift;
-	$self->SUPER::set(@_);
+    my $self = shift;
+    $self->SUPER::set(@_);
 }
 
 
@@ -48,7 +52,7 @@ Curses::Toolkit::Object::Shape - simple shape class
 
 =head1 VERSION
 
-version 0.100320
+version 0.100630
 
 =head1 DESCRIPTION
 

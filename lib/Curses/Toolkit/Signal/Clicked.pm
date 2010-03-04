@@ -10,7 +10,7 @@ use warnings;
 use strict;
 
 package Curses::Toolkit::Signal::Clicked;
-our $VERSION = '0.100320';
+our $VERSION = '0.100630';
 
 
 
@@ -20,40 +20,41 @@ use Params::Validate qw(:all);
 
 
 sub generate_listener {
-	my $class = shift;
-	my %args = validate( @_,
-						 { widget => { isa => 'Curses::Toolkit::Widget' },
-						   code_ref => { type => CODEREF },
-						   arguments => { type => ARRAYREF },
-						 },
-					   );
-	my $widget = $args{widget};
-	my $code_ref = $args{code_ref};
-	my @arguments = @{$args{arguments}};
+    my $class = shift;
+    my %args  = validate(
+        @_,
+        {   widget    => { isa  => 'Curses::Toolkit::Widget' },
+            code_ref  => { type => CODEREF },
+            arguments => { type => ARRAYREF },
+        },
+    );
+    my $widget    = $args{widget};
+    my $code_ref  = $args{code_ref};
+    my @arguments = @{ $args{arguments} };
 
-	return Curses::Toolkit::EventListener->new(
-		accepted_events => {
-			'Curses::Toolkit::Event::Key' => sub { 
-				my ($event) = @_;
-				$event->{type} eq 'stroke' or return 0;
-				   $event->{params}{key} eq ' '    # space key
-				|| $event->{params}{key} eq '<^M>' # enter key
-				   or return 0;
-				return 1;
-			},
-			'Curses::Toolkit::Event::Mouse::Click' => sub { 
-				my ($event) = @_;
-				$event->{type} eq 'clicked' or return 0;
-				$event->{button} eq 'button1' or return 0;
-				return 1;
-			},
-		},
-		code => sub {
-			$widget->can('set_focus') and $widget->set_focus(1);
-			$widget->can('flash') and $widget->flash();
-			$code_ref->(@_, @arguments);
-		},
-	);
+    return Curses::Toolkit::EventListener->new(
+        accepted_events => {
+            'Curses::Toolkit::Event::Key' => sub {
+                my ($event) = @_;
+                $event->{type} eq 'stroke' or return 0;
+                $event->{params}{key} eq ' '           # space key
+                    || $event->{params}{key} eq '<^M>' # enter key
+                    or return 0;
+                return 1;
+            },
+            'Curses::Toolkit::Event::Mouse::Click' => sub {
+                my ($event) = @_;
+                $event->{type}   eq 'clicked' or return 0;
+                $event->{button} eq 'button1' or return 0;
+                return 1;
+            },
+        },
+        code => sub {
+            $widget->can('set_focus') and $widget->set_focus(1);
+            $widget->can('flash') and $widget->flash();
+            $code_ref->( @_, @arguments );
+        },
+    );
 }
 
 1;
@@ -64,7 +65,7 @@ __END__
 
 =head1 VERSION
 
-version 0.100320
+version 0.100630
 
 =head1 NAME
 
