@@ -10,7 +10,7 @@ use warnings;
 use strict;
 
 package Curses::Toolkit::Signal;
-our $VERSION = '0.100630';
+our $VERSION = '0.100680';
 
 
 
@@ -37,7 +37,7 @@ __END__
 
 =head1 VERSION
 
-version 0.100630
+version 0.100680
 
 =head1 NAME
 

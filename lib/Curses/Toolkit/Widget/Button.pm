@@ -10,7 +10,7 @@ use warnings;
 use strict;
 
 package Curses::Toolkit::Widget::Button;
-our $VERSION = '0.100630';
+our $VERSION = '0.100680';
 
 
 
@@ -157,7 +157,7 @@ Curses::Toolkit::Widget::Button - a simple text button widget
 
 =head1 VERSION
 
-version 0.100630
+version 0.100680
 
 =head1 Appearence
 

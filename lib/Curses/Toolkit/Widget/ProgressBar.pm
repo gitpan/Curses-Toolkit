@@ -10,7 +10,7 @@ use strict;
 use warnings;
 
 package Curses::Toolkit::Widget::ProgressBar;
-our $VERSION = '0.100630';
+our $VERSION = '0.100680';
 
 
 
@@ -86,7 +86,7 @@ Curses::Toolkit::Widget::ProgressBar - progress bar widget base class
 
 =head1 VERSION
 
-version 0.100630
+version 0.100680
 
 =head1 THEME RELATED PROPERTIES
 

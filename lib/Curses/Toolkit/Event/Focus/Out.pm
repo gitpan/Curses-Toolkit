@@ -10,7 +10,7 @@ use warnings;
 use strict;
 
 package Curses::Toolkit::Event::Focus::Out;
-our $VERSION = '0.100630';
+our $VERSION = '0.100680';
 
 
 
@@ -37,7 +37,7 @@ Curses::Toolkit::Event::Focus::Out - event that is related to out-focus
 
 =head1 VERSION
 
-version 0.100630
+version 0.100680
 
 =head1 DESCRIPTION
 

@@ -9,7 +9,7 @@ WriteMakefile(
   NAME      => 'Curses::Toolkit',
   AUTHOR    => "Damien\ \"dams\"\ Krotkine",
   ABSTRACT  => "a\ modern\ Curses\ toolkit",
-  VERSION   => '0.100630',
+  VERSION   => '0.100680',
   EXE_FILES => [ qw() ],
   (eval { ExtUtils::MakeMaker->VERSION(6.31) } ? (LICENSE => 'perl') : ()),
   PREREQ_PM    => {
@@ -19,6 +19,7 @@ WriteMakefile(
     "List::Util" => '0',
     "File::Find" => '0',
     "Curses::UI" => '0',
+    "Moose::Meta::Attribute::Custom::Trait::Chained" => '1.000',
     "File::Spec::Functions" => '0',
     "List::MoreUtils" => '0',
     "Moose" => '0.92',

@@ -10,7 +10,7 @@ use warnings;
 use strict;
 
 package Curses::Toolkit::Event::Content;
-our $VERSION = '0.100630';
+our $VERSION = '0.100680';
 
 
 
@@ -30,7 +30,7 @@ Curses::Toolkit::Event::Content - base class for content events
 
 =head1 VERSION
 
-version 0.100630
+version 0.100680
 
 =head1 DESCRIPTION
 

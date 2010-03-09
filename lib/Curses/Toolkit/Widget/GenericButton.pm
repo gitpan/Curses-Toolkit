@@ -10,7 +10,7 @@ use warnings;
 use strict;
 
 package Curses::Toolkit::Widget::GenericButton;
-our $VERSION = '0.100630';
+our $VERSION = '0.100680';
 
 
 
@@ -50,7 +50,7 @@ Curses::Toolkit::Widget::GenericButton - a button widget that can hold any other
 
 =head1 VERSION
 
-version 0.100630
+version 0.100680
 
 =head1 DESCRIPTION
 

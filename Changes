@@ -1,4 +1,8 @@
-0.100630  2010-03-04 18:02:48 UTC
+0.100680  2010-03-09 09:13:36 UTC
+
+0.100680
+	add Moose::Meta::Attribute::Custom::Trait::Chained requirement
+0.100630
 	progress bar widget (by jquelin)
 	more signals
 	more documentation, some cleanup
