@@ -1,18 +1,18 @@
-# 
+#
 # This file is part of Curses-Toolkit
-# 
-# This software is copyright (c) 2008 by Damien "dams" Krotkine.
-# 
+#
+# This software is copyright (c) 2010 by Damien "dams" Krotkine.
+#
 # This is free software; you can redistribute it and/or modify it under
 # the same terms as the Perl 5 programming language system itself.
-# 
+#
 use warnings;
 use strict;
 
 package Curses::Toolkit;
-our $VERSION = '0.100680';
-
-
+BEGIN {
+  $Curses::Toolkit::VERSION = '0.200';
+}
 
 # ABSTRACT: a modern Curses toolkit
 
@@ -556,7 +556,6 @@ sub _rebuild_all {
 
 
 __END__
-
 =pod
 
 =head1 NAME
@@ -565,7 +564,7 @@ Curses::Toolkit - a modern Curses toolkit
 
 =head1 VERSION
 
-version 0.100680
+version 0.200
 
 =head1 SYNOPSIS
 
@@ -632,7 +631,7 @@ L<Curses::Toolkit::Tutorial> (not yet done!)
 Curses::Toolkit is based on a widget model, inspired by Gtk. I suggest you read
 the POD of the following widgets :
 
-=over 
+=over
 
 =item L<Curses::Toolkit::Widget::Window>
 
@@ -690,7 +689,11 @@ Not yet implemented
 
 An horizontal progress bar widget
 
-=back 
+=item L<Curses::Toolkit::Widget::HProgressBar>
+
+A vertical progress bar widget
+
+=back
 
 For reference, here are the various hierarchy of the objects/concepts of the
 toolkit you might have to use :
@@ -817,8 +820,6 @@ service.
            switch_key        : the key used to switch between windows. Default to 'r'. If set to undef, it's disabled
   output : a Curses::Toolkit object
 
-
-
 =head1 METHODS
 
 =head2 get_theme_name
@@ -828,8 +829,6 @@ service.
 Return the theme associated with the root window. Typically used to get a
 usable default theme name. Use tha instead of hard-wiring
 'Curses::Toolkit::Theme::Default'
-
-
 
 =head2 add_event_listener
 
@@ -841,8 +840,6 @@ respond to some events
   input : a Curses::Toolkit::EventListener
   output : the root window
 
-
-
 =head2 get_event_listeners
 
   my @listeners = $root->get_event_listener();
@@ -851,8 +848,6 @@ Returns the list of listeners connected to the root window.
 
   input : none
   output : an ARRAY of Curses::Toolkit::EventListener
-
-
 
 =head2 get_focused_widget
 
@@ -864,8 +859,6 @@ be a window.
   input : none
   output : a Curses::Toolkit::Widget or void
 
-
-
 =head2 get_focused_window
 
   my $window = $root->get_focused_window();
@@ -875,8 +868,6 @@ Returns the window currently focused.
   input : none
   output : a Curses::Toolkit::Widget::Window or void
 
-
-
 =head2 get_focused_window
 
   my $window = $root->get_nexd_window();
@@ -885,8 +876,6 @@ Returns the next window.
 
   input : none
   output : a Curses::Toolkit::Widget::Window or void
-
-
 
 =head2 set_mainloop
 
@@ -899,8 +888,6 @@ mainloop object is in charge to listen to the events and call $root->dispatch_ev
   input  : a mainloop object
   output : the Curses::Toolkit object
 
-
-
 =head2 get_mainloop
 
   my $mainloop = $root->get_mainloop()
@@ -911,8 +898,6 @@ mainloop were associated.
   input : none
   output : the mainloop object, or undef
 
-
-
 =head2 get_shape
 
   my $coordinate = $root->get_shape();
@@ -921,8 +906,6 @@ Returns a coordinate object that represents the size of the root window.
 
   input  : none
   output : a Curses::Toolkit::Object::Coordinates object
-
-
 
 =head2 add_window
 
@@ -934,8 +917,6 @@ Adds a window on the root window. Returns the root window
   input : a Curses::Toolkit::Widget::Window object
   output : the root window
 
-
-
 =head2 bring_window_to_front()
 
   $root_window->bring_window_to_front($window)
@@ -944,8 +925,6 @@ Brings the window to front
 
   input : a Curses::Toolkit::Widget::Window
   output : the root window
-
-
 
 =head2 needs_redraw
 
@@ -957,8 +936,6 @@ only if a mainloop is active ( see POE::Component::Curses )
   input : none
   output : the root window
 
-
-
 =head2 get_windows
 
   my @windows = $root->get_windows();
@@ -968,16 +945,12 @@ Returns the list of windows loaded
   input : none
   output : ARRAY of Curses::Toolkit::Widget::Window
 
-
-
 =head2 set_modal_widget
 
 Set a widget to be modal
 
   input  : a widget
   output : the root window
-
-
 
 =head2 unset_modal_widget
 
@@ -986,16 +959,12 @@ Unset the widget to be modal
   input  : none
   output : the root window
 
-
-
 =head2 get_modal_widget
 
 returns the modal widget, or void
 
   input  : none
   output : the modal widget or void
-
-
 
 =head2 show_all
 
@@ -1006,8 +975,6 @@ Set visibility property to true for every element. Returns the root windows
   input : none
   output : the root window
 
-
-
 =head2 render
 
   $root->render();
@@ -1017,8 +984,6 @@ Build everything in the buffer. You need to call 'display' after that to display
   input : none
   output : the root window
 
-
-
 =head2 display
 
   $root->display();
@@ -1027,8 +992,6 @@ Refresh the screen.
 
   input  : none
   output : the root window
-
-
 
 =head2 dispatch_event
 
@@ -1042,8 +1005,6 @@ root window. You probably don't want to use this method directly. Use Signals in
            optional, a widget. if given, the event dispatching will start with this wisget (and not the focused one)
   output : true if the event were handled, false if not
 
-
-
 =head2 fire_event
 
   $widget->fire_event($event, $widget);
@@ -1054,8 +1015,6 @@ to use this method.
   input  : a Curses::Toolkit::Event
            optional, a widget. if given, the event dispatching will start with this wisget (and not the focused one)
   output : the root_window
-
-
 
 =head2 add_delay
 
@@ -1071,8 +1030,6 @@ can be a fraction. @args will be passed to the code reference
            a code reference
            an optional list of arguments to be passed to the code reference
   output : a timer unique identifier or void
-
-
 
 =head1 BUGS
 
@@ -1108,17 +1065,18 @@ L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=Curses-Toolkit>
 
 L<http://search.cpan.org/dist/Curses-Toolkit>
 
-=back 
+=back
 
 =head1 AUTHOR
 
-  Damien "dams" Krotkine
+Damien "dams" Krotkine
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2008 by Damien "dams" Krotkine.
+This software is copyright (c) 2010 by Damien "dams" Krotkine.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
-=cut 
+=cut
+

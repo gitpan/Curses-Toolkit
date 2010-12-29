@@ -1,18 +1,18 @@
-# 
+#
 # This file is part of Curses-Toolkit
-# 
-# This software is copyright (c) 2008 by Damien "dams" Krotkine.
-# 
+#
+# This software is copyright (c) 2010 by Damien "dams" Krotkine.
+#
 # This is free software; you can redistribute it and/or modify it under
 # the same terms as the Perl 5 programming language system itself.
-# 
+#
 use strict;
 use warnings;
 
 package Curses::Toolkit::Widget::HProgressBar;
-our $VERSION = '0.100680';
-
-
+BEGIN {
+  $Curses::Toolkit::Widget::HProgressBar::VERSION = '0.200';
+}
 
 # ABSTRACT: a horizontal progress bar widget
 
@@ -44,8 +44,8 @@ sub draw {
 
     my $char_done    = $self->get_theme_property('char_done');
     my $char_left    = $self->get_theme_property('char_left');
-    my $left_string  = $self->get_theme_property('left_enclosing');
-    my $right_string = $self->get_theme_property('right_enclosing');
+    my $left_string  = $self->get_theme_property('start_enclosing');
+    my $right_string = $self->get_theme_property('end_enclosing');
     my $wl           = length $left_string;
     my $wr           = length $right_string;
     my $bw           = $self->get_theme_property('border_width');
@@ -79,13 +79,13 @@ sub draw {
     my $o3 = ( $w1 - length $text ) / 2;
     my $o4 = $w1 - $wr;
 
-    $theme->draw_string( $c->x1() + $bw,       $c->y1() + $bw, $left_string );
-    $theme->draw_string( $c->x1() + $bw + $o4, $c->y1() + $bw, $right_string );
+    $theme->draw_string( $c->get_x1() + $bw,       $c->get_y1() + $bw, $left_string );
+    $theme->draw_string( $c->get_x1() + $bw + $o4, $c->get_y1() + $bw, $right_string );
 
-    $theme->draw_string( $c->x1() + $bw + $o1, $c->y1() + $bw, $char_done x $w_done );
-    $theme->draw_string( $c->x1() + $bw + $o2, $c->y1() + $bw, $char_left x $w_left );
+    $theme->draw_string( $c->get_x1() + $bw + $o1, $c->get_y1() + $bw, $char_done x $w_done );
+    $theme->draw_string( $c->get_x1() + $bw + $o2, $c->get_y1() + $bw, $char_left x $w_left );
 
-    $theme->draw_string( $c->x1() + $bw + $o3, $c->y1() + $bw, $text );
+    $theme->draw_string( $c->get_x1() + $bw + $o3, $c->get_y1() + $bw, $text );
 
     return;
 }
@@ -94,7 +94,7 @@ sub draw {
 sub get_desired_space {
     my ( $self, $available_space ) = @_;
     my $desired_space = $available_space->clone;
-    $desired_space->set( y2 => $desired_space->y1 + 1 );
+    $desired_space->set( y2 => $desired_space->get_y1 + 1 );
     $desired_space->grow_to($self->get_minimum_space($available_space));
     return $desired_space;
 }
@@ -104,13 +104,13 @@ sub get_minimum_space {
     my ( $self, $available_space ) = @_;
 
     my $minimum_space = $available_space->clone;
-    my $default_width = $self->get_theme_property('default_width');
+    my $default_width = $self->get_theme_property('default_length');
     my $bw            = $self->get_theme_property('border_width');
-    my $left_string   = $self->get_theme_property('left_enclosing');
-    my $right_string  = $self->get_theme_property('right_enclosing');
+    my $left_string   = $self->get_theme_property('start_enclosing');
+    my $right_string  = $self->get_theme_property('end_enclosing');
     $minimum_space->set(
-        x2 => $available_space->x1() + 2 * $bw + length($left_string) + $default_width + length($right_string),
-        y2 => $available_space->y1() + 1 + 2 * $bw,
+        x2 => $available_space->get_x1() + 2 * $bw + length($left_string) + $default_width + length($right_string),
+        y2 => $available_space->get_y1() + 1 + 2 * $bw,
     );
     return $minimum_space;
 }
@@ -118,19 +118,10 @@ sub get_minimum_space {
 
 
 
-sub _get_theme_properties_definition {
-    my ($self) = @_;
-    return {
-        %{ $self->SUPER::_get_theme_properties_definition() },
-        default_width   => { optional => 0, type => SCALAR, },
-        left_enclosing  => { optional => 0, type => SCALAR, },
-        right_enclosing => { optional => 0, type => SCALAR, },
-
-    };
-}
+no Moose;
+__PACKAGE__->meta->make_immutable (inline_constructor => 0);
 
 1;
-
 
 
 
@@ -142,90 +133,15 @@ Curses::Toolkit::Widget::HProgressBar - a horizontal progress bar widget
 
 =head1 VERSION
 
-version 0.100680
-
-=head1 THEME RELATED PROPERTIES
-
-To set/get a theme properties, you should do :
-
-  $hprogress_bar->set_theme_property(property_name => $property_value);
-  $value = $button->get_theme_property('property_name');
-
-Here is the list of properties related to the progressbar, that can be
-changed in the associated theme. See the L<Curses::Toolkit::Theme> class
-used for the default (default class to look at is
-L<Curses::Toolkit::Theme::Default>)
-
-Don't forget to look at properties from the parent class, as these are also
-inherited from!
-
-=head2 border_width (inherited)
-
-The width of the border of the progress bar.
-
-Example:
-  # set buttons to have a border of 1
-  $hprogressbar->set_theme_property(border_width => 1 );
-
-=head2 default_width
-
-Sets the value of the default width of the progress bar.
-
-=head2 char_done
-
-Sets the value of the char used to represent the done portion of the
-progress bar.
-
-Example :
-  # set char_done
-  $hprogressbar->set_theme_property(char_done => '=' );
-
-=head2 char_left
-
-Sets the value of the char used to represent the left portion of the
-progress bar.
-
-Example :
-  # set char_left
-  $hprogressbar->set_theme_property(char_left => '=' );
-
-=head2 left_enclosing
-
-The string to be displayed at the left of the progress bar. Usually some enclosing characters.
-
-Example :
-  # set left enclosing
-  $hprogressbar->set_theme_property(left_enclosing => '< ' );
-  $hprogressbar->set_theme_property(left_enclosing => '[ ' );
-
-=head2 right_enclosing
-
-The string to be displayed at the right of the progress bar. Usually some enclosing characters.
-
-Example :
-  # set left enclosing
-  $hprogressbar->set_theme_property(left_enclosing => ' >' );
-  $hprogressbar->set_theme_property(left_enclosing => ' ]' );
-
-
-
-=head1 Appearence
-
-Standard theme:
-
-  ||||||||---------- 14% ------------------
-
-With a border:
-
-  +------------------------------------------+
-  |||||||||---------- 14% -------------------|
-  +------------------------------------------+
+version 0.200
 
 =head1 DESCRIPTION
 
-The C<Curses::Toolkit::Widget::ProgressBar> widget is a classical
+The C<Curses::Toolkit::Widget::HProgressBar> widget is a classical
 progress bar widget, used to provide some sort of progress information
 to your program user.
+
+This progress bar is horizontal.
 
 =head1 ATTRIBUTES
 
@@ -247,8 +163,6 @@ What to show in the progress bar. Must be a C<PROGRESS_BAR_LABEL> -
 check L<Curses::Toolkit::Types> for valid options. Default to
 C<percent>.
 
-
-
 =head1 METHODS
 
 =head2 new
@@ -256,13 +170,9 @@ C<percent>.
   input:  none
   output: a Curses::Toolkit::Widget::HProgressBar
 
-
-
 =head2 draw
 
 Redraw the progress bar.
-
-
 
 =head2 get_desired_space
 
@@ -273,8 +183,6 @@ The Button desires the minimum size : text length plus the button brackets
   output: a Curses::Toolkit::Object::Coordinates object
 
 The desired space is as much horizontal space as possible, with a height of 1.
-
-
 
 =head2 get_minimum_space
 
@@ -287,11 +195,9 @@ button brackets.
 
 The ProgressBar requires 12x1 minimum.
 
-
-
 =head2 possible_signals
 
-  my @signals = keys $button->possible_signals();
+  my @signals = keys $progressbar->possible_signals();
 
 Returns the possible signals that can be used on this widget. See
 L<Curses::Toolkit::Widget::signal_connect> to bind signals to actions
@@ -301,21 +207,99 @@ L<Curses::Toolkit::Widget::signal_connect> to bind signals to actions
 
 The progress bar accepts no signal.
 
+=head1 THEME RELATED PROPERTIES
 
+To set/get a theme properties, you should do :
+
+  $hprogressbar->set_theme_property(property_name => $property_value);
+  $value = $hprogressbar->get_theme_property('property_name');
+
+Here is the list of properties related to the progressbar, that can be
+changed in the associated theme. See the L<Curses::Toolkit::Theme> class
+used for the default (default class to look at is
+L<Curses::Toolkit::Theme::Default>)
+
+Don't forget to look at properties from the parent class, as these are also
+inherited from!
+
+=head2 border_width (inherited)
+
+The width of the border of the progressbar.
+
+Example:
+  # set the progressbar to have a border of 1
+  $hprogressbar->set_theme_property(border_width => 1 );
+
+=head2 default_length
+
+Sets the value of the default length of the progress bar.
+
+Example :
+  # set default_length
+  $hprogressbar->set_theme_property(default_length => 10 );
+
+=head2 char_done
+
+Sets the value of the char used to represent the done portion of the
+progress bar.
+
+Example :
+  # set char_done
+  $hprogressbar->set_theme_property(char_done => '=' );
+
+=head2 char_left
+
+Sets the value of the char used to represent the left portion of the
+progress bar.
+
+Example :
+  # set char_left
+  $hprogressbar->set_theme_property(char_left => ' ' );
+
+=head2 start_enclosing
+
+The string to be displayed at the left of the progress bar. Usually some enclosing characters.
+
+Example :
+  # set left enclosing
+  $hprogressbar->set_theme_property(start_enclosing => '< ' );
+  $hprogressbar->set_theme_property(start_enclosing => '[ ' );
+
+=head2 end_enclosing
+
+The string to be displayed at the right of the progress bar. Usually some enclosing characters.
+
+Example :
+  # set right enclosing
+  $hprogressbar->set_theme_property(end_enclosing => ' >' );
+  $hprogressbar->set_theme_property(end_enclosing => ' ]' );
+
+=head1 Appearence
+
+Standard theme:
+
+  ||||||||---------- 14% ------------------
+
+With a border:
+
+  +------------------------------------------+
+  |||||||||---------- 14% -------------------|
+  +------------------------------------------+
 
 =head1 AUTHOR
 
-  Damien "dams" Krotkine
+Damien "dams" Krotkine
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2008 by Damien "dams" Krotkine.
+This software is copyright (c) 2010 by Damien "dams" Krotkine.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
-=cut 
-
+=cut
 
 
 __END__
+
+

@@ -1,18 +1,18 @@
-# 
+#
 # This file is part of Curses-Toolkit
-# 
-# This software is copyright (c) 2008 by Damien "dams" Krotkine.
-# 
+#
+# This software is copyright (c) 2010 by Damien "dams" Krotkine.
+#
 # This is free software; you can redistribute it and/or modify it under
 # the same terms as the Perl 5 programming language system itself.
-# 
+#
 use warnings;
 use strict;
 
 package Curses::Toolkit::Widget::HBox;
-our $VERSION = '0.100680';
-
-
+BEGIN {
+  $Curses::Toolkit::Widget::HBox::VERSION = '0.200';
+}
 
 # ABSTRACT: an horizontal box widget
 
@@ -92,7 +92,7 @@ sub _rebuild_children_coordinates {
             my $space = $child->get_minimum_space($remaining_space);
             my $w     = $space->width();
             $width += $w;
-            $remaining_space->substract( { x2 => $w } );
+            $remaining_space->subtract( { x2 => $w } );
             $children_widths[$idx] = $w;
             $idx++;
         }
@@ -108,10 +108,10 @@ sub _rebuild_children_coordinates {
         } else {
             my $avg_width = int( $remaining_space->width() / $count );
             my $avg_space = $remaining_space->clone();
-            $avg_space->set( x2 => $avg_space->x1() + $avg_width );
+            $avg_space->set( x2 => $avg_space->get_x1() + $avg_width );
             my $space = $child->get_desired_space($avg_space);
             my $w     = $space->width();
-            $remaining_space->substract( { x2 => $w } );
+            $remaining_space->subtract( { x2 => $w } );
             $width += $w;
             $children_widths[$idx] = $w;
             $count--;
@@ -152,7 +152,7 @@ sub get_desired_space {
         my $space = $child->get_minimum_space($remaining_space);
         my $w     = $space->width();
         $width += $w;
-        $remaining_space->substract( { x2 => $w } );
+        $remaining_space->subtract( { x2 => $w } );
     }
 
     # add to it the width of the expanding children, restricted
@@ -162,15 +162,15 @@ sub get_desired_space {
     foreach my $child (@expanding_children) {
         my $avg_width = int( $remaining_space->width() / $count );
         my $avg_space = $remaining_space->clone();
-        $avg_space->set( x2 => $avg_space->x1() + $avg_width );
+        $avg_space->set( x2 => $avg_space->get_x1() + $avg_width );
         my $space = $child->get_desired_space($avg_space);
         my $w     = $space->width();
-        $remaining_space->substract( { x2 => $w } );
+        $remaining_space->subtract( { x2 => $w } );
         $width += $w;
         $count--;
     }
 
-    $desired_space->set( x2 => $desired_space->x1() + $width );
+    $desired_space->set( x2 => $desired_space->get_x1() + $width );
 
     return $desired_space;
 
@@ -193,10 +193,10 @@ sub get_minimum_space {
         $width += $w;
         use List::Util qw(max);
         $height = max $height, $space->height();
-        $remaining_space->substract( { x2 => $w } );
+        $remaining_space->subtract( { x2 => $w } );
     }
 
-    $minimum_space->set( x2 => $minimum_space->x1() + $width, y2 => $minimum_space->y1() + $height );
+    $minimum_space->set( x2 => $minimum_space->get_x1() + $width, y2 => $minimum_space->get_y1() + $height );
 
     return $minimum_space;
 
@@ -205,7 +205,6 @@ sub get_minimum_space {
 1;
 
 __END__
-
 =pod
 
 =head1 NAME
@@ -214,13 +213,11 @@ Curses::Toolkit::Widget::HBox - an horizontal box widget
 
 =head1 VERSION
 
-version 0.100680
+version 0.200
 
 =head1 DESCRIPTION
 
 This widget can contain 0 or more widgets. The children are packed horizontally.
-
-
 
 =head1 CONSTRUCTOR
 
@@ -228,8 +225,6 @@ This widget can contain 0 or more widgets. The children are packed horizontally.
 
   input : none
   output : a Curses::Toolkit::Widget::HBox
-
-
 
 =head1 METHODS
 
@@ -259,16 +254,12 @@ over and above the global amount specified by "spacing" property. If child is
 a widget at one of the reference ends of box, then padding pixels are also
 put between child and the reference edge of box
 
-
-
 =head2 get_desired_space
 
 Given a coordinate representing the available space, returns the space desired
 
   input : a Curses::Toolkit::Object::Coordinates object
   output : a Curses::Toolkit::Object::Coordinates object
-
-
 
 =head2 get_minimum_space
 
@@ -278,17 +269,16 @@ needed to properly display itself
   input : a Curses::Toolkit::Object::Coordinates object
   output : a Curses::Toolkit::Object::Coordinates object
 
-
-
 =head1 AUTHOR
 
-  Damien "dams" Krotkine
+Damien "dams" Krotkine
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2008 by Damien "dams" Krotkine.
+This software is copyright (c) 2010 by Damien "dams" Krotkine.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
-=cut 
+=cut
+

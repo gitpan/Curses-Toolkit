@@ -1,12 +1,12 @@
 #!/usr/bin/perl
-# 
+#
 # This file is part of Curses-Toolkit
-# 
-# This software is copyright (c) 2008 by Damien "dams" Krotkine.
-# 
+#
+# This software is copyright (c) 2010 by Damien "dams" Krotkine.
+#
 # This is free software; you can redistribute it and/or modify it under
 # the same terms as the Perl 5 programming language system itself.
-# 
+#
 
 use strict;
 use warnings;
@@ -25,14 +25,16 @@ sub main {
     use Curses::Toolkit::Widget::Border;
     use Curses::Toolkit::Widget::Button;
     use Curses::Toolkit::Widget::HProgressBar;
+    use Curses::Toolkit::Widget::VProgressBar;
 
     my $root = POE::Component::Curses->spawn;
 
-    my $bar;
+    my $hbar;
+    my $vbar;
     {
         my $window1 =
           Curses::Toolkit::Widget::Window->new->set_name('window')->set_title("manual progress bar")
-              ->set_coordinates( x1 => 0, y1 => 0, x2 => '100%', y2 => 7 );
+              ->set_coordinates( x1 => 0, y1 => 0, x2 => '100%', y2 => 30 );
         $root->add_window($window1);
 
         $window1->add_widget(
@@ -50,7 +52,8 @@ sub main {
                 ->pack_end(
                   Curses::Toolkit::Widget::Button->new_with_label('-')->signal_connect( clicked => 
                       sub {
-                          $bar->set_position( $bar->get_position - 1 );
+                          $hbar->set_position( $hbar->get_position - 1 );
+                          $vbar->set_position( $hbar->get_position - 1 );
                       }),
                   { expand => 0 },
                 )
@@ -58,7 +61,15 @@ sub main {
               { expand => 0 },
             )
             ->pack_end(
-              $bar  = Curses::Toolkit::Widget::HProgressBar->new,
+              Curses::Toolkit::Widget::VBox->new
+              ->pack_end(
+                $hbar  = Curses::Toolkit::Widget::HProgressBar->new,
+                { expand => 1 },
+              )
+               ->pack_end(
+                 $vbar  = Curses::Toolkit::Widget::VProgressBar->new,
+                 { expand => 1 },
+               ),
               { expand => 1 },
             )
             ->pack_end(
@@ -72,7 +83,8 @@ sub main {
                 ->pack_end(
                   Curses::Toolkit::Widget::Button->new_with_label('+')->signal_connect( clicked =>
                       sub {
-                          $bar->set_position( $bar->get_position + 1 );
+                          $hbar->set_position( $hbar->get_position + 1 );
+                          $vbar->set_position( $hbar->get_position + 1 );
                       }),
                   { expand => 0 },
                 )

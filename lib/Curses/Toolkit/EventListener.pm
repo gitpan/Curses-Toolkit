@@ -1,18 +1,18 @@
-# 
+#
 # This file is part of Curses-Toolkit
-# 
-# This software is copyright (c) 2008 by Damien "dams" Krotkine.
-# 
+#
+# This software is copyright (c) 2010 by Damien "dams" Krotkine.
+#
 # This is free software; you can redistribute it and/or modify it under
 # the same terms as the Perl 5 programming language system itself.
-# 
+#
 use warnings;
 use strict;
 
 package Curses::Toolkit::EventListener;
-our $VERSION = '0.100680';
-
-
+BEGIN {
+  $Curses::Toolkit::EventListener::VERSION = '0.200';
+}
 
 # ABSTRACT: base class for event listeners
 
@@ -125,7 +125,6 @@ DESTROY {
 1;
 
 __END__
-
 =pod
 
 =head1 NAME
@@ -134,7 +133,7 @@ Curses::Toolkit::EventListener - base class for event listeners
 
 =head1 VERSION
 
-version 0.100680
+version 0.200
 
 =head1 DESCRIPTION
 
@@ -152,8 +151,6 @@ a given event, and if yes, performs specific action on it.
 The CODEREfs receive an event as argument. If they return true, then the event
 listener can handle this event
 
-
-
 =head1 METHODS
 
 =head2 can_handle
@@ -163,8 +160,6 @@ Given an event, returns true if the listener is capable of handling this event
   input : a Curses::Toolkit::Event
   output : true or false
 
-
-
 =head2 send_event
 
 Given an event, send it to the listener.
@@ -173,16 +168,12 @@ Returns the result of the event code.
   input : a Curses::Toolkit::Event
   output : the result of the event code execution
 
-
-
 =head2 enable
 
 Enables the event listener (by default the listener is enabled)
 
   input  : none
   output : the event listener
-
-
 
 =head2 disable
 
@@ -191,16 +182,12 @@ Disables the event listener
   input  : none
   output : the event listener
 
-
-
 =head2 is_enabled
 
 Return the state of the listener
 
 input  : none
 output : true or false
-
-
 
 =head2 is_attached
 
@@ -209,8 +196,6 @@ Returns true if the event listener is already attached to a widget
   input  : none
   output : true or false
 
-
-
 =head2 detach
 
 detach the event listener from the widget it is attached to.
@@ -218,17 +203,16 @@ detach the event listener from the widget it is attached to.
   input  : none
   output : the event listener
 
-
-
 =head1 AUTHOR
 
-  Damien "dams" Krotkine
+Damien "dams" Krotkine
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2008 by Damien "dams" Krotkine.
+This software is copyright (c) 2010 by Damien "dams" Krotkine.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
-=cut 
+=cut
+

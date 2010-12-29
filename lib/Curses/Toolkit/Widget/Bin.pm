@@ -1,18 +1,18 @@
-# 
+#
 # This file is part of Curses-Toolkit
-# 
-# This software is copyright (c) 2008 by Damien "dams" Krotkine.
-# 
+#
+# This software is copyright (c) 2010 by Damien "dams" Krotkine.
+#
 # This is free software; you can redistribute it and/or modify it under
 # the same terms as the Perl 5 programming language system itself.
-# 
+#
 use warnings;
 use strict;
 
 package Curses::Toolkit::Widget::Bin;
-our $VERSION = '0.100680';
-
-
+BEGIN {
+  $Curses::Toolkit::Widget::Bin::VERSION = '0.200';
+}
 
 # ABSTRACT: a bin widget
 
@@ -60,7 +60,7 @@ sub _rebuild_children_coordinates {
     $child_space->restrict_to($available_space);
 
     # 		# Force the child space to be as large as the available space
-    # 		$child_space->set(x2 => $available_space->x2() );
+    # 		$child_space->set(x2 => $available_space->get_x2() );
     # At the end, we grant it this space
     $child_widget->_set_relatives_coordinates($child_space);
     $child_widget->can('_rebuild_children_coordinates')
@@ -71,7 +71,6 @@ sub _rebuild_children_coordinates {
 1;
 
 __END__
-
 =pod
 
 =head1 NAME
@@ -80,13 +79,11 @@ Curses::Toolkit::Widget::Bin - a bin widget
 
 =head1 VERSION
 
-version 0.100680
+version 0.200
 
 =head1 DESCRIPTION
 
-This widget can contain 0 or 1 other widgets.
-
-
+This widget can contain 0 or 1 other widget.
 
 =head1 CONSTRUCTOR
 
@@ -94,8 +91,6 @@ This widget can contain 0 or 1 other widgets.
 
   input : none
   output : a Curses::Toolkit::Widget::Bin
-
-
 
 =head1 METHODS
 
@@ -110,8 +105,6 @@ The added child widget takes all the available space.
   input  : the child widget
   output : the current widget (not the child widget)
 
-
-
 =head2 remove_widget
 
 Removes the child widget.
@@ -119,17 +112,16 @@ Removes the child widget.
   input  : none
   output : the current widget (not the child widget)
 
-
-
 =head1 AUTHOR
 
-  Damien "dams" Krotkine
+Damien "dams" Krotkine
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2008 by Damien "dams" Krotkine.
+This software is copyright (c) 2010 by Damien "dams" Krotkine.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
-=cut 
+=cut
+

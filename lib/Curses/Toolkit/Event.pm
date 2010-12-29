@@ -1,18 +1,18 @@
-# 
+#
 # This file is part of Curses-Toolkit
-# 
-# This software is copyright (c) 2008 by Damien "dams" Krotkine.
-# 
+#
+# This software is copyright (c) 2010 by Damien "dams" Krotkine.
+#
 # This is free software; you can redistribute it and/or modify it under
 # the same terms as the Perl 5 programming language system itself.
-# 
+#
 use warnings;
 use strict;
 
 package Curses::Toolkit::Event;
-our $VERSION = '0.100680';
-
-
+BEGIN {
+  $Curses::Toolkit::Event::VERSION = '0.200';
+}
 
 # ABSTRACT: base class for events
 
@@ -75,7 +75,6 @@ sub restricted_to_widget {
 1;
 
 __END__
-
 =pod
 
 =head1 NAME
@@ -84,7 +83,7 @@ Curses::Toolkit::Event - base class for events
 
 =head1 VERSION
 
-version 0.100680
+version 0.200
 
 =head1 DESCRIPTION
 
@@ -113,63 +112,48 @@ widget recursively.
 However, if you enable event restriction, the event will not be passed to the
 parent widget. Only the listener of the widget will be tested.
 
-
-
 =head1 METHODS
 
 =head2 get_type
 
 Returns the type of the event
 
-
-
 =head2 enable_propagation
 
 Enable propagation of the event to other matching listeners
-
-
 
 =head2 disable_propagation
 
 Disable propagation of the event to other matching listeners
 
-
-
 =head2 can_propagate
 
 Returns wether the event can propagate
-
-
 
 =head2 enable_restriction
 
 Enable restriction of the event to the original widget : the event won't be
 passed to parent widgets
 
-
-
 =head2 disable_restriction
 
 Disable restriction of the event to the original widget : the event will be
 passed to parent widgets
 
-
-
 =head2 restricted_to_widget
 
 Returns wether the event is restricted to the widget
 
-
-
 =head1 AUTHOR
 
-  Damien "dams" Krotkine
+Damien "dams" Krotkine
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2008 by Damien "dams" Krotkine.
+This software is copyright (c) 2010 by Damien "dams" Krotkine.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
-=cut 
+=cut
+

@@ -1,18 +1,18 @@
-# 
+#
 # This file is part of Curses-Toolkit
-# 
-# This software is copyright (c) 2008 by Damien "dams" Krotkine.
-# 
+#
+# This software is copyright (c) 2010 by Damien "dams" Krotkine.
+#
 # This is free software; you can redistribute it and/or modify it under
 # the same terms as the Perl 5 programming language system itself.
-# 
+#
 use warnings;
 use strict;
 
 package Curses::Toolkit::Object::Shape;
-our $VERSION = '0.100680';
-
-
+BEGIN {
+  $Curses::Toolkit::Object::Shape::VERSION = '0.200';
+}
 
 # ABSTRACT: simple shape class
 
@@ -25,7 +25,7 @@ use Params::Validate qw(:all);
 
 sub set         { _die() }
 sub add         { _die() }
-sub substract   { _die() }
+sub subtract   { _die() }
 sub restrict_to { _die() }
 
 sub _die {
@@ -43,7 +43,6 @@ sub _set {
 1;
 
 __END__
-
 =pod
 
 =head1 NAME
@@ -52,7 +51,7 @@ Curses::Toolkit::Object::Shape - simple shape class
 
 =head1 VERSION
 
-version 0.100680
+version 0.200
 
 =head1 DESCRIPTION
 
@@ -67,17 +66,16 @@ You can have a look at L<Curses::Toolkit::Object::Coordinates>.
 
 Nothing more than L<Curses::Toolkit::Object::Coordinates> for now
 
-
-
 =head1 AUTHOR
 
-  Damien "dams" Krotkine
+Damien "dams" Krotkine
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2008 by Damien "dams" Krotkine.
+This software is copyright (c) 2010 by Damien "dams" Krotkine.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
-=cut 
+=cut
+

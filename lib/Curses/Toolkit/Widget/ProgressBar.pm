@@ -1,18 +1,18 @@
-# 
+#
 # This file is part of Curses-Toolkit
-# 
-# This software is copyright (c) 2008 by Damien "dams" Krotkine.
-# 
+#
+# This software is copyright (c) 2010 by Damien "dams" Krotkine.
+#
 # This is free software; you can redistribute it and/or modify it under
 # the same terms as the Perl 5 programming language system itself.
-# 
+#
 use strict;
 use warnings;
 
 package Curses::Toolkit::Widget::ProgressBar;
-our $VERSION = '0.100680';
-
-
+BEGIN {
+  $Curses::Toolkit::Widget::ProgressBar::VERSION = '0.200';
+}
 
 # ABSTRACT: progress bar widget base class
 
@@ -68,13 +68,18 @@ sub _get_theme_properties_definition {
     my ($self) = @_;
     return {
         %{ $self->SUPER::_get_theme_properties_definition() },
+        start_enclosing => { optional => 0, type => SCALAR, },
+        end_enclosing => { optional => 0, type => SCALAR, },
+        default_length => { optional => 0, type => SCALAR, },
         char_done => { optional => 0, type => SCALAR, },
         char_left => { optional => 0, type => SCALAR, },
     };
 }
 
-1;
+no Moose;
+__PACKAGE__->meta->make_immutable(inline_constructor => 0);
 
+1;
 
 
 
@@ -86,54 +91,7 @@ Curses::Toolkit::Widget::ProgressBar - progress bar widget base class
 
 =head1 VERSION
 
-version 0.100680
-
-=head1 THEME RELATED PROPERTIES
-
-To set/get a theme properties, you should do :
-
-  $button->set_theme_property(property_name => $property_value);
-  $value = $button->get_theme_property('property_name');
-
-Here is the list of properties related to the window, that can be
-changed in the associated theme. See the L<Curses::Toolkit::Theme> class
-used for the default (default class to look at is
-L<Curses::Toolkit::Theme::Default>)
-
-Don't forget to look at properties from the parent class, as these are also
-inherited from!
-
-=head2 border_width (inherited)
-
-The width of the border of the button.
-
-Example:
-  # set buttons to have a border of 1
-  $button->set_theme_property(border_width => 1 );
-
-=head2 default_width
-
-Sets the value of the default width of the progress bar.
-
-=head2 char_done
-
-Sets the value of the char used to represent the done portion of the
-progress bar.
-
-Example :
-  # set char_done
-  $entry->set_theme_property(char_done => '=' );
-
-=head2 char_left
-
-Sets the value of the char used to represent the left portion of the
-progress bar.
-
-Example :
-  # set char_left
-  $entry->set_theme_property(char_left => '=' );
-
-
+version 0.200
 
 =head1 SYNOPSIS
 
@@ -168,8 +126,6 @@ What to show in the progress bar. Must be a C<PROGRESS_BAR_LABEL> -
 check L<Curses::Toolkit::Types> for valid options. Default to
 C<percent>.
 
-
-
 =head1 METHODS
 
 =head2 new
@@ -177,11 +133,9 @@ C<percent>.
   input:  none
   output: a Curses::Toolkit::Widget::ProgressBar
 
-
-
 =head2 possible_signals
 
-  my @signals = keys $button->possible_signals();
+  my @signals = keys $progressbar->possible_signals();
 
 Returns the possible signals that can be used on this widget. See
 L<Curses::Toolkit::Widget::signal_connect> to bind signals to actions
@@ -191,21 +145,86 @@ L<Curses::Toolkit::Widget::signal_connect> to bind signals to actions
 
 The progress bar accepts no signal.
 
+=head1 THEME RELATED PROPERTIES
 
+To set/get a theme properties, you should do :
+
+  $progressbar->set_theme_property(property_name => $property_value);
+  $value = $progressbar->get_theme_property('property_name');
+
+Here is the list of properties related to the progressbar, that can be
+changed in the associated theme. See the L<Curses::Toolkit::Theme> class
+used for the default (default class to look at is
+L<Curses::Toolkit::Theme::Default>)
+
+Don't forget to look at properties from the parent class, as these are also
+inherited from!
+
+=head2 border_width (inherited)
+
+The width of the border of the progressbar.
+
+Example:
+  # set the progressbar to have a border of 1
+  $progressbar->set_theme_property(border_width => 1 );
+
+=head2 default_length
+
+Sets the value of the default length of the progress bar.
+
+Example :
+  # set default_length
+  $progressbar->set_theme_property(default_length => 10 );
+
+=head2 char_done
+
+Sets the value of the char used to represent the done portion of the
+progress bar.
+
+Example :
+  # set char_done
+  $progressbar->set_theme_property(char_done => '=' );
+
+=head2 char_left
+
+Sets the value of the char used to represent the left portion of the
+progress bar.
+
+Example :
+  # set char_left
+  $progressbar->set_theme_property(char_left => ' ' );
+
+=head2 start_enclosing
+
+The string to be displayed at the left/top of the progress bar. Usually some enclosing characters.
+
+Example :
+  # set left/top enclosing
+  $progressbar->set_theme_property(start_enclosing => '< ' );
+  $progressbar->set_theme_property(start_enclosing => '[ ' );
+
+=head2 end_enclosing
+
+The string to be displayed at the right/bottom of the progress bar. Usually some enclosing characters.
+
+Example :
+  # set right/bottom enclosing
+  $progressbar->set_theme_property(end_enclosing => ' >' );
+  $progressbar->set_theme_property(end_enclosing => ' ]' );
 
 =head1 AUTHOR
 
-  Damien "dams" Krotkine
+Damien "dams" Krotkine
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2008 by Damien "dams" Krotkine.
+This software is copyright (c) 2010 by Damien "dams" Krotkine.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
-=cut 
-
+=cut
 
 
 __END__
+

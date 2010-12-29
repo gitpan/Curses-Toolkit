@@ -1,18 +1,18 @@
-# 
+#
 # This file is part of Curses-Toolkit
-# 
-# This software is copyright (c) 2008 by Damien "dams" Krotkine.
-# 
+#
+# This software is copyright (c) 2010 by Damien "dams" Krotkine.
+#
 # This is free software; you can redistribute it and/or modify it under
 # the same terms as the Perl 5 programming language system itself.
-# 
+#
 use warnings;
 use strict;
 
 package Curses::Toolkit::Widget::Container;
-our $VERSION = '0.100680';
-
-
+BEGIN {
+  $Curses::Toolkit::Widget::Container::VERSION = '0.200';
+}
 
 # ABSTRACT: a container widget
 
@@ -51,8 +51,8 @@ sub blank {
     my $theme  = $self->get_theme();
     my $c      = $self->get_coordinates();
     my $bc     = $self->_get_available_space() + {
-        x1 => $c->x1(), y1 => $c->y1(),
-        x2 => $c->x1(), y2 => $c->y1(),
+        x1 => $c->get_x1(), y1 => $c->get_y1(),
+        x2 => $c->get_x1(), y2 => $c->get_y1(),
     };
     $theme->draw_blank($bc);
     return $self;
@@ -111,7 +111,6 @@ sub _get_available_space {
 1;
 
 __END__
-
 =pod
 
 =head1 NAME
@@ -120,7 +119,7 @@ Curses::Toolkit::Widget::Container - a container widget
 
 =head1 VERSION
 
-version 0.100680
+version 0.200
 
 =head1 DESCRIPTION
 
@@ -133,8 +132,6 @@ This widget can contain 0 or more other widgets.
   input : none
   output : a Curses::Toolkit::Widget::Container
 
-
-
 =head1 METHODS
 
 =head2 render
@@ -144,8 +141,6 @@ Default rendering method for the widget. All render() method should call draw()
   input  : curses_handler
   output : the widget
 
-
-
 =head2 get_children
 
 Returns the list of children of the widget
@@ -153,17 +148,16 @@ Returns the list of children of the widget
   input : none
   output : ARRAY of Curses::Toolkit::Widget
 
-
-
 =head1 AUTHOR
 
-  Damien "dams" Krotkine
+Damien "dams" Krotkine
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2008 by Damien "dams" Krotkine.
+This software is copyright (c) 2010 by Damien "dams" Krotkine.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
-=cut 
+=cut
+

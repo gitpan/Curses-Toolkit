@@ -1,12 +1,12 @@
 #!perl
-# 
+#
 # This file is part of Curses-Toolkit
-# 
-# This software is copyright (c) 2008 by Damien "dams" Krotkine.
-# 
+#
+# This software is copyright (c) 2010 by Damien "dams" Krotkine.
+#
 # This is free software; you can redistribute it and/or modify it under
 # the same terms as the Perl 5 programming language system itself.
-# 
+#
 
 BEGIN {
   unless ($ENV{RELEASE_TESTING}) {
@@ -15,9 +15,9 @@ BEGIN {
   }
 }
 
+
 use Test::More;
 
-eval "use Test::Pod 1.00";
-plan skip_all => "Test::Pod 1.00 required for testing POD" if $@;
-
-all_pod_files_ok();
+eval "use Test::CPAN::Meta";
+plan skip_all => "Test::CPAN::Meta required for testing META.yml" if $@;
+meta_yaml_ok();

@@ -1,18 +1,18 @@
-# 
+#
 # This file is part of Curses-Toolkit
-# 
-# This software is copyright (c) 2008 by Damien "dams" Krotkine.
-# 
+#
+# This software is copyright (c) 2010 by Damien "dams" Krotkine.
+#
 # This is free software; you can redistribute it and/or modify it under
 # the same terms as the Perl 5 programming language system itself.
-# 
+#
 use warnings;
 use strict;
 
 package Curses::Toolkit::Role::Focusable;
-our $VERSION = '0.100680';
-
-
+BEGIN {
+  $Curses::Toolkit::Role::Focusable::VERSION = '0.200';
+}
 
 # ABSTRACT: This role implements the fact that a widget can have focus
 
@@ -76,7 +76,6 @@ sub is_focused {
 
 
 __END__
-
 =pod
 
 =head1 NAME
@@ -85,7 +84,7 @@ Curses::Toolkit::Role::Focusable - This role implements the fact that a widget c
 
 =head1 VERSION
 
-version 0.100680
+version 0.200
 
 =head1 DESCRIPTION
 
@@ -99,13 +98,9 @@ This role can be merged in anything that is a Curses::Toolkit::Widget
 
 None, this is a role, so it has no constructor
 
-
-
 =head2 is_focusable
 
 Returns 1, except if the widget has its sensitivity set to false
-
-
 
 =head2 set_focus
 
@@ -117,8 +112,6 @@ Sets the focus on/off on the widget.
   input : a boolean
   output : the widget
 
-
-
 =head2 is_focused
 
 Retrieves the focus setting of the widget.
@@ -126,17 +119,16 @@ Retrieves the focus setting of the widget.
   input : none
   output : true if the widget is focused, or false if not
 
-
-
 =head1 AUTHOR
 
-  Damien "dams" Krotkine
+Damien "dams" Krotkine
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2008 by Damien "dams" Krotkine.
+This software is copyright (c) 2010 by Damien "dams" Krotkine.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
-=cut 
+=cut
+

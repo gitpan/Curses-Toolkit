@@ -2,43 +2,74 @@
 use strict;
 use warnings;
 
-use ExtUtils::MakeMaker;
 
-WriteMakefile(
-  DISTNAME  => 'Curses-Toolkit',
-  NAME      => 'Curses::Toolkit',
-  AUTHOR    => "Damien\ \"dams\"\ Krotkine",
-  ABSTRACT  => "a\ modern\ Curses\ toolkit",
-  VERSION   => '0.100680',
-  EXE_FILES => [ qw() ],
-  (eval { ExtUtils::MakeMaker->VERSION(6.31) } ? (LICENSE => 'perl') : ()),
-  PREREQ_PM    => {
-    "MooseX::Has::Sugar" => '0',
-    "FindBin" => '0',
-    "Moose::Util::TypeConstraints" => '0',
-    "List::Util" => '0',
-    "File::Find" => '0',
-    "Curses::UI" => '0',
-    "Moose::Meta::Attribute::Custom::Trait::Chained" => '1.000',
-    "File::Spec::Functions" => '0',
-    "List::MoreUtils" => '0',
-    "Moose" => '0.92',
-    "File::Find::Rule" => '0',
-    "English" => '0',
-    "Term::ANSIColor" => '0',
-    "parent" => '0',
-    "Tie::Array::Iterable" => '0',
-    "overload" => '0',
-    "Curses" => '0',
-    "Test::More" => '0',
-    "Params::Validate" => '0',
-    "HTML::Parser" => '0',
-    "MooseX::FollowPBP" => '0',
-    "Path::Class" => '0',
-    "UNIVERSAL::require" => '0.13',
-    "Cwd" => '0',
-    "POE" => '0',
+
+use ExtUtils::MakeMaker 6.31;
+
+
+
+my %WriteMakefileArgs = (
+  'ABSTRACT' => 'a modern Curses toolkit',
+  'AUTHOR' => 'Damien "dams" Krotkine',
+  'BUILD_REQUIRES' => {
+    'English' => '0',
+    'File::Find' => '0',
+    'File::Temp' => '0',
+    'IO::Pty::Easy' => '0',
+    'Test::Exception' => '0',
+    'Test::More' => '0',
+    'aliased' => '0'
   },
-  test => {TESTS => 't/*.t'}
+  'CONFIGURE_REQUIRES' => {
+    'ExtUtils::MakeMaker' => '6.31'
+  },
+  'DISTNAME' => 'Curses-Toolkit',
+  'EXE_FILES' => [],
+  'LICENSE' => 'perl',
+  'NAME' => 'Curses::Toolkit',
+  'PREREQ_PM' => {
+    'Curses' => '0',
+    'Data::Dumper' => '0',
+    'HTML::Parser' => '0',
+    'IO::Pty::Easy' => '0',
+    'List::MoreUtils' => '0',
+    'List::Util' => '0',
+    'Moose' => '0.92',
+    'Moose::Meta::Attribute::Custom::Trait::Chained' => '0.01',
+    'Moose::Util::TypeConstraints' => '0',
+    'MooseX::FollowPBP' => '0',
+    'MooseX::Has::Sugar' => '0',
+    'POE' => '0',
+    'Params::Validate' => '0',
+    'Tie::Array::Iterable' => '0',
+    'UNIVERSAL::require' => '0.13',
+    'overload' => '0',
+    'parent' => '0'
+  },
+  'VERSION' => '0.200',
+  'test' => {
+    'TESTS' => 't/*.t t/object/*.t'
+  }
 );
+
+
+unless ( eval { ExtUtils::MakeMaker->VERSION(6.56) } ) {
+  my $br = delete $WriteMakefileArgs{BUILD_REQUIRES};
+  my $pp = $WriteMakefileArgs{PREREQ_PM};
+  for my $mod ( keys %$br ) {
+    if ( exists $pp->{$mod} ) {
+      $pp->{$mod} = $br->{$mod} if $br->{$mod} > $pp->{$mod};
+    }
+    else {
+      $pp->{$mod} = $br->{$mod};
+    }
+  }
+}
+
+delete $WriteMakefileArgs{CONFIGURE_REQUIRES}
+  unless eval { ExtUtils::MakeMaker->VERSION(6.52) };
+
+WriteMakefile(%WriteMakefileArgs);
+
+
 

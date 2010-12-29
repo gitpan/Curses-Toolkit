@@ -1,80 +1,81 @@
-# 
+#
 # This file is part of Curses-Toolkit
-# 
-# This software is copyright (c) 2008 by Damien "dams" Krotkine.
-# 
+#
+# This software is copyright (c) 2010 by Damien "dams" Krotkine.
+#
 # This is free software; you can redistribute it and/or modify it under
 # the same terms as the Perl 5 programming language system itself.
-# 
+#
 use warnings;
 use strict;
 
 package Curses::Toolkit::Object::Coordinates;
-our $VERSION = '0.100680';
-
-
-
+BEGIN {
+  $Curses::Toolkit::Object::Coordinates::VERSION = '0.200';
+}
 # ABSTRACT: simple coordinates class
 
-use parent qw(Curses::Toolkit::Object);
+# We don't use Moose for speed purpose
 
 use Params::Validate qw(:all);
 
+use parent qw(Curses::Toolkit::Object);
+
 use overload
     '+'  => '_clone_add',
-    '-'  => '_clone_substract',
+    '-'  => '_clone_subtract',
     '""' => '_stringify',
     '==' => '_equals';
 
-sub _stringify {
-    my ($self) = @_;
-    return $self->width . 'x' . $self->height . '+' . $self->x1 . 'x' . $self->y1;
-}
 
-sub _equals {
-    my ( $c1, $c2 ) = @_;
-    return
-           $c1->x1() == $c2->x1()
-        && $c1->y1() == $c2->y1()
-        && $c1->x2() == $c2->x2()
-        && $c1->y2() == $c2->y2();
-}
+# -- attributes
 
 
+# -- constructor, builder & initializer
+
+
+# called before object is built, to normalize the arguments.
 sub new {
-    my $class = shift;
+    my $class  = shift;
 
-    if ( ref( $_[0] ) eq __PACKAGE__ ) {
+    my %params;
+
+    if ( ref($_[0]) eq __PACKAGE__ ) {
+        # case: Coordinates->new( $clone );
         my $c    = $_[0];
-        my $self = {
+        %params = (
             x1 => $c->{x1}, y1 => $c->{y1},
             x2 => $c->{x2}, y2 => $c->{y2},
-        };
-        return bless $self, $class;
-    }
-    my %params = @_;
-    if ( exists $params{width} || exists $params{height} ) {
-        validate(
-            @_,
-            {   x1        => { type     => SCALAR }, y1     => { type => SCALAR },
-                width     => { type     => SCALAR }, height => { type => SCALAR },
-                normalize => { optional => 1,        type   => BOOLEAN },
-            }
+            normalize => $c->{normalize},
         );
-        $params{x2} = $params{x1} + $params{width};
-        $params{y2} = $params{y1} + $params{height};
-        defined $params{normalize} or $params{normalize} = 1;
     } else {
-        validate(
-            @_,
-            {   x1        => { type     => SCALAR | CODEREF }, y1   => { type => SCALAR | CODEREF },
-                x2        => { type     => SCALAR | CODEREF }, y2   => { type => SCALAR | CODEREF },
-                normalize => { optional => 1,                  type => BOOLEAN },
-            }
-        );
+        %params = @_;
+        if ( exists $params{width} || exists $params{height} ) {
+            # case: width and height arguments
+            %params = validate( @_,
+                {   x1        => { type => SCALAR }, y1     => { type => SCALAR },
+                    width     => { type => SCALAR }, height => { type => SCALAR },
+                    normalize => { type => BOOLEAN, default => 1 },
+                }
+            );
+            $params{x2} = $params{x1} + $params{width};
+            $params{y2} = $params{y1} + $params{height};
+        } else {
+            %params = validate( @_,
+                {   x1 => { type => SCALAR|CODEREF }, y1 => { type => SCALAR|CODEREF },
+                    x2 => { type => SCALAR|CODEREF }, y2 => { type => SCALAR|CODEREF },
+                    normalize => { type => BOOLEAN, default => 1 },
+                }
+            );
+        }
+
+        foreach (qw( x1 x2 y1 y2 )) {
+            ref $params{$_} eq 'CODE'
+              or $params{$_} = int($params{$_});
+        }
     }
     my $self = bless \%params, $class;
-    $params{normalize} and $self->_normalize();
+    $self->_normalize();
     return $self;
 }
 
@@ -88,209 +89,173 @@ sub new_zero {
 }
 
 
+
 sub clone {
     my ($self) = @_;
     return ref($self)->new($self);
 }
 
+sub get_x1 { my $v = shift->{x1}; ref $v eq 'CODE' ? $v->() : $v }
+sub get_y1 { my $v = shift->{y1}; ref $v eq 'CODE' ? $v->() : $v }
+sub get_x2 { my $v = shift->{x2}; ref $v eq 'CODE' ? $v->() : $v }
+sub get_y2 { my $v = shift->{y2}; ref $v eq 'CODE' ? $v->() : $v }
+sub get_normalize { shift->{normalize} }
+
+# -- public methods
+
 
 sub set {
     my $self   = shift;
+
+    # checks on params
     my %params = validate(
         @_,
         {   x1 => { type => SCALAR | CODEREF, optional => 1 }, y1 => { type => SCALAR | CODEREF, optional => 1 },
             x2 => { type => SCALAR | CODEREF, optional => 1 }, y2 => { type => SCALAR | CODEREF, optional => 1 },
+            normalize => { type => BOOLEAN, default => 1 },
         }
     );
-    keys %params or die "One of (x1, y1, x2, y2) argument must be passed";
-    @{$self}{ keys %params } = values %params;
+    keys %params or die "One of (x1, y1, x2, y2, normalize) argument must be passed";
+
+    # set the new coords
+    foreach my $k ( keys %params ) {
+        $self->{$k} = $params{$k};
+    }
     $self->_normalize();
     return $self;
 }
 
-# make sure the coordinate is positive
-sub _normalize {
-    my ($self) = @_;
-
-    $self->x1() <= $self->x2() or ( $self->{x1}, $self->{x2} ) = ( $self->{x2}, $self->{x1} );
-    $self->y1() <= $self->y2() or ( $self->{y1}, $self->{y2} ) = ( $self->{y2}, $self->{y1} );
-    return;
-}
 
 
 sub width {
     my ($self) = @_;
-    return $self->x2() - $self->x1();
+    return $self->get_x2() - $self->get_x1();
 }
+
 
 
 sub height {
     my ($self) = @_;
-    return $self->y2() - $self->y1();
+    return $self->get_y2() - $self->get_y1();
 }
 
-
-sub x1 { my ($self) = @_; my $x1 = $self->{x1}; ref $x1 eq 'CODE' ? $x1->($self) : $x1 }
-sub y1 { my ($self) = @_; my $y1 = $self->{y1}; ref $y1 eq 'CODE' ? $y1->($self) : $y1 }
-sub x2 { my ($self) = @_; my $x2 = $self->{x2}; ref $x2 eq 'CODE' ? $x2->($self) : $x2 }
-sub y2 { my ($self) = @_; my $y2 = $self->{y2}; ref $y2 eq 'CODE' ? $y2->($self) : $y2 }
 
 
 sub add {
     my ( $self, $c ) = @_;
 
-    if ( !ref $c ) {
+    # FIXME: callbacks loose their coderef status
 
+    if ( !ref $c ) {
         # argument is a constant
         @{$self}{qw(x1 y1 x2 y2)} = (
-            $self->x1() + $c, $self->y1() + $c,
-            $self->x2() + $c, $self->y2() + $c,
+            $self->get_x1 + $c, $self->get_y1 + $c,
+            $self->get_x2 + $c, $self->get_y2 + $c,
         );
-    } elsif ( ref $c eq __PACKAGE__ ) {
 
+    } elsif ( ref $c eq __PACKAGE__ ) {
         # argument is a coordinate object
         @{$self}{qw(x1 x2 y1 y2)} = (
-            $self->x1() + $c->x1(), $self->y1() + $c->y1(),
-            $self->x2() + $c->x2(), $self->y2() + $c->y2(),
+            $self->get_x1 + $c->get_x1, $self->get_x2 + $c->get_x2,
+            $self->get_y1 + $c->get_y1, $self->get_y2 + $c->get_y2,
         );
-    } elsif ( ref $c eq 'HASH' ) {
 
+    } elsif ( ref $c eq 'HASH' ) {
         # argument is a hash
         while ( my ( $k, $v ) = each %$c ) {
-            $self->{$k} = $self->$k() + $v;
+            my $meth = "get_$k";
+            $self->{$k} = $self->$meth + $v;
         }
+
     } else {
-        die "Argument type ('" . ref $c . "') is not supported in Coordinate addition";
+        die "Argument type ('" . ref($c) . "') is not supported in Coordinate addition";
     }
     $self->_normalize();
     return $self;
 }
 
-sub _clone_add {
-    my $self  = shift;
-    my $clone = $self->clone();
-    $clone->add(@_);
-    return $clone;
-}
-
-# sub add {
-# 	my ($self, $c) = @_;
-# 	# argument is a constant
-# 	ref $c or
-# 	  return $self->set( x1 => $self->x1() + $c, y1 => $self->y1() + $c,
-# 							   x2 => $self->x2() + $c, y2 => $self->y2() + $c,
-# 							 );
-
-# 	# argument is a coordinate object
-# 	ref $c eq $self and
-# 	  return $self->set( x1 => $self->x1() + $c->x1(), y1 => $self->y1() + $c->y1(),
-# 							   x2 => $self->x2() + $c->x2(), y2 => $self->y2() + $c->y2(),
-# 							 );
-# 	# argument is a hash
-# 	ref $c eq 'HASH' and
-# 	  return $self->set( x1 => $self->x1() + $c->{x1}, y1 => $self->y1() + $c->{y1},
-# 							   x2 => $self->x2() + $c->{x2}, y2 => $self->y2() + $c->{y2},
-# 							 );
-
-# 	die "Argument type ('" . ref $c . "') is not supported in Coordinate addition";
-# }
 
 
-sub substract {
+sub subtract {
     my ( $self, $c ) = @_;
 
-    if ( !ref $c ) {
+    # FIXME: callbacks loose their coderef status
 
+    if ( !ref $c ) {
         # argument is a constant
         @{$self}{qw(x1 y1 x2 y2)} = (
-            $self->x1() - $c, $self->y1() - $c,
-            $self->x2() - $c, $self->y2() - $c,
+            $self->get_x1 - $c, $self->get_y1 - $c,
+            $self->get_x2 - $c, $self->get_y2 - $c,
         );
-    } elsif ( ref $c eq __PACKAGE__ ) {
 
+    } elsif ( ref $c eq __PACKAGE__ ) {
         # argument is a coordinate object
         @{$self}{qw(x1 x2 y1 y2)} = (
-            $self->x1() - $c->x1(), $self->y1() - $c->y1(),
-            $self->x2() - $c->x2(), $self->y2() - $c->y2(),
+            $self->get_x1 - $c->get_x1, $self->get_x2 - $c->get_x2,
+            $self->get_y1 - $c->get_y1, $self->get_y2 - $c->get_y2,
         );
+
     } elsif ( ref $c eq 'HASH' ) {
 
         # argument is a hash
         while ( my ( $k, $v ) = each %$c ) {
-            $self->{$k} = $self->$k() - $v;
+            my $meth = "get_$k";
+            $self->{$k} = $self->$meth - $v;
         }
+
     } else {
-        die "Argument type ('" . ref $c . "') is not supported in Coordinate addition";
+        die "Argument type ('" . ref($c) . "') is not supported in Coordinate addition";
     }
     $self->_normalize();
     return $self;
 }
 
-sub _clone_substract {
-    my $self  = shift;
-    my $clone = $self->clone();
-    $clone->substract(@_);
-    return $clone;
-}
-
-# sub substract {
-# 	my ($self, $c) = @_;
-# 	# argument is a constant
-# 	ref $c or
-# 	  return $self->set( x1 => $self->x1() - $c, y1 => $self->y1() - $c,
-# 							   x2 => $self->x2() - $c, y2 => $self->y2() - $c,
-# 							 );
-# 	# argument is a Coordinates object
-# 	if ($c->isa($self)) {
-# 		return $self->set( x1 => $self->x1() - $c->x1(), y1 => $self->y1() - $c->y1(),
-# 								 x2 => $self->x2() - $c->x2(), y2 => $self->y2() - $c->y2(),
-# 							   );
-# 	}
-# 	# argument is a hash
-# 	ref $c eq 'HASH' and
-# 	  return $self->set( x1 => $self->x1() - $c->{x1}, y1 => $self->y1() - $c->{y1},
-# 							   x2 => $self->x2() - $c->{x2}, y2 => $self->y2() - $c->{y2},
-# 							 );
-# 	die "Argument type ('" . ref $c . "') is not supported in Coordinate substraction";
-# }
 
 
 sub restrict_to {
     my $self = shift;
     my ($c) = validate_pos( @_, { isa => 'Curses::Toolkit::Object::Coordinates' } );
 
-    $self->x1() < $c->x1() and $self->{x1} = $c->{x1};
-    $self->x1() > $c->x2() and $self->{x1} = $c->{x2};
+    $self->get_x1 < $c->get_x1 and $self->{x1} = $c->{x1};
+    $self->get_x1 > $c->get_x2 and $self->{x1} = $c->{x2};
 
-    $self->x2() > $c->x2() and $self->{x2} = $c->{x2};
-    $self->x2() < $c->x1() and $self->{x2} = $c->{x1};
+    $self->get_x2 > $c->get_x2 and $self->{x2} = $c->{x2};
+    $self->get_x2 < $c->get_x1 and $self->{x2} = $c->{x1};
 
-    $self->y1() < $c->y1() and $self->{y1} = $c->{y1};
-    $self->y1() > $c->y2() and $self->{y1} = $c->{y2};
+    $self->get_y1 < $c->get_y1 and $self->{y1} = $c->{y1};
+    $self->get_y1 > $c->get_y2 and $self->{y1} = $c->{y2};
 
-    $self->y2() > $c->y2() and $self->{y2} = $c->{y2};
-    $self->y2() < $c->y1() and $self->{y2} = $c->{y1};
+    $self->get_y2 > $c->get_y2 and $self->{y2} = $c->{y2};
+    $self->get_y2 < $c->get_y1 and $self->{y2} = $c->{y1};
+
+    $self->_normalize();
 
     return $self;
 }
+
 
 
 sub grow_to {
     my $self = shift;
     my ($c) = validate_pos( @_, { isa => 'Curses::Toolkit::Object::Coordinates' } );
 
-    $self->x1() > $c->x1() and $self->{x1} = $c->{x1};
-    $self->x2() < $c->x2() and $self->{x2} = $c->{x2};
+    $self->get_x1 > $c->get_x1 and $self->{x1} = $c->{x1};
+    $self->get_x2 < $c->get_x2 and $self->{x2} = $c->{x2};
 
-    $self->y1() > $c->y1() and $self->{y1} = $c->{y1};
-    $self->y2() < $c->y2() and $self->{y2} = $c->{y2};
+    $self->get_y1 > $c->get_y1 and $self->{y1} = $c->{y1};
+    $self->get_y2 < $c->get_y2 and $self->{y2} = $c->{y2};
+
+    $self->_normalize();
 
     return $self;
 }
 
 
+
 sub translate {
     my $self = shift;
+
+    # FIXME: callbacks loose their coderef status
 
     my %params = validate(
         @_,
@@ -309,8 +274,12 @@ sub translate {
         $self->{y1} += $params{y};
         $self->{y2} += $params{y};
     }
+
+    $self->_normalize();
+
     return $self;
 }
+
 
 
 sub translate_up {
@@ -319,10 +288,12 @@ sub translate_up {
 }
 
 
+
 sub translate_down {
     my ( $self, $value ) = @_;
     return $self->translate( y => abs $value );
 }
+
 
 
 sub translate_left {
@@ -331,21 +302,24 @@ sub translate_left {
 }
 
 
+
 sub translate_right {
     my ( $self, $value ) = @_;
     return $self->translate( x => abs $value );
 }
 
 
+
 sub contains {
     my $self = shift;
     my ($c) = validate_pos( @_, { isa => 'Curses::Toolkit::Object::Coordinates' } );
     return
-           $self->x1() <= $c->x1()
-        && $self->y1() <= $c->y1()
-        && $self->x2() >= $c->x2()
-        && $self->y2() >= $c->y2();
+           $self->get_x1() <= $c->get_x1()
+        && $self->get_y1() <= $c->get_y1()
+        && $self->get_x2() >= $c->get_x2()
+        && $self->get_y2() >= $c->get_y2();
 }
+
 
 
 sub is_inside {
@@ -355,20 +329,98 @@ sub is_inside {
 }
 
 
+
 sub is_in_widget {
     my ( $self, $widget ) = @_;
     my $w_coord = $widget->get_coordinates();
     return
-           $w_coord->x1() <= $self->x1()
-        && $w_coord->x2() >= $self->x2()
-        && $w_coord->y1() <= $self->y1()
-        && $w_coord->y2() >= $self->y2();
+           $w_coord->get_x1 <= $self->get_x1
+        && $w_coord->get_x2 >= $self->get_x2
+        && $w_coord->get_y1 <= $self->get_y1
+        && $w_coord->get_y2 >= $self->get_y2;
 }
 
 
+# -- private methods
+
+#
+# my $c3 = $c1->_clone_add( $c2 );
+# my $c3 = $c1 + $c2;   # overloaded
+#
+# clone a coord and add another to the new object.
+#
+sub _clone_add {
+    my $self  = shift;
+    my $clone = $self->clone();
+    $clone->add(@_);
+    return $clone;
+}
+
+
+#
+# my $c3 = $c1->_clone_subtract( $c2 );
+# my $c3 = $c1 - $c2;   # overloaded
+#
+# clone a coord and subtract another to the new object.
+#
+sub _clone_subtract {
+    my $self  = shift;
+    my $clone = $self->clone();
+    $clone->subtract(@_);
+    return $clone;
+}
+
+
+#
+# my $bool = $c1->_equals( $c2 );
+# my $bool = $c1 == $c2;    # overloaded
+#
+# return true if both $c1 and $c2 point to the same coords. they can
+# point to different objects, though.
+#
+sub _equals {
+    my ( $c1, $c2 ) = @_;
+    return
+           $c1->get_x1 == $c2->get_x1
+        && $c1->get_y1 == $c2->get_y1
+        && $c1->get_x2 == $c2->get_x2
+        && $c1->get_y2 == $c2->get_y2;
+}
+
+
+#
+# my $str = $self->_stringify;
+# my $str = "$self";     # overloaded
+#
+# return the string 'WxH+XxY' with:
+#   W = width
+#   H = height,
+#   X = top left x coord
+#   Y = top left y coord
+#
+sub _stringify {
+    my ($self) = @_;
+    return $self->width . 'x' . $self->height . '+' . $self->get_x1 . 'x' . $self->get_y1;
+}
+
+
+#
+# $self->_normalize;
+#
+# make sure the coordinate is positive. in effect:
+#  - swap x1 and x2 to make sure x1 <= x2
+#  - swap y1 and y2 to make sure y1 <= y2
+#
+sub _normalize {
+    my ($self) = @_;
+    $self->get_normalize() or return;
+    $self->get_x1() <= $self->get_x2() or ( $self->{x1}, $self->{x2} ) = ( $self->{x2}, $self->{x1} );
+    $self->get_y1() <= $self->get_y2() or ( $self->{y1}, $self->{y2} ) = ( $self->{y2}, $self->{y1} );
+    return;
+}
+
 1;
 
-__END__
 
 =pod
 
@@ -378,150 +430,175 @@ Curses::Toolkit::Object::Coordinates - simple coordinates class
 
 =head1 VERSION
 
-version 0.100680
+version 0.200
 
 =head1 DESCRIPTION
 
-Trivial class to hold 2 points
+Trivial class to hold 2 points.
 
-+ and - are properly overloaded
++ and - are properly overloaded.
 
-=head1 CONSTRUCTOR
+=head1 ATTRIBUTES
+
+=head2 x1
+
+Top left x coordinate of the object. Can be either an integer or a
+coderef.
+
+=head2 y1
+
+Top left y coordinate of the object. Can be either an integer or a
+coderef.
+
+=head2 x2
+
+Bottom right x coordinate of the object. Can be either an integer or a
+coderef.
+
+=head2 y2
+
+Bottom right y coordinate of the object. Can be either an integer or a
+coderef.
+
+=head2 normalize
+
+A boolean to swap coordinates to make sure x1 < x2 and y1 < y2 if set to
+true (default). If set to false, the coordinates will be untouched.
+
+=head1 METHODS
 
 =head2 new
+
+    my $coord = CTO::Coordinates->new( @attributes );
+    my $coord = CTO::Coordinates->new( $coord_to_clone );
+    my $coord = CTO::Coordinates->new( x1=>$x1, y1=>$y1, width=>$w, height=>$h );
+
+Constructor for the class. Acceps various kind of attributes.
 
   input  : x1 : top left x
            y1 : top left y
            x2 : right bottom x
            y2 : right bottom y
-           [ normalize ] : optional, if false, won't normalize the coords (see below)
+           [ normalize ] : optional
     OR
   input  : x1 : top left x
            y1 : top left y
            width : width
-           height : heigth
-           [ normalize ] : optional, if false, won't normalize the coords (see below)
+           height : height
+           [ normalize ] : optional
     OR
   input  : x1 : sub { ... } # returns top left x
            y1 : sub { ... } # returns top left y
            x2 : sub { ... } # returns right bottom x
            y2 : sub { ... } # returns right bottom y
-           [ normalize ] : optional, if false, won't normalize the coords (see below)
+           [ normalize ] : optional
     OR
   input  : a Curses::Toolkit::Object::Coordinates object
 
   output : a Curses::Toolkit::Object::Coordinates object
 
-Normalize option : if set to false, the coordinate will be untouched. If set to
-true (default), the coordinate will make sure x1 < x2 and y1 < y2, and that
-they are all integers, swapping or rounding them if necessary.
-
-
-
 =head2 new_zero
 
-Creates a new coordinates with all zero
+    my $coord = CTO::Coordinates->new_zero;
+
+Creates a new coordinates with all individual coords set to zero.
 
   input  : none
   output : a Curses::Toolkit::Object::Coordinates object
-
-
-
-=head1 METHODS
 
 =head2 clone
 
-clone an coordinates object
+    my $c2 = $c1->clone;
+
+Clone a coordinates object.
 
   input  : none
   output : a Curses::Toolkit::Object::Coordinates object
 
-
-
 =head2 set
 
-set attributes of the coordinate
+    $coord->set( x1=>$x1, y1=>$y1, x2=>$x2, y2=>$y2, normalize => 1 );
 
-  input  : one or more of x1, x2, y1, y2, width, height
+Set attributes of the coordinate object.
+
+  input  : one or more of x1, x2, y1, y2
   output : the coordinate object
-
-
 
 =head2 width
 
-returns the width represented by the coordinates
+    my $width = $coord->width;
 
-
+Returns the width represented by the coordinate object.
 
 =head2 height
 
-returns the height represented by the coordinates
+    my $height = $coord->height;
 
-
-
-=head2 x1, x2, y1, y2
-
-These are helpers to retrieve the coordinates values
-
-
+Returns the height represented by the coordinate object.
 
 =head2 add
 
-Add to the coordinate.
+    $coord->add( $const );
+    $coord->add( $coord_to_add );
+    $coord->add( { x1=>$x1, y1=>$y1, x2=>$x2, y2=>$y2 } );
+
+Add to the coordinate attributes of the object.
 
 If the argument is a constant, it's added to all the components of the
 coordinate.
 If it's a Curses::Toolkit::Object::Coordinates, it's added side by side
 If it's a hashref, it's added side by side
 
-  input  : a CONSTANT
-OR
-  input  : a Curses::Toolkit::Object::Coordinates
-OR
-  input  : a HASHREF of 'x1', 'x2', 'y1', 'y2'
+      input  : a CONSTANT
+    OR
+      input  : a Curses::Toolkit::Object::Coordinates
+    OR
+      input  : a HASHREF of 'x1', 'x2', 'y1', 'y2'
 
-output : the Curses::Toolkit::Object::Coordinates object
+    output : the Curses::Toolkit::Object::Coordinates object
 
+=head2 subtract
 
-
-=head2 substract
+    $coord->subtract( $const );
+    $coord->subtract( $coord_to_add );
+    $coord->subtract( { x1=>$x1, y1=>$y1, x2=>$x2, y2=>$y2 } );
 
 Substract from the coordinate (also overloads '-').
 
-If the argument is a constant, it's substracted from all the components of the
+If the argument is a constant, it's subtracted from all the components of the
 coordinate.
-If it's a Curses::Toolkit::Object::Coordinates, it's substracted side by side
-If it's a hashref, it's substracted side by side
+If it's a Curses::Toolkit::Object::Coordinates, it's subtracted side by side
+If it's a hashref, it's subtracted side by side
 
-  input  : a CONSTANT
-OR
-  input  : a Curses::Toolkit::Object::Coordinates
-OR
-  input  : a HASHREF of 'x1', 'x2', 'y1', 'y2'
+      input  : a CONSTANT
+    OR
+      input  : a Curses::Toolkit::Object::Coordinates
+    OR
+      input  : a HASHREF of 'x1', 'x2', 'y1', 'y2'
 
-output : the Curses::Toolkit::Object::Coordinates object
-
-
+    output : the Curses::Toolkit::Object::Coordinates object
 
 =head2 restrict_to
+
+    $coord->restrict_to( $coord_to_fit_into );
 
 Force the coordinate to be inside the passed coordinate.
 
   input  : a Curses::Toolkit::Object::Coordinates object
   output : the object
 
-
-
 =head2 grow_to
+
+    $coord->grow_to( $coord_to_match );
 
 Force the coordinate to be at least as big as the passed coordinate.
 
   input  : a Curses::Toolkit::Object::Coordinates object
   output : the object
 
-
-
 =head2 translate
+
+    $coord->translate( x=>$x, y=>$y );
 
 Given a X value and a Y value, translates the coordinate accordingly
 
@@ -529,84 +606,82 @@ Given a X value and a Y value, translates the coordinate accordingly
            y : value to translate the coord vertically
   output : the Curses::Toolkit::Object::Coordinates object
 
-
-
 =head2 translate_up
+
+    $coord->translate_up( $offset );
 
 Given a value, translates the coordinate up (value sign is ignored)
 
   input  : value to translate the coord up
   output : the Curses::Toolkit::Object::Coordinates object
 
-
-
 =head2 translate_down
+
+    $coord->translate_down( $offset );
 
 Given a value, translates the coordinate down (value sign is ignored)
 
   input  : value to translate the coord down
   output : the Curses::Toolkit::Object::Coordinates object
 
-
-
 =head2 translate_left
+
+    $coord->translate_left( $offset );
 
 Given a value, translates the coordinate left (value sign is ignored)
 
   input  : value to translate the coord left
   output : the Curses::Toolkit::Object::Coordinates object
 
-
-
 =head2 translate_right
+
+    $coord->translate_right( $offset );
 
 Given a value, translates the coordinate right (value sign is ignored)
 
   input  : value to translate the coord right
   output : the Curses::Toolkit::Object::Coordinates object
 
-
-
 =head2 contains
+
+    my $bool = $coord->contains( $coord_to_check );
 
 Return true if the coordinates contains the given coordinates
 
-  my $boolean = $self->contains( $coord )
-
   input  : a Curses::Toolkit::Object::Coordinates object : the coordinates
   output : true or false
-
-
 
 =head2 is_inside
 
-Return true if the coordinates is inside the given coordinates
+    my $bool = $coord->is_inside( $coord_to_check );
 
-  my $boolean = $self->is_inside( $coord )
+Return true if the coordinates is inside the given coordinates
 
   input  : a Curses::Toolkit::Object::Coordinates object : the coordinates
   output : true or false
 
-
-
 =head2 is_in_widget
+
+    my $bool = $coord->is_in_widget( $widget );
 
 Return true if the coordinates is inside the given widget
 
   input  : Curses::Toolkit::Widget : the widget
   output : true or false
 
-
-
 =head1 AUTHOR
 
-  Damien "dams" Krotkine
+Damien "dams" Krotkine
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2008 by Damien "dams" Krotkine.
+This software is copyright (c) 2010 by Damien "dams" Krotkine.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
-=cut 
+=cut
+
+
+__END__
+

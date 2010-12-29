@@ -1,18 +1,18 @@
-# 
+#
 # This file is part of Curses-Toolkit
-# 
-# This software is copyright (c) 2008 by Damien "dams" Krotkine.
-# 
+#
+# This software is copyright (c) 2010 by Damien "dams" Krotkine.
+#
 # This is free software; you can redistribute it and/or modify it under
 # the same terms as the Perl 5 programming language system itself.
-# 
+#
 use warnings;
 use strict;
 
 package Curses::Toolkit::Widget::Window;
-our $VERSION = '0.100680';
-
-
+BEGIN {
+  $Curses::Toolkit::Widget::Window::VERSION = '0.200';
+}
 
 # ABSTRACT: a window
 
@@ -23,6 +23,7 @@ use Params::Validate qw(:all);
 use List::MoreUtils qw(any none);
 use List::Util qw(min sum max);
 
+use Curses::Toolkit::EventListener;
 
 
 sub new {
@@ -89,7 +90,7 @@ sub new {
                         and return 1;
                     my $c  = $event->{coordinates};
                     my $wc = $self->get_coordinates();
-                    !$self->{_move_pressed} && $event->{type} eq 'pressed' && $c->y1() == $wc->y1()
+                    !$self->{_move_pressed} && $event->{type} eq 'pressed' && $c->get_y1() == $wc->get_y1()
                         and return 1;
                     return 0;
                 },
@@ -106,17 +107,17 @@ sub new {
                     my $wc = $window->get_coordinates();            # window coord
                     my $rc = $self->get_root_window()->get_shape(); # root coord
                     $wc += {
-                        x1 => $c->x1() - $oc->x1(), x2 => $c->x1() - $oc->x1(),
-                        y1 => $c->y1() - $oc->y1(), y2 => $c->y1() - $oc->y1(),
+                        x1 => $c->get_x1() - $oc->get_x1(), x2 => $c->get_x1() - $oc->get_x1(),
+                        y1 => $c->get_y1() - $oc->get_y1(), y2 => $c->get_y1() - $oc->get_y1(),
                     };
-                    $wc->y1() < 0
-                        and $wc->translate_down( $wc->y1() );
-                    $wc->y1() > $rc->height() - 1
-                        and $wc->translate_up( $wc->y1() - $rc->height() + 1 );
-                    $wc->x1() < -$wc->width() + 1
-                        and $wc->translate_right( -$wc->width() + 1 - $wc->x1() );
-                    $wc->x1() > $rc->width() - 1
-                        and $wc->translate_left( -$wc->x1() - $rc->width() + 1 );
+                    $wc->get_y1() < 0
+                        and $wc->translate_down( $wc->get_y1() );
+                    $wc->get_y1() > $rc->height() - 1
+                        and $wc->translate_up( $wc->get_y1() - $rc->height() + 1 );
+                    $wc->get_x1() < -$wc->width() + 1
+                        and $wc->translate_right( -$wc->width() + 1 - $wc->get_x1() );
+                    $wc->get_x1() > $rc->width() - 1
+                        and $wc->translate_left( -$wc->get_x1() - $rc->width() + 1 );
 
                     $window->set_coordinates($wc);
                     $window->needs_redraw();
@@ -148,8 +149,8 @@ sub new {
                     my $wc = $self->get_coordinates();
                           !$self->{_resize_pressed}
                         && $event->{type} eq 'pressed'
-                        && $c->x2() == $wc->x2() - 1
-                        && $c->y2() == $wc->y2() - 1
+                        && $c->get_x2() == $wc->get_x2() - 1
+                        && $c->get_y2() == $wc->get_y2() - 1
                         and return 1;
                     return 0;
                 },
@@ -163,7 +164,7 @@ sub new {
                     $window->unset_modal();
                     my $c  = $event->{coordinates};
                     my $wc = $window->get_coordinates();
-                    $wc->set( x2 => $c->x2() + 1, y2 => $c->y2() + 1 );
+                    $wc->set( x2 => $c->get_x2() + 1, y2 => $c->get_y2() + 1 );
                     $window->set_coordinates($wc);
                     $window->needs_redraw();
                     $self->{_resize_pressed} = 0;
@@ -230,7 +231,7 @@ sub set_coordinates {
             my $percent = $1;
             $params{x2} = sub {
                 my ($coord) = @_;
-                $coord->x1()
+                $coord->get_x1()
                     + ( $self->get_root_window() and $self->get_root_window()->get_shape()->width() * $percent / 100 );
             };
             delete $params{width};
@@ -239,7 +240,7 @@ sub set_coordinates {
             my $percent = $1;
             $params{y2} = sub {
                 my ($coord) = @_;
-                $coord->y1()
+                $coord->get_y1()
                     + ( $self->get_root_window() and $self->get_root_window()->get_shape()->height() * $percent / 100 );
             };
             delete $params{height};
@@ -377,14 +378,14 @@ sub draw {
     my $theme = $self->get_theme();
     if ( length $title_to_display ) {
         $theme->draw_title(
-            $c->x1() + $o1, $c->y1(),
+            $c->get_x1() + $o1, $c->get_y1(),
             join( $title_to_display, @title_brackets_characters ),
             { clicked => $self->{_move_pressed} }
         );
     }
 
-    #	$theme->draw_corner_lr($c->x2() - 1, $c->y2() - 1);
-    $theme->draw_resize( $c->x2() - 1, $c->y2() - 1, { clicked => $self->{_resize_pressed} } );
+    #	$theme->draw_corner_lr($c->get_x2() - 1, $c->get_y2() - 1);
+    $theme->draw_resize( $c->get_x2() - 1, $c->get_y2() - 1, { clicked => $self->{_resize_pressed} } );
 }
 
 
@@ -594,7 +595,6 @@ sub _get_theme_properties_definition {
 1;
 
 __END__
-
 =pod
 
 =head1 NAME
@@ -603,26 +603,7 @@ Curses::Toolkit::Widget::Window - a window
 
 =head1 VERSION
 
-version 0.100680
-
-=head1 Appearence
-
-  +-[ title ]------------+
-  |                      |
-  |                      |
-  |                      |
-  |                      |
-  |                      |
-  |                      |
-  |                      |
-  |                      |
-  +----------------------#
-
-=head1 DESCRIPTION
-
-This is a window widget. This widget is important, as it's the only one that
-you can add on the root window. So all your graphical interface should be
-contained in one or more window.
+version 0.200
 
 =head1 SYNOPSIS
 
@@ -651,14 +632,31 @@ contained in one or more window.
   # spawn a root window
   $root->add_window($window);
 
+=head1 DESCRIPTION
+
+This is a window widget. This widget is important, as it's the only one that
+you can add on the root window. So all your graphical interface should be
+contained in one or more window.
+
+=head1 Appearence
+
+  +-[ title ]------------+
+  |                      |
+  |                      |
+  |                      |
+  |                      |
+  |                      |
+  |                      |
+  |                      |
+  |                      |
+  +----------------------#
+
 =head1 CONSTRUCTOR
 
 =head2 new
 
   input : none
   output : a Curses::Toolkit::Widget::Window
-
-
 
 =head2 set_title
 
@@ -667,16 +665,12 @@ Set the title of the window
   input  : the title
   output : the window widget
 
-
-
 =head2 get_title
 
 Get the title of the window
 
   input  : none
   output : the window title
-
-
 
 =head2 set_coordinates
 
@@ -701,8 +695,6 @@ You can also set coordinates in percent of the root window width / height :
     OR
   input  : a Curses::Toolkit::Object::Coordinates object
 
-
-
 =head2 set_root_window
 
 Sets the root window ( the root toolkit object) to which this window is added 
@@ -710,16 +702,12 @@ Sets the root window ( the root toolkit object) to which this window is added
   input  : the root toolkit object (Curses::Toolkit)
   output : the window
 
-
-
 =head2 get_root_window
 
 Get the root window
 
   input  : none
   output : the root toolkit object (Curses::Toolkit)
-
-
 
 =head2 bring_to_front()
 
@@ -730,8 +718,6 @@ Bring the window to front
   input : none
   output : the window widget
 
-
-
 =head2 bring_to_back()
 
   $window->bring_to_back()
@@ -740,8 +726,6 @@ Bring the window to the back
 
   input : none
   output : none
-
-
 
 =head2 set_focused_widget
 
@@ -752,8 +736,6 @@ Set the widget that has focus.
   input : a Curses::Toolkit::Widget that is into this window
   output : the window
 
-
-
 =head2 get_focused_widget
 
   my $widget = $window->get_focused_widget();
@@ -763,15 +745,11 @@ Gets the focused widget.
   input : none
   output : the focused Curses::Toolkit::Widget
 
-
-
 =head2 draw
 
 Draw the widget. You shouldn't use that, the mainloop will take care of it. If
 you are not using any mainloop, you should call draw() on the root window. See
 Curses::Toolkit
-
-
 
 =head2 get_visible_shape
 
@@ -779,8 +757,6 @@ Gets the Coordinates of the part of the window which is visible
 
   input  : none
   output : the shape (Curses::Toolkit::Object::Coordinates)
-
-
 
 =head2 set_type
 
@@ -790,16 +766,12 @@ Can be :
   input  : SCALAR : the type, one of 'normal', 'menu'
   output : the window widget
 
-
-
 =head2 get_type
 
 Get the type of the window
 
   input : none
   output : the type
-
-
 
 =head1 Theme related properties
 
@@ -877,17 +849,16 @@ accepted
 This sets the duration the loop animation should pause before going to the
 other direction. It's in seconds, but fractions are accepted
 
-
-
 =head1 AUTHOR
 
-  Damien "dams" Krotkine
+Damien "dams" Krotkine
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2008 by Damien "dams" Krotkine.
+This software is copyright (c) 2010 by Damien "dams" Krotkine.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
-=cut 
+=cut
+

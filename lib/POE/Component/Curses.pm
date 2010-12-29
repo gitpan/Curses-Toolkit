@@ -1,18 +1,18 @@
-# 
+#
 # This file is part of Curses-Toolkit
-# 
-# This software is copyright (c) 2008 by Damien "dams" Krotkine.
-# 
+#
+# This software is copyright (c) 2010 by Damien "dams" Krotkine.
+#
 # This is free software; you can redistribute it and/or modify it under
 # the same terms as the Perl 5 programming language system itself.
-# 
+#
 use warnings;
 use strict;
 
 package POE::Component::Curses;
-our $VERSION = '0.100680';
-
-
+BEGIN {
+  $POE::Component::Curses::VERSION = '0.200';
+}
 
 # ABSTRACT: the ( currently only ) loader for Curses::toolkit
 
@@ -197,7 +197,6 @@ sub spawn {
 1;
 
 __END__
-
 =pod
 
 =head1 NAME
@@ -206,7 +205,7 @@ POE::Component::Curses - the ( currently only ) loader for Curses::toolkit
 
 =head1 VERSION
 
-version 0.100680
+version 0.200
 
 =head1 SYNOPSIS
 
@@ -241,7 +240,7 @@ version 0.100680
 
 POE::Component::Curses is a mainloop for L<Curses::Toolkit>.
 
-It has only one method : C<spawn>, which instantiate and returs a
+It has only one method : C<spawn>, which instantiates and returns a
 L<Curses::Toolkit> object for you. This is the root window.
 
 You should use this object to populate your root window with widgets. See
@@ -262,17 +261,16 @@ See its documentation for more information
          : args <HashRef> : the arguments to be passed to C<Curses::Toolkit::init_root_window>
   output : a L<Curses::Toolkit> instance
 
-
-
 =head1 AUTHOR
 
-  Damien "dams" Krotkine
+Damien "dams" Krotkine
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2008 by Damien "dams" Krotkine.
+This software is copyright (c) 2010 by Damien "dams" Krotkine.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
-=cut 
+=cut
+

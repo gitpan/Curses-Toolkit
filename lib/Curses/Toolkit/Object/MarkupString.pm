@@ -1,18 +1,18 @@
-# 
+#
 # This file is part of Curses-Toolkit
-# 
-# This software is copyright (c) 2008 by Damien "dams" Krotkine.
-# 
+#
+# This software is copyright (c) 2010 by Damien "dams" Krotkine.
+#
 # This is free software; you can redistribute it and/or modify it under
 # the same terms as the Perl 5 programming language system itself.
-# 
+#
 use warnings;
 use strict;
 
 package Curses::Toolkit::Object::MarkupString;
-our $VERSION = '0.100680';
-
-
+BEGIN {
+  $Curses::Toolkit::Object::MarkupString::VERSION = '0.200';
+}
 
 # ABSTRACT: a string that contains markups
 
@@ -124,10 +124,10 @@ sub _recompute {
                     push @current_attrs, \%struct;
                 } elsif ( $tagname eq 'b' ) {
                     push @stack, $tagname;
-                    push @current_attrs, { weight => A_BOLD };
+                    push @current_attrs, { weight => 'bold' };
                 } elsif ( $tagname eq 'u' ) {
                     push @stack, $tagname;
-                    push @current_attrs, { weight => A_UNDERLINE };
+                    push @current_attrs, { weight => 'underline' };
                 } else {
                     push @struct, map { [ $_, _deep_copy(@current_attrs) ] } split( //, $text );
                 }
@@ -160,6 +160,7 @@ sub _recompute {
 
     $self->{stripped_string} = join( '', map { $_->[0] } @struct );
     $self->{attr_struct} = \@struct;
+
     return;
 }
 
@@ -178,6 +179,7 @@ sub substring {
     my $new_stripped_string = '';
     $start < length( $self->{stripped_string} )
         and $new_stripped_string = substr( $self->{stripped_string}, $start, $width );
+
     my $r = $class->new_from_computed_string(
         undef,                                                          # markup string
         $new_stripped_string,                                           # stripped string
@@ -217,14 +219,15 @@ sub split_string {
     my $count   = 0;
     my @results = ();
     while ( $string =~ /$pattern/g ) {
-        my $end = $start + length($`) - 1;
+        my ($prematch, $match, $postmatch) = ($`, $&, $');
+        my $end = $start + length($prematch) - 1;
         push @results, $class->new_from_computed_string(
             undef,                                           # markup string
-            $`,                                              # stripped string
+            $prematch,                                       # stripped string
             [ @{ $self->{attr_struct} }[ $start .. $end ] ], # attr_struct
         );
-        $start  = $end + 1 + length($&);
-        $string = $';
+        $start  = $end + 1 + length($match);
+        $string = $postmatch;
         defined $limit or next;
         ++$count >= $limit and last;
     }
@@ -233,7 +236,7 @@ sub split_string {
         $class->new_from_computed_string(
         undef,
         $string,
-        [ @{ $self->{attr_struct} }[ $start .. length($string) - $start - 1 ] ]
+        [ @{ $self->{attr_struct} }[ $start .. $start + length($string) - 1 ] ]
         );
     return @results;
 }
@@ -274,7 +277,6 @@ sub chomp_string {
 
 
 __END__
-
 =pod
 
 =head1 NAME
@@ -283,7 +285,7 @@ Curses::Toolkit::Object::MarkupString - a string that contains markups
 
 =head1 VERSION
 
-version 0.100680
+version 0.200
 
 =head1 DESCRIPTION
 
@@ -296,17 +298,16 @@ This is an internal Class, you shouldn't use it.
 see L<Curses::Toolkit::Widget::Label> to get the list of supported markups
 (like <u>, <b>, <span>).
 
-
-
 =head1 AUTHOR
 
-  Damien "dams" Krotkine
+Damien "dams" Krotkine
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2008 by Damien "dams" Krotkine.
+This software is copyright (c) 2010 by Damien "dams" Krotkine.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
-=cut 
+=cut
+

@@ -1,18 +1,18 @@
-# 
+#
 # This file is part of Curses-Toolkit
-# 
-# This software is copyright (c) 2008 by Damien "dams" Krotkine.
-# 
+#
+# This software is copyright (c) 2010 by Damien "dams" Krotkine.
+#
 # This is free software; you can redistribute it and/or modify it under
 # the same terms as the Perl 5 programming language system itself.
-# 
+#
 use warnings;
 use strict;
 
 package Curses::Toolkit::Widget::Button;
-our $VERSION = '0.100680';
-
-
+BEGIN {
+  $Curses::Toolkit::Widget::Button::VERSION = '0.200';
+}
 
 # ABSTRACT: a simple text button widget
 
@@ -94,9 +94,9 @@ sub draw {
     my $t1 = ' ' x ( ( $w2 - length $text ) / 2 );
     my $t2 = ' ' x ( $w2 - length($text) - length($t1) );
 
-    $theme->draw_string( $c->x1() + $bw,       $c->y1() + $bw, $left_string );
-    $theme->draw_string( $c->x1() + $bw + $o2, $c->y1() + $bw, $right_string );
-    $theme->draw_string( $c->x1() + $bw + $o1, $c->y1() + $bw, $t1 . $text . $t2 );
+    $theme->draw_string( $c->get_x1() + $bw,       $c->get_y1() + $bw, $left_string );
+    $theme->draw_string( $c->get_x1() + $bw + $o2, $c->get_y1() + $bw, $right_string );
+    $theme->draw_string( $c->get_x1() + $bw + $o1, $c->get_y1() + $bw, $t1 . $text . $t2 );
 
     return;
 }
@@ -114,8 +114,8 @@ sub get_minimum_space {
     my $left_string   = $self->get_theme_property('left_enclosing');
     my $right_string  = $self->get_theme_property('right_enclosing');
     $minimum_space->set(
-        x2 => $available_space->x1() + 2 * $bw + length($left_string) + length($text) + length($right_string),
-        y2 => $available_space->y1() + 1 + 2 * $bw,
+        x2 => $available_space->get_x1() + 2 * $bw + length($left_string) + length($text) + length($right_string),
+        y2 => $available_space->get_y1() + 1 + 2 * $bw,
     );
     return $minimum_space;
 }
@@ -148,7 +148,6 @@ sub _get_theme_properties_definition {
 1;
 
 __END__
-
 =pod
 
 =head1 NAME
@@ -157,7 +156,16 @@ Curses::Toolkit::Widget::Button - a simple text button widget
 
 =head1 VERSION
 
-version 0.100680
+version 0.200
+
+=head1 DESCRIPTION
+
+The Curses::Toolkit::Widget::Button widget is a classical button widget, used
+to attach a function that is called when the button is pressed.
+
+This widget cannot hold any widget. If you want a button with a specific
+widget, please use L<Curses::Toolkit::Widget::GenericButton>, however it may
+use more space in your interface
 
 =head1 Appearence
 
@@ -171,15 +179,6 @@ With a border
   | A Button |
   +----------+
 
-=head1 DESCRIPTION
-
-The Curses::Toolkit::Widget::Button widget is a classical button widget, used
-to attach a function that is called when the button is pressed.
-
-This widget cannot hold any widget. If you want a button with a specific
-widget, please use L<Curses::Toolkit::Widget::GenericButton>, however it may
-use more space in your interface
-
 =head1 CONSTRUCTOR
 
 =head2 new
@@ -187,14 +186,10 @@ use more space in your interface
   input : none
   output : a Curses::Toolkit::Widget::Button
 
-
-
 =head2 new_with_label
 
   input : the text of the button
   output : a Curses::Toolkit::Widget::Button
-
-
 
 =head1 METHODS
 
@@ -205,8 +200,6 @@ Set the text of the entry
   input  : STRING, the text
   output : the button object
 
-
-
 =head2 get_text
 
 Get the text of the Button
@@ -214,11 +207,7 @@ Get the text of the Button
   input  : none
   output : STRING, the Button text
 
-
-
 =head2 draw
-
-
 
 =head2 get_desired_space
 
@@ -228,8 +217,6 @@ The Button desires the minimum size : text length plus the button brackets
   input : a Curses::Toolkit::Object::Coordinates object
   output : a Curses::Toolkit::Object::Coordinates object
 
-
-
 =head2 get_minimum_space
 
 Given a coordinate representing the available space, returns the minimum space required
@@ -237,8 +224,6 @@ The Button requires the text length plus the button brackets
 
   input : a Curses::Toolkit::Object::Coordinates object
   output : a Curses::Toolkit::Object::Coordinates object
-
-
 
 =head2 possible_signals
 
@@ -249,8 +234,6 @@ L<Curses::Toolkit::Widget::signal_connect> to bind signals to actions
 
   input  : none
   output : HASH, keys are signal names, values are signal classes
-
-
 
 =head1 Theme related properties
 
@@ -292,17 +275,16 @@ Example :
   $button->set_theme_property(left_enclosing => ' >' );
   $button->set_theme_property(left_enclosing => ' ]' );
 
-
-
 =head1 AUTHOR
 
-  Damien "dams" Krotkine
+Damien "dams" Krotkine
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2008 by Damien "dams" Krotkine.
+This software is copyright (c) 2010 by Damien "dams" Krotkine.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
-=cut 
+=cut
+

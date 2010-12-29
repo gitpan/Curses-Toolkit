@@ -1,18 +1,18 @@
-# 
+#
 # This file is part of Curses-Toolkit
-# 
-# This software is copyright (c) 2008 by Damien "dams" Krotkine.
-# 
+#
+# This software is copyright (c) 2010 by Damien "dams" Krotkine.
+#
 # This is free software; you can redistribute it and/or modify it under
 # the same terms as the Perl 5 programming language system itself.
-# 
+#
 use warnings;
 use strict;
 
 package Curses::Toolkit::Widget::Border;
-our $VERSION = '0.100680';
-
-
+BEGIN {
+  $Curses::Toolkit::Widget::Border::VERSION = '0.200';
+}
 
 # ABSTRACT: a border widget
 
@@ -32,15 +32,15 @@ sub draw {
     $border_width > 0 or return;
 
     for my $i ( 0 .. $border_width - 1 ) {
-        $theme->draw_hline( $c->x1() + $i, $c->y1() + $i,     $c->width() - 2 * $i );
-        $theme->draw_hline( $c->x1() + $i, $c->y2() - $i - 1, $c->width() - 2 * $i );
-        $theme->draw_vline( $c->x1() + $i,     $c->y1() + $i, $c->height() - 2 * $i );
-        $theme->draw_vline( $c->x2() - $i - 1, $c->y1() + $i, $c->height() - 2 * $i );
+        $theme->draw_hline( $c->get_x1() + $i, $c->get_y1() + $i,     $c->width() - 2 * $i );
+        $theme->draw_hline( $c->get_x1() + $i, $c->get_y2() - $i - 1, $c->width() - 2 * $i );
+        $theme->draw_vline( $c->get_x1() + $i,     $c->get_y1() + $i, $c->height() - 2 * $i );
+        $theme->draw_vline( $c->get_x2() - $i - 1, $c->get_y1() + $i, $c->height() - 2 * $i );
 
-        $theme->draw_corner_ul( $c->x1() + $i, $c->y1() + $i );
-        $theme->draw_corner_ll( $c->x1() + $i, $c->y2() - $i - 1 );
-        $theme->draw_corner_ur( $c->x2() - $i - 1, $c->y1() + $i );
-        $theme->draw_corner_lr( $c->x2() - $i - 1, $c->y2() - $i - 1 );
+        $theme->draw_corner_ul( $c->get_x1() + $i, $c->get_y1() + $i );
+        $theme->draw_corner_ll( $c->get_x1() + $i, $c->get_y2() - $i - 1 );
+        $theme->draw_corner_ur( $c->get_x2() - $i - 1, $c->get_y1() + $i );
+        $theme->draw_corner_lr( $c->get_x2() - $i - 1, $c->get_y2() - $i - 1 );
     }
     return;
 }
@@ -72,15 +72,15 @@ sub get_desired_space {
     if ( defined $child ) {
         my $child_available_space = $available_space->clone();
         $child_available_space->set(
-            x1 => $available_space->x1() + $bw, y1 => $available_space->y1() + $bw,
-            x2 => $available_space->x2() - $bw, y2 => $available_space->y2() - $bw,
+            x1 => $available_space->get_x1() + $bw, y1 => $available_space->get_y1() + $bw,
+            x2 => $available_space->get_x2() - $bw, y2 => $available_space->get_y2() - $bw,
         );
         $child_space = $child->get_desired_space($child_available_space);
 
         my $desired_space = $available_space->clone();
         $desired_space->set(
-            x2 => $desired_space->x1() + $child_space->width() + 2 * $bw,
-            y2 => $desired_space->y1() + $child_space->height() + 2 * $bw,
+            x2 => $desired_space->get_x1() + $child_space->width() + 2 * $bw,
+            y2 => $desired_space->get_y1() + $child_space->height() + 2 * $bw,
         );
         return $desired_space;
     }
@@ -99,15 +99,15 @@ sub get_minimum_space {
     if ( defined $child ) {
         my $child_available_space = $available_space->clone();
         $child_available_space->set(
-            x1 => $available_space->x1() + $bw, y1 => $available_space->y1() + $bw,
-            x2 => $available_space->x2() - $bw, y2 => $available_space->y2() - $bw,
+            x1 => $available_space->get_x1() + $bw, y1 => $available_space->get_y1() + $bw,
+            x2 => $available_space->get_x2() - $bw, y2 => $available_space->get_y2() - $bw,
         );
         $child_space = $child->get_minimum_space($child_available_space);
     }
     my $minimum_space = $available_space->clone();
     $minimum_space->set(
-        x2 => $available_space->x1() + $child_space->width() + 2 * $bw,
-        y2 => $available_space->y1() + $child_space->height() + 2 * $bw,
+        x2 => $available_space->get_x1() + $child_space->width() + 2 * $bw,
+        y2 => $available_space->get_y1() + $child_space->height() + 2 * $bw,
     );
     return $minimum_space;
 }
@@ -130,7 +130,6 @@ sub _get_theme_properties_definition {
 1;
 
 __END__
-
 =pod
 
 =head1 NAME
@@ -139,19 +138,19 @@ Curses::Toolkit::Widget::Border - a border widget
 
 =head1 VERSION
 
-version 0.100680
-
-=head1 Appearence
-
-  +----------+
-  |          |
-  +----------+
+version 0.200
 
 =head1 DESCRIPTION
 
 This widget consists of a border, and a child widget in that border
 
 This widget can contain 0 or 1 other widget.
+
+=head1 Appearence
+
+  +----------+
+  |          |
+  +----------+
 
 =head1 CONSTRUCTOR
 
@@ -160,17 +159,13 @@ This widget can contain 0 or 1 other widget.
   input : none
   output : a Curses::Toolkit::Widget::Border
 
-
-
 =head2 get_desired_space
 
 Given a coordinate representing the available space, returns the space desired
-The Border desires all the space available, so it returns the available space
+The Border desires as much as its children desires, plus its width
 
   input : a Curses::Toolkit::Object::Coordinates object
   output : a Curses::Toolkit::Object::Coordinates object
-
-
 
 =head2 get_minimum_space
 
@@ -179,8 +174,6 @@ needed to properly display itself
 
   input : a Curses::Toolkit::Object::Coordinates object
   output : a Curses::Toolkit::Object::Coordinates object
-
-
 
 =head1 Theme related properties
 
@@ -200,17 +193,16 @@ inherited from !
 
 Sets the width of the border. If not set, the border will be invisible
 
-
-
 =head1 AUTHOR
 
-  Damien "dams" Krotkine
+Damien "dams" Krotkine
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2008 by Damien "dams" Krotkine.
+This software is copyright (c) 2010 by Damien "dams" Krotkine.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
-=cut 
+=cut
+

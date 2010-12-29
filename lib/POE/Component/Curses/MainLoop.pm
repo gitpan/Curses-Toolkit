@@ -1,18 +1,18 @@
-# 
+#
 # This file is part of Curses-Toolkit
-# 
-# This software is copyright (c) 2008 by Damien "dams" Krotkine.
-# 
+#
+# This software is copyright (c) 2010 by Damien "dams" Krotkine.
+#
 # This is free software; you can redistribute it and/or modify it under
 # the same terms as the Perl 5 programming language system itself.
-# 
+#
 use warnings;
 use strict;
 
 package POE::Component::Curses::MainLoop;
-our $VERSION = '0.100680';
-
-
+BEGIN {
+  $POE::Component::Curses::MainLoop::VERSION = '0.200';
+}
 
 # ABSTRACT: <FIXME to be filled>
 
@@ -45,7 +45,7 @@ sub _build_toolkit_root {
 ## Methods called by the Curses::Toolkit objects ##
 ## They usually returns $self, or a return value
 
-# Curses::Toolkit requires a redraw to happen at smoe time
+# Curses::Toolkit requires a redraw to happen at some time
 sub needs_redraw {
     my ($self) = @_;
 
@@ -57,7 +57,7 @@ sub needs_redraw {
     return $self;
 }
 
-# Curses::Toolkit asks a code snipets to be after a delay
+# Curses::Toolkit asks a code snipets to be executed after a delay
 sub add_delay {
     my $self    = shift;
     my $seconds = shift;
@@ -66,7 +66,7 @@ sub add_delay {
     return;
 }
 
-# Curses::Toolkit needs an event to pe stacked for dispatch
+# Curses::Toolkit needs an event to be stacked for dispatch
 sub stack_event {
     my $self = shift;
     $poe_kernel->post( $self->get_session_name, 'stack_event', @_ );
@@ -77,7 +77,6 @@ sub stack_event {
 ## They usually return nothing
 
 # POE::Component::Curses asked to rebuild all coordinates
-
 sub event_rebuild_all {
     my ($self) = @_;
     $self->get_toolkit_root->_rebuild_all();
@@ -180,7 +179,6 @@ __PACKAGE__->meta->make_immutable;
 1;
 
 __END__
-
 =pod
 
 =head1 NAME
@@ -189,7 +187,7 @@ POE::Component::Curses::MainLoop - <FIXME to be filled>
 
 =head1 VERSION
 
-version 0.100680
+version 0.200
 
 =head1 SYNOPSIS
 
@@ -200,17 +198,16 @@ as a MainLoop interface to L<Curses::Toolkit>
 
 Please look at L<POE::Component::Curses>. Thanks !
 
-
-
 =head1 AUTHOR
 
-  Damien "dams" Krotkine
+Damien "dams" Krotkine
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2008 by Damien "dams" Krotkine.
+This software is copyright (c) 2010 by Damien "dams" Krotkine.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
-=cut 
+=cut
+

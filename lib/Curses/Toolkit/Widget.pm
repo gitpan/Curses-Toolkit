@@ -1,18 +1,18 @@
-# 
+#
 # This file is part of Curses-Toolkit
-# 
-# This software is copyright (c) 2008 by Damien "dams" Krotkine.
-# 
+#
+# This software is copyright (c) 2010 by Damien "dams" Krotkine.
+#
 # This is free software; you can redistribute it and/or modify it under
 # the same terms as the Perl 5 programming language system itself.
-# 
+#
 use warnings;
 use strict;
 
 package Curses::Toolkit::Widget;
-our $VERSION = '0.100680';
-
-
+BEGIN {
+  $Curses::Toolkit::Widget::VERSION = '0.200';
+}
 
 # ABSTRACT: base class for widgets
 
@@ -295,8 +295,8 @@ sub get_coordinates {
         my $rc = $self->get_relatives_coordinates();
         use Curses::Toolkit::Object::Coordinates;
         my $c = Curses::Toolkit::Object::Coordinates->new(
-            x1 => $pc->x1() + $rc->x1(), y1 => $pc->y1() + $rc->y1(),
-            x2 => $pc->x1() + $rc->x2(), y2 => $pc->y1() + $rc->y2(),
+            x1 => $pc->get_x1() + $rc->get_x1(), y1 => $pc->get_y1() + $rc->get_y1(),
+            x2 => $pc->get_x1() + $rc->get_x2(), y2 => $pc->get_y1() + $rc->get_y2(),
         );
         return $c;
     }
@@ -607,7 +607,6 @@ sub _bind_signal {
 1;
 
 __END__
-
 =pod
 
 =head1 NAME
@@ -616,7 +615,7 @@ Curses::Toolkit::Widget - base class for widgets
 
 =head1 VERSION
 
-version 0.100680
+version 0.200
 
 =head1 DESCRIPTION
 
@@ -625,8 +624,6 @@ Base class for widgets
 =head1 CONSTRUCTOR
 
 None, this is an abstract class
-
-
 
 =head1 METHODS
 
@@ -639,16 +636,12 @@ message, so that you know which sicget it is talking about. Default name is
   input  : the name
   output : the widget
 
-
-
 =head2 get_name
 
 Get the name of a widget
 
   input  : the widget
   output : the name
-
-
 
 =head2 set_sensitive
 
@@ -660,16 +653,12 @@ Sets the sensitivity on/off on the widget. non-sensitive widgets can be seen as 
   input : a boolean
   output : the widget
 
-
-
 =head2 is_sensitive
 
 Retrieves the sensitivity setting of the widget.
 
   input : none
   output : true if the widget is sensitive, or false if not
-
-
 
 =head2 set_visible
 
@@ -681,16 +670,12 @@ Sets the visibility on/off on the widget. non-visible widgets are not displayed,
   input : a boolean
   output : the widget
 
-
-
 =head2 is_visible
 
 Retrieves the visibility setting of the widget.
 
   input : none
   output : true if the widget is visible, or false if not
-
-
 
 =head2 set_property
 
@@ -706,16 +691,12 @@ a hash representing this group values.
 
 Returns the widget
 
-
-
 =head2 get_property
 
   my $value = $widget->get_property('group name', 'property name');
   my $group_hash = $widget->get_property('group name');
 
 Return the property or the group of property of a widget.
-
-
 
 =head2 set_theme_property
 
@@ -731,16 +712,12 @@ Theme properties are arbitrary theme caracteristics of widgets. They are
 
 Returns the widget;
 
-
-
 =head2 get_theme_property
 
   my $value = $widget->get_theme_property('property name');
   my $hash = $widget->get_theme_property();
 
 Return the theme property or the hash of theme properties of a widget.
-
-
 
 =head2 add_event_listener
 
@@ -753,8 +730,6 @@ and possible_signals instead.
   input : a Curses::Toolkit::EventListener
   output : the root window
 
-
-
 =head2 get_event_listeners
 
   my @listeners = $widget->get_event_listener();
@@ -763,8 +738,6 @@ Returns the list of listeners connected to this widget.
 
   input : none
   output : an ARRAY of Curses::Toolkit::EventListener
-
-
 
 =head2 fire_event
 
@@ -777,15 +750,11 @@ to use this method. Please see signal_connect and possible_signals instead.
            optional, a widget. if given, the event will apply on it only
   output : the widget
 
-
-
 =head2 draw
 
 This is the method that draws the widget itself.
 Default drawing for the widget.
 This method doesn't draw anything
-
-
 
 =head2 render
 
@@ -794,16 +763,12 @@ Default rendering method for the widget. Any render method should call draw
   input  : curses_handler
   output : the widget
 
-
-
 =head2 get_parent
 
 Returns the parent of the widget
 
   input : none
   output : a Curses::Toolkit::Widget object or undef
-
-
 
 =head2 set_theme_name
 
@@ -813,8 +778,6 @@ Set a specific display theme name.
            a BOOLEAN, if true, recursively sets the themes to the children
   output : the widget
 
-
-
 =head2 get_theme_name
 
 Get the theme name used for this widget. If there is none, tries to get it from
@@ -823,8 +786,6 @@ the parent. If there is no parent, the default theme name is used
   input  : none
   output : a STRING, name of a class inheriting from Curses::Toolkit::Theme
 
-
-
 =head2 get_theme
 
 Get the widget current theme instance. If none is set, creates a new instance
@@ -832,8 +793,6 @@ from the widget's theme name (see L<get_theme_name>).
 
   input  : none
   output : a Curses::Toolkit::Theme object
-
-
 
 =head2 get_window
 
@@ -845,8 +804,6 @@ If the widget is not part of window, void returned.
   input  : none
   output : the window in which the widget is (Curses::Toolkit::Widget::Window), or void
 
-
-
 =head2 get_root_window
 
   my $window = $widget->get_root_window();
@@ -857,16 +814,12 @@ If the widget is not part of window, void is returned.
   input  : none
   output : the root window (Curses::Toolkit), or void
 
-
-
 =head2 get_coordinates
 
 Get the absolute coordinates (see L<Curses::Toolkit::Object::Coordinates> )
 
   input  : none
   output : a Curses::Toolkit::Object::Coordinates object
-
-
 
 =head2 get_relatives_coordinates
 
@@ -875,16 +828,12 @@ Get the relative coordinates (see L<Curses::Toolkit::Object::Coordinates> )
   input  : none
   output : a Curses::Toolkit::Object::Coordinates object
 
-
-
 =head2 get_visible_shape
 
 Gets the Coordinates of the part of the widget which is visible
 
   input  : none
   output : the shape (Curses::Toolkit::Object::Coordinates) or void
-
-
 
 =head2 rebuild_all_coordinates
 
@@ -894,8 +843,6 @@ Recompute all the relative coordinates accross the whole window
 
   input  : none
   output : the widget
-
-
 
 =head2 needs_redraw
 
@@ -907,15 +854,9 @@ only if a mainloop is active ( see POE::Component::Curses )
   input : none
   output : the widget
 
-
-
 =head2 set_modal
 
-
-
 =head2 unset_modal
-
-
 
 =head2 get_next_focused_widget
 
@@ -926,8 +867,6 @@ Returns the widget next in the focus chain
   input : optional, a true value to start searching from $widget
   output : the next focused widget
 
-
-
 =head2 possible_signals
 
 my @signals = keys $widget->possible_signals();
@@ -937,8 +876,6 @@ signals to action
 
   input  : none
   output : HASH, keys are signal names, values are signal classes
-
-
 
 =head2 possible_signals
 
@@ -966,17 +903,16 @@ Connects an action to a signal.
            LIST, additional arguments
   output : HASH, keys are siagnal names, values are signal classes
 
-
-
 =head1 AUTHOR
 
-  Damien "dams" Krotkine
+Damien "dams" Krotkine
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2008 by Damien "dams" Krotkine.
+This software is copyright (c) 2010 by Damien "dams" Krotkine.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
-=cut 
+=cut
+

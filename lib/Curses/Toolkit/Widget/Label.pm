@@ -1,18 +1,18 @@
-# 
+#
 # This file is part of Curses-Toolkit
-# 
-# This software is copyright (c) 2008 by Damien "dams" Krotkine.
-# 
+#
+# This software is copyright (c) 2010 by Damien "dams" Krotkine.
+#
 # This is free software; you can redistribute it and/or modify it under
 # the same terms as the Perl 5 programming language system itself.
-# 
+#
 use warnings;
 use strict;
 
 package Curses::Toolkit::Widget::Label;
-our $VERSION = '0.100680';
-
-
+BEGIN {
+  $Curses::Toolkit::Widget::Label::VERSION = '0.200';
+}
 
 # ABSTRACT: a container with two panes arranged horizontally
 
@@ -110,19 +110,19 @@ sub draw {
         $t->search_replace( '^\s+', '' );
         $t->search_replace( '\s+$', '' );
         if ( $justify eq 'left' ) {
-            $theme->draw_string( $c->x1(), $c->y1() + $y, $t );
+            $theme->draw_string( $c->get_x1(), $c->get_y1() + $y, $t );
         }
         if ( $justify eq 'center' ) {
             $theme->draw_string(
-                $c->x1() + ( $c->width() - length $t ) / 2,
-                $c->y1() + $y,
+                $c->get_x1() + ( $c->width() - length $t ) / 2,
+                $c->get_y1() + $y,
                 $t
             );
         }
         if ( $justify eq 'right' ) {
             $theme->draw_string(
-                $c->x1() + $c->width() - length $t,
-                $c->y1() + $y,
+                $c->get_x1() + $c->width() - length $t,
+                $c->get_y1() + $y,
                 $t
             );
         }
@@ -210,8 +210,8 @@ sub _get_space {
         $text =~ s/\n(\s)/$1/g;
         $text =~ s/\n/ /g;
         $minimum_space->set(
-            x2 => $available_space->x1() + length $text,
-            y2 => $available_space->y1() + 1,
+            x2 => $available_space->get_x1() + length $text,
+            y2 => $available_space->get_y1() + 1,
         );
         return $minimum_space;
     } elsif ( $wrap_mode eq 'active' ) {
@@ -220,8 +220,8 @@ sub _get_space {
             my @text = _textwrap( $self->{_markup_string}, $width );
             if ( $width >= $self->{_markup_string}->stripped_length() ) {
                 $minimum_space->set(
-                    x2 => $minimum_space->x1() + $self->{_markup_string}->stripped_length() + 1,
-                    y2 => $minimum_space->y1() + 1
+                    x2 => $minimum_space->get_x1() + $self->{_markup_string}->stripped_length() + 1,
+                    y2 => $minimum_space->get_y1() + 1
                 );
                 last;
             }
@@ -230,16 +230,16 @@ sub _get_space {
                 next;
             }
             $minimum_space->set(
-                x2 => $minimum_space->x1() + max( map { $_->stripped_length() } @text ) + 1,
-                y2 => $minimum_space->y1() + scalar(@text)
+                x2 => $minimum_space->get_x1() + max( map { $_->stripped_length() } @text ) + 1,
+                y2 => $minimum_space->get_y1() + scalar(@text)
             );
             last;
         }
         return $minimum_space;
     } elsif ( $wrap_mode eq 'lazy' ) {
         my @text = _textwrap( $self->{_markup_string}, max( $available_space->width(), 1 ) );
-        $minimum_space->set( y2 => $minimum_space->y1() + scalar(@text) );
-        $minimum_space->set( x2 => $minimum_space->x1() + max( map { $_->stripped_length() } @text ) );
+        $minimum_space->set( y2 => $minimum_space->get_y1() + scalar(@text) );
+        $minimum_space->set( x2 => $minimum_space->get_x1() + max( map { $_->stripped_length() } @text ) );
         return $minimum_space;
     }
     die;
@@ -250,7 +250,6 @@ sub _get_space {
 1;
 
 __END__
-
 =pod
 
 =head1 NAME
@@ -259,12 +258,12 @@ Curses::Toolkit::Widget::Label - a container with two panes arranged horizontall
 
 =head1 VERSION
 
-version 0.100680
+version 0.200
 
 =head1 DESCRIPTION
 
 This widget consists of a text label. This widget is more powerful than it
-seems : it supports line wrapping, and color, bold, underline, etc.
+looks : it supports line wrapping, and color, bold, underline, etc.
 
 =head1 MARKUPS SUPPORT
 
@@ -274,7 +273,7 @@ in its text, for example :
   'foo <u>underlined bar</u> <span fgcolor="blue"> blue text <span
    bgcolor="red"> blue on red </span> normal on red </span> <b>bold</b>.'
 
-=over 
+=over
 
 =item <u>
 
@@ -296,7 +295,7 @@ The <span> tag allows more attributes to be set. Attributes can of course be com
 
 There is the list of attributes :
 
-=over 
+=over
 
 =item weight
 
@@ -343,9 +342,9 @@ Change the foreground color. values can be :
   cyan
   white
 
-=back 
+=back
 
-=back 
+=back
 
 =head1 CONSTRUCTOR
 
@@ -353,8 +352,6 @@ Change the foreground color. values can be :
 
   input : none
   output : a Curses::Toolkit::Widget::Label object
-
-
 
 =head1 METHODS
 
@@ -366,16 +363,12 @@ markups, to display colors, bold, underline, etc., see Markup Support above
   input  : the text
   output : the label object
 
-
-
 =head2 get_text
 
 Get the text of the Label
 
   input  : none
   output : STRING, the Label text
-
-
 
 =head2 set_justify
 
@@ -384,16 +377,12 @@ Set the text justification inside the label widget.
   input  : STRING, one of 'left', 'right', 'center'
   output : the label object
 
-
-
 =head2 get_justify
 
 Get the text justification inside the label widget.
 
   input  : none
   output : STRING, one of 'left', 'right', 'center'
-
-
 
 =head2 set_wrap_mode
 
@@ -405,16 +394,12 @@ if it is obliged to (not enough space to display on the same line), and on parag
   input  : STRING, one of 'never', 'active', 'lazy'
   output : the label widget
 
-
-
 =head2 get_wrap_mode
 
 Get the text wrap mode ofthe label widget.
 
   input  : none
   output : STRING, one of 'never', 'active', 'lazy'
-
-
 
 =head2 set_wrap_method
 
@@ -424,16 +409,12 @@ the label wrap but at any point.
   input  : STRING, one of 'word', 'letter'
   output : the label widget
 
-
-
 =head2 get_wrap_method
 
 Get the text wrap method inside the label widget.
 
   input  : none
   output : STRING, one of 'word', 'letter'
-
-
 
 =head2 get_desired_space
 
@@ -443,8 +424,6 @@ The Label desires the minimum space that lets it display entirely
   input : a Curses::Toolkit::Object::Coordinates object
   output : a Curses::Toolkit::Object::Coordinates object
 
-
-
 =head2 get_minimum_space
 
 Given a coordinate representing the available space, returns the minimum space
@@ -453,17 +432,16 @@ needed to properly display itself
   input : a Curses::Toolkit::Object::Coordinates object
   output : a Curses::Toolkit::Object::Coordinates object
 
-
-
 =head1 AUTHOR
 
-  Damien "dams" Krotkine
+Damien "dams" Krotkine
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2008 by Damien "dams" Krotkine.
+This software is copyright (c) 2010 by Damien "dams" Krotkine.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
-=cut 
+=cut
+

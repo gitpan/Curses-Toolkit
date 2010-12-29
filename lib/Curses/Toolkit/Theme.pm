@@ -1,18 +1,18 @@
-# 
+#
 # This file is part of Curses-Toolkit
-# 
-# This software is copyright (c) 2008 by Damien "dams" Krotkine.
-# 
+#
+# This software is copyright (c) 2010 by Damien "dams" Krotkine.
+#
 # This is free software; you can redistribute it and/or modify it under
 # the same terms as the Perl 5 programming language system itself.
-# 
+#
 use warnings;
 use strict;
 
 package Curses::Toolkit::Theme;
-our $VERSION = '0.100680';
-
-
+BEGIN {
+  $Curses::Toolkit::Theme::VERSION = '0.200';
+}
 
 # ABSTRACT: base class for widgets themes
 
@@ -332,7 +332,6 @@ sub _addstr_with_tags {
 
 
 
-
 =pod
 
 =head1 NAME
@@ -341,7 +340,7 @@ Curses::Toolkit::Theme - base class for widgets themes
 
 =head1 VERSION
 
-version 0.100680
+version 0.200
 
 =head1 DESCRIPTION
 
@@ -350,8 +349,6 @@ Base class for widgets themes
 =head1 CONSTRUCTOR
 
 None, this is an abstract class
-
-
 
 =head2 set_property
 
@@ -368,8 +365,6 @@ name. However you can specify the class name, and a hash representing multiple n
 
 Returns the widget.
 
-
-
 =head2 get_property
 
   my $value = $widget->get_property('Toolkit::Curses::Widget::Class', 'property name');
@@ -377,15 +372,11 @@ Returns the widget.
 
 Return the theme property or the hash of properties of a widget.
 
-
-
 =head2 get_widget
 
   my $widget = $theme_instance->get_widget();
 
 Returns the widget of this theme instance, or undef
-
-
 
 =head2 get_window
 
@@ -393,23 +384,17 @@ Returns the widget of this theme instance, or undef
 
 Returns the window of this theme instance, or void
 
-
-
 =head2 get_root_window
 
   my $widget = $theme_instance->get_root_window();
 
 Returns the root window of this theme instance, or void
 
-
-
 =head2 get_shape
 
   my $widget = $theme_instance->get_shape();
 
 Returns the shape of the root window of this theme instance, or void
-
-
 
 =head2 is_in_shape
 
@@ -420,8 +405,6 @@ Returns the shape of the root window of this theme instance, or void
 Returns true / false if the given coordinates are in the current shape. Or
 returns void if there is no root window.
 
-
-
 =head2 restrict_to_shape
 
   my $coordinates = $theme_instance->restrict_to_shape( $coordinate );
@@ -431,8 +414,6 @@ returns void if there is no root window.
 Given a coordinates, returns it restricted to the shape of the root window, or
 void if there is no root window. Useful to draw text / line and make sure thay
 are in the shape
-
-
 
 =head2 curses
 
@@ -446,11 +427,7 @@ can contain these keys:
   focused : draw in focused mode
   clicked : draw in clicked mode
 
-
-
-=begin Pod::Coverage
-
-BLANK_CLICKED
+=for Pod::Coverage BLANK_CLICKED
 BLANK_FOCUSED
 BLANK_NORMAL
 CORNER_CLICKED
@@ -468,6 +445,9 @@ RESIZE_NORMAL
 STRING_CLICKED
 STRING_FOCUSED
 STRING_NORMAL
+VSTRING_CLICKED
+VSTRING_FOCUSED
+VSTRING_NORMAL
 ULCORNER
 URCORNER
 TITLE_CLICKED
@@ -478,21 +458,19 @@ VLINE_CLICKED
 VLINE_FOCUSED
 VLINE_NORMAL
 
-=end Pod::Coverage
-
 =head1 AUTHOR
 
-  Damien "dams" Krotkine
+Damien "dams" Krotkine
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2008 by Damien "dams" Krotkine.
+This software is copyright (c) 2010 by Damien "dams" Krotkine.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
-=cut 
-
+=cut
 
 
 __END__
+

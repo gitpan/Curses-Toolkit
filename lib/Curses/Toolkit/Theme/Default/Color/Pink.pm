@@ -1,18 +1,18 @@
-# 
+#
 # This file is part of Curses-Toolkit
-# 
-# This software is copyright (c) 2008 by Damien "dams" Krotkine.
-# 
+#
+# This software is copyright (c) 2010 by Damien "dams" Krotkine.
+#
 # This is free software; you can redistribute it and/or modify it under
 # the same terms as the Perl 5 programming language system itself.
-# 
+#
 use warnings;
 use strict;
 
 package Curses::Toolkit::Theme::Default::Color::Pink;
-our $VERSION = '0.100680';
-
-
+BEGIN {
+  $Curses::Toolkit::Theme::Default::Color::Pink::VERSION = '0.200';
+}
 
 # ABSTRACT: default widget theme with pink-ish color, made for Book
 
@@ -66,6 +66,10 @@ sub STRING_NORMAL  { shift->_set_colors( 'white', 'magenta' ) }
 sub STRING_FOCUSED { shift->_set_colors( 'blue',  'magenta' )->_attron(A_REVERSE) }
 sub STRING_CLICKED { shift->_set_colors( 'blue',  'magenta' )->_attron(A_BOLD) }
 
+sub VSTRING_NORMAL  { shift->_set_colors( 'white', 'magenta' ) }
+sub VSTRING_FOCUSED { shift->_set_colors( 'blue',  'magenta' )->_attron(A_REVERSE) }
+sub VSTRING_CLICKED { shift->_set_colors( 'blue',  'magenta' )->_attron(A_BOLD) }
+
 sub TITLE_NORMAL  { shift->_set_colors( 'black', 'magenta' ) }
 sub TITLE_FOCUSED { shift->_set_colors( 'black', 'magenta' )->_attron(A_BOLD) }
 sub TITLE_CLICKED { shift->_set_colors( 'blue',  'magenta' )->_attron(A_REVERSE) }
@@ -81,7 +85,6 @@ sub BLANK_CLICKED { shift->_set_colors( 'black', 'magenta' ) }
 1;
 
 __END__
-
 =pod
 
 =head1 NAME
@@ -90,7 +93,7 @@ Curses::Toolkit::Theme::Default::Color::Pink - default widget theme with pink-is
 
 =head1 VERSION
 
-version 0.100680
+version 0.200
 
 =head1 DESCRIPTION
 
@@ -103,17 +106,16 @@ You want to use this theme if you are a stereotyped girl, or a child, or Book. O
   input : a Curses::Toolkit::Widget
   output : a Curses::Toolkit::Theme::Default::Color::Pink object
 
-
-
 =head1 AUTHOR
 
-  Damien "dams" Krotkine
+Damien "dams" Krotkine
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2008 by Damien "dams" Krotkine.
+This software is copyright (c) 2010 by Damien "dams" Krotkine.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
-=cut 
+=cut
+

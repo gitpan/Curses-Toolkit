@@ -1,18 +1,18 @@
-# 
+#
 # This file is part of Curses-Toolkit
-# 
-# This software is copyright (c) 2008 by Damien "dams" Krotkine.
-# 
+#
+# This software is copyright (c) 2010 by Damien "dams" Krotkine.
+#
 # This is free software; you can redistribute it and/or modify it under
 # the same terms as the Perl 5 programming language system itself.
-# 
+#
 use warnings;
 use strict;
 
 package Curses::Toolkit::Widget::Entry;
-our $VERSION = '0.100680';
-
-
+BEGIN {
+  $Curses::Toolkit::Widget::Entry::VERSION = '0.200';
+}
 
 # ABSTRACT: base class for focus events
 
@@ -294,9 +294,9 @@ sub draw {
         # put the background text below it
         substr( $display_text, 0, length($t) ) = $t;
 
-        $theme->draw_string( $c->x1(),       $c->y1(), $left_enclosing );
-        $theme->draw_string( $c->x1() + $o2, $c->y1(), $right_enclosing );
-        $theme->draw_string( $c->x1() + $o1, $c->y1(), $display_text );
+        $theme->draw_string( $c->get_x1(),       $c->get_y1(), $left_enclosing );
+        $theme->draw_string( $c->get_x1() + $o2, $c->get_y1(), $right_enclosing );
+        $theme->draw_string( $c->get_x1() + $o1, $c->get_y1(), $display_text );
 
     } else {
         if ( $self->get_cursor_position() >= $self->{text_display_offset} + $w2 - 1 ) {
@@ -312,11 +312,11 @@ sub draw {
         my $t2                       = substr( $display_text, $relative_cursor_position, 1 );
         my $t3                       = substr( $display_text, $relative_cursor_position + 1 );
 
-        $theme->draw_string( $c->x1(),                         $c->y1(), $left_enclosing,  { reverse => 0 } );
-        $theme->draw_string( $c->x1() + $o2,                   $c->y1(), $right_enclosing, { reverse => 0 } );
-        $theme->draw_string( $c->x1() + $o1,                   $c->y1(), $t1,              { reverse => 0 } );
-        $theme->draw_string( $c->x1() + $o1 + length($t1),     $c->y1(), $t2,              { reverse => 1 } );
-        $theme->draw_string( $c->x1() + $o1 + length($t1) + 1, $c->y1(), $t3,              { reverse => 0 } );
+        $theme->draw_string( $c->get_x1(),                         $c->get_y1(), $left_enclosing,  { reverse => 0 } );
+        $theme->draw_string( $c->get_x1() + $o2,                   $c->get_y1(), $right_enclosing, { reverse => 0 } );
+        $theme->draw_string( $c->get_x1() + $o1,                   $c->get_y1(), $t1,              { reverse => 0 } );
+        $theme->draw_string( $c->get_x1() + $o1 + length($t1),     $c->get_y1(), $t2,              { reverse => 1 } );
+        $theme->draw_string( $c->get_x1() + $o1 + length($t1) + 1, $c->get_y1(), $t3,              { reverse => 0 } );
     }
 
 
@@ -329,10 +329,10 @@ sub get_desired_space {
 
     my $desired_space = $available_space->clone();
 
-    #	$desired_space->set( x2 => $available_space->x1() + $self->get_width(),
+    #	$desired_space->set( x2 => $available_space->get_x1() + $self->get_width(),
     $desired_space->set(
-        x2 => $available_space->x2(),
-        y2 => $available_space->y1() + 1,
+        x2 => $available_space->get_x2(),
+        y2 => $available_space->get_y1() + 1,
     );
     return $desired_space;
 
@@ -345,8 +345,8 @@ sub get_minimum_space {
     my $minimum_space = $available_space->clone();
     my $default_width = $self->get_theme_property('default_width');
     $minimum_space->set(
-        x2 => $available_space->x1() + $default_width,
-        y2 => $available_space->y1() + 1,
+        x2 => $available_space->get_x1() + $default_width,
+        y2 => $available_space->get_y1() + 1,
     );
     return $minimum_space;
 }
@@ -387,7 +387,6 @@ sub _get_theme_properties_definition {
 1;
 
 __END__
-
 =pod
 
 =head1 NAME
@@ -396,15 +395,15 @@ Curses::Toolkit::Widget::Entry - base class for focus events
 
 =head1 VERSION
 
-version 0.100680
-
-=head1 Appearence
-
-  [entry text____]
+version 0.200
 
 =head1 DESCRIPTION
 
 This widget consists of an entry
+
+=head1 Appearence
+
+  [entry text____]
 
 =head1 CONSTRUCTOR
 
@@ -413,16 +412,12 @@ This widget consists of an entry
   input : none
   output : a Curses::Toolkit::Widget::Entry object
 
-
-
 =head2 new_with_text
 
 This creates an entry with text in it.
 
   input  : STRING, some text
   output : a Curses::Toolkit::Widget::Entry object
-
-
 
 =head1 METHODS
 
@@ -433,16 +428,12 @@ Set the text of the entry
   input  : STRING, the text
   output : the entry object
 
-
-
 =head2 get_text
 
 Get the text of the Entry
 
   input  : none
   output : STRING, the Entry text
-
-
 
 =head2 set_edit_mode
 
@@ -451,16 +442,12 @@ Set the entry to be in edit mode or not
 input  : true or false
 output : the entry widget
 
-
-
 =head2 get_edit_mode
 
 Returns true if the entry is in edit mode, false otherwise
 
 input  : none
 output : true or false
-
-
 
 =head2 set_cursor_position
 
@@ -469,16 +456,12 @@ Set absolute position of the cursor
   input  : the cursor position
   output : the entry widget;
 
-
-
 =head2 get_cursor_position
 
 Returns the absolute position of the cursor
 
   input  : none
   output : the cursor position
-
-
 
 =head2 move_cursor_position
 
@@ -487,11 +470,7 @@ Set the position of the cursor, relatively
   input  : cursor deplacement (can be positive or negative)
   output : the entry widget
 
-
-
 =head2 draw
-
-
 
 =head2 get_desired_space
 
@@ -500,8 +479,6 @@ The Entry desires 12x1
 
   input : a Curses::Toolkit::Object::Coordinates object
   output : a Curses::Toolkit::Object::Coordinates object
-
-
 
 =head2 get_minimum_space
 
@@ -512,8 +489,6 @@ The Entry requires 3x1 minimum
   input : a Curses::Toolkit::Object::Coordinates object
   output : a Curses::Toolkit::Object::Coordinates object
 
-
-
 =head2 possible_signals
 
 my @signals = keys $button->possible_signals();
@@ -523,8 +498,6 @@ L<Curses::Toolkit::Widget::signal_connect> to bind signals to actions
 
   input  : none
   output : HASH, keys are signal names, values are signal classes
-
-
 
 =head1 Theme related properties
 
@@ -562,17 +535,16 @@ Example :
   $entry->set_theme_property(left_enclosing => ' >' );
   $entry->set_theme_property(left_enclosing => ' ]' );
 
-
-
 =head1 AUTHOR
 
-  Damien "dams" Krotkine
+Damien "dams" Krotkine
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2008 by Damien "dams" Krotkine.
+This software is copyright (c) 2010 by Damien "dams" Krotkine.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
-=cut 
+=cut
+

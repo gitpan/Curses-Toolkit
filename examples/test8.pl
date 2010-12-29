@@ -1,16 +1,16 @@
 #!/usr/bin/perl
-# 
+#
 # This file is part of Curses-Toolkit
-# 
-# This software is copyright (c) 2008 by Damien "dams" Krotkine.
-# 
+#
+# This software is copyright (c) 2010 by Damien "dams" Krotkine.
+#
 # This is free software; you can redistribute it and/or modify it under
 # the same terms as the Perl 5 programming language system itself.
-# 
+#
 
 use HTML::Parser;
 
-# substract of pango  :
+# subtract of pango  :
 # weight : One of 'normal', 'bold'
 # fgcolor :
 # bgcolor :
@@ -82,3 +82,4 @@ sub default {
 	my ($dtext) = @_;
 	print "$dtext";
 }
+
