@@ -1,7 +1,7 @@
 #
 # This file is part of Curses-Toolkit
 #
-# This software is copyright (c) 2010 by Damien "dams" Krotkine.
+# This software is copyright (c) 2011 by Damien "dams" Krotkine.
 #
 # This is free software; you can redistribute it and/or modify it under
 # the same terms as the Perl 5 programming language system itself.
@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit;
 BEGIN {
-  $Curses::Toolkit::VERSION = '0.200';
+  $Curses::Toolkit::VERSION = '0.201';
 }
 
 # ABSTRACT: a modern Curses toolkit
@@ -26,11 +26,7 @@ sub init_root_window {
 
     my %params = validate(
         @_,
-        {   clear => {
-                type    => BOOLEAN,
-                default => 1,
-            },
-            theme_name => {
+        {   theme_name => {
                 type     => SCALAR,
                 optional => 1,
             },
@@ -79,6 +75,8 @@ sub init_root_window {
     use Curses::Toolkit::Theme::Default;
     use Curses::Toolkit::Theme::Default::Color::Yellow;
     use Curses::Toolkit::Theme::Default::Color::Pink;
+    use Curses::Toolkit::Theme::Default::Color::BlueWhite;
+
     use Tie::Array::Iterable;
     $params{theme_name} ||= Curses::Toolkit->get_default_theme_name();
     my @windows = ();
@@ -226,7 +224,7 @@ sub get_default_theme_name {
     my ($class) = @_;
     return (
         has_colors()
-        ? 'Curses::Toolkit::Theme::Default::Color::Yellow'
+        ? 'Curses::Toolkit::Theme::Default::Color::BlueWhite'
         : 'Curses::Toolkit::Theme::Default'
     );
 
@@ -410,9 +408,25 @@ sub show_all {
 
 
 
+
 sub render {
     my ($self) = @_;
     $self->{curses_handler}->erase();
+
+    if (!defined $self->{_root_theme}) {
+        $self->{_root_theme} = $self->get_theme_name->new(Curses::Toolkit::Widget::Window->new());
+        $self->{_root_theme}->_set_colors($self->{_root_theme}->ROOT_COLOR, $self->{_root_theme}->ROOT_COLOR);
+    }
+    my $root_theme = $self->{_root_theme};
+
+    my $c = $self->{shape};
+    my $str = ' ' x ($c->get_x2() - $c->get_x1());
+    $self->{curses_handler}->attron($root_theme->_get_color_pair);
+    foreach my $y ( $c->get_y1() .. $c->get_y2() - 1 ) {
+        $self->{curses_handler}->addstr( $y, $c->get_x1(), $str );
+    }
+
+    
     foreach my $window ( sort { $a->get_property( window => 'stack' ) <=> $b->get_property( window => 'stack' ) }
         $self->get_windows() )
     {
@@ -564,7 +578,7 @@ Curses::Toolkit - a modern Curses toolkit
 
 =head1 VERSION
 
-version 0.200
+version 0.201
 
 =head1 SYNOPSIS
 
@@ -813,8 +827,7 @@ is not really a constructor, because you can't have more than one
 Curses::Toolkit object for one Curses environment. Think of it more like a
 service.
 
-  input  : clear_background  : optional, boolean, default 1 : if true, clears background
-           theme_name        : optional, the name of them to use as default diosplay theme
+  input  : theme_name        : optional, the name of them to use as default display theme
            mainloop          : optional, the mainloop object that will be used for event handling
            quit_key          : the key used to quit the whole application. Default to 'q'. If set to undef, it's disabled
            switch_key        : the key used to switch between windows. Default to 'r'. If set to undef, it's disabled
@@ -1073,7 +1086,7 @@ Damien "dams" Krotkine
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2010 by Damien "dams" Krotkine.
+This software is copyright (c) 2011 by Damien "dams" Krotkine.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

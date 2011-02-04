@@ -1,7 +1,7 @@
 #
 # This file is part of Curses-Toolkit
 #
-# This software is copyright (c) 2010 by Damien "dams" Krotkine.
+# This software is copyright (c) 2011 by Damien "dams" Krotkine.
 #
 # This is free software; you can redistribute it and/or modify it under
 # the same terms as the Perl 5 programming language system itself.
@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::Theme::Default::Color::Pink;
 BEGIN {
-  $Curses::Toolkit::Theme::Default::Color::Pink::VERSION = '0.200';
+  $Curses::Toolkit::Theme::Default::Color::Pink::VERSION = '0.201';
 }
 
 # ABSTRACT: default widget theme with pink-ish color, made for Book
@@ -27,7 +27,7 @@ use Curses;
 sub new {
     my $class = shift;
     has_colors()
-        or die "Cannot create a '" . __PACKAGE__ . "' object : color is not supported";
+        or die "Cannot create a '$class' object : color is not supported";
     return $class->SUPER::new(@_);
 }
 
@@ -46,6 +46,20 @@ sub _get_default_properties {
             left_enclosing  => '',
             right_enclosing => '',
         },
+'Curses::Toolkit::Widget::Window' => {
+            title_width               => 20,
+            title_bar_position        => 'top',
+            title_position            => 'right',
+            title_brackets_characters => [ '| ', ' |' ],
+            title_left_offset         => 1,
+            title_right_offset        => 1,
+            title_animation           => 1,
+            title_loop_duration       => 4,
+            title_loop_pause          => 2 / 3,
+
+            # inherited from Border
+            border_width => 1,
+        }
     );
     return $properties{$class_name} || $self->SUPER::_get_default_properties($class_name);
 }
@@ -70,9 +84,9 @@ sub VSTRING_NORMAL  { shift->_set_colors( 'white', 'magenta' ) }
 sub VSTRING_FOCUSED { shift->_set_colors( 'blue',  'magenta' )->_attron(A_REVERSE) }
 sub VSTRING_CLICKED { shift->_set_colors( 'blue',  'magenta' )->_attron(A_BOLD) }
 
-sub TITLE_NORMAL  { shift->_set_colors( 'black', 'magenta' ) }
-sub TITLE_FOCUSED { shift->_set_colors( 'black', 'magenta' )->_attron(A_BOLD) }
-sub TITLE_CLICKED { shift->_set_colors( 'blue',  'magenta' )->_attron(A_REVERSE) }
+sub TITLE_NORMAL  { shift->_set_colors( 'blue', 'magenta' ) }
+sub TITLE_FOCUSED { shift->_set_colors( 'blue', 'magenta' )->_attron(A_BOLD) }
+sub TITLE_CLICKED { shift->_set_colors( 'blue',  'white' )->_attron(A_REVERSE) }
 
 sub RESIZE_NORMAL  { shift->_set_colors( 'blue', 'magenta' ) }
 sub RESIZE_FOCUSED { shift->_set_colors( 'red',  'magenta' )->_attron(A_BOLD) }
@@ -93,7 +107,7 @@ Curses::Toolkit::Theme::Default::Color::Pink - default widget theme with pink-is
 
 =head1 VERSION
 
-version 0.200
+version 0.201
 
 =head1 DESCRIPTION
 
@@ -112,7 +126,7 @@ Damien "dams" Krotkine
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2010 by Damien "dams" Krotkine.
+This software is copyright (c) 2011 by Damien "dams" Krotkine.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

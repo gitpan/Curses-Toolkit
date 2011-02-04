@@ -1,7 +1,7 @@
 #
 # This file is part of Curses-Toolkit
 #
-# This software is copyright (c) 2010 by Damien "dams" Krotkine.
+# This software is copyright (c) 2011 by Damien "dams" Krotkine.
 #
 # This is free software; you can redistribute it and/or modify it under
 # the same terms as the Perl 5 programming language system itself.
@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::Widget::VBox;
 BEGIN {
-  $Curses::Toolkit::Widget::VBox::VERSION = '0.200';
+  $Curses::Toolkit::Widget::VBox::VERSION = '0.201';
 }
 
 # ABSTRACT: a vertical box widget
@@ -77,6 +77,7 @@ sub _rebuild_children_coordinates {
     my $available_space = $self->_get_available_space();
 
     my @children_heights;
+    my @children_padding;
 
     my $desired_space   = $available_space->clone();
     my $remaining_space = $available_space->clone();
@@ -96,8 +97,10 @@ sub _rebuild_children_coordinates {
             $remaining_space->subtract( { y2 => $h } );
             $children_heights[$idx] = $h;
             $idx++;
+            $children_padding[$idx] = { before => 0, after => 0 };
         }
     }
+
 
     # add to it the height of the expanding children, restricted
     my $count = scalar( grep { $_->get_property( 'packing', 'expand' ) } @children );
@@ -112,7 +115,16 @@ sub _rebuild_children_coordinates {
             $avg_space->set( y2 => $avg_space->get_y1() + $avg_height );
             my $space = $child->get_desired_space($avg_space);
             my $h     = $space->height();
-            $remaining_space->subtract( { y2 => $h } );
+            if ($h < $avg_height) {
+                if ($child->get_property(packing => 'fill')) {
+                    $h = $avg_height;
+                    $children_padding[$idx] = { before => 0, after => 0 };
+                } else {
+                    my $p = int(($avg_height - $h) / 2);
+                    $children_padding[$idx] = { before => $p, after => ($avg_height-$h-$p) };
+                }
+            }
+            $remaining_space->subtract( { y2 => $h + $children_padding[$idx]{before} + $children_padding[$idx]{after} } );
             $height += $h;
             $children_heights[$idx] = $h;
             $count--;
@@ -125,6 +137,7 @@ sub _rebuild_children_coordinates {
     my $y2 = 0;
     foreach my $child (@children) {
         my $child_space = $available_space->clone();
+        $y1 += $children_padding[$idx]{before};
         $y2 = $y1 + $children_heights[$idx];
         $child_space->set( y1 => $y1, y2 => $y2 );
         $child_space->restrict_to($available_space);
@@ -133,6 +146,7 @@ sub _rebuild_children_coordinates {
             and $child->_rebuild_children_coordinates();
 
         $y1 = $y2;
+        $y1 += $children_padding[$idx]{after};
         $idx++;
     }
 
@@ -144,36 +158,39 @@ sub get_desired_space {
     my ( $self, $available_space ) = @_;
 
     my $desired_space   = $available_space->clone();
-    my $remaining_space = $available_space->clone();
 
-    # first, compute how high all the non expanding children are
-    my @children = $self->get_children();
-    my $height   = 0;
-    foreach my $child ( grep { !$_->get_property( 'packing', 'expand' ) } @children ) {
-        my $space = $child->get_minimum_space($remaining_space);
-        my $h     = $space->height();
-        $height += $h;
-        $remaining_space->subtract( { y2 => $h } );
-    }
+return $desired_space;
 
-    # add to it the height of the expanding children, restricted
-    my @expanding_children = grep { $_->get_property( 'packing', 'expand' ) } @children;
+#     my $remaining_space = $available_space->clone();
 
-    my $count = @expanding_children;
-    foreach my $child (@expanding_children) {
-        my $avg_height = int( $remaining_space->height() / $count );
-        my $avg_space  = $remaining_space->clone();
-        $avg_space->set( y2 => $avg_space->get_y1() + $avg_height );
-        my $space = $child->get_desired_space($avg_space);
-        my $h     = $space->height();
-        $remaining_space->subtract( { y2 => $h } );
-        $height += $h;
-        $count--;
-    }
+#     # first, compute how high all the non expanding children are
+#     my @children = $self->get_children();
+#     my $height   = 0;
+#     foreach my $child ( grep { !$_->get_property( 'packing', 'expand' ) } @children ) {
+#         my $space = $child->get_minimum_space($remaining_space);
+#         my $h     = $space->height();
+#         $height += $h;
+#         $remaining_space->subtract( { y2 => $h } );
+#     }
 
-    $desired_space->set( y2 => $desired_space->get_y1() + $height );
+#     # add to it the height of the expanding children, restricted
+#     my @expanding_children = grep { $_->get_property( 'packing', 'expand' ) } @children;
 
-    return $desired_space;
+#     my $count = @expanding_children;
+#     foreach my $child (@expanding_children) {
+#         my $avg_height = int( $remaining_space->height() / $count );
+#         my $avg_space  = $remaining_space->clone();
+#         $avg_space->set( y2 => $avg_space->get_y1() + $avg_height );
+#         my $space = $child->get_desired_space($avg_space);
+#         my $h     = $space->height();
+#         $remaining_space->subtract( { y2 => $h } );
+#         $height += $h;
+# #        $count--;
+#     }
+
+#     $desired_space->set( y2 => $desired_space->get_y1() + $height );
+
+#     return $desired_space;
 
 }
 
@@ -217,7 +234,7 @@ Curses::Toolkit::Widget::VBox - a vertical box widget
 
 =head1 VERSION
 
-version 0.200
+version 0.201
 
 =head1 DESCRIPTION
 
@@ -243,17 +260,17 @@ pack_start multiple time to add more widgets.
 
 The hash containing options can contain :
 
-expand : TRUE if the new child is to be given extra space allocated to box.
+expand : if set to true, the new child will be given extra space allocated to box.
 The extra space will be divided evenly between all children of box that use
 this option
 
-fill : TRUE if space given to child by the expand option is actually
+fill : if set to true, the space given to child by the expand option is actually
 allocated to child, rather than just padding it. This parameter has no effect
-if expand is set to FALSE. A child is always allocated the full height of a
+if expand is set to false. A child is always allocated the full height of a
 GtkHBox and the full width of a GtkVBox. This option affects the other
 dimension
 
-padding : extra space in pixels to put between this child and its neighbors,
+padding : NOT SUPPORTED YET. extra space in pixels to put between this child and its neighbors,
 over and above the global amount specified by "spacing" property. If child is
 a widget at one of the reference ends of box, then padding pixels are also
 put between child and the reference edge of box
@@ -279,7 +296,7 @@ Damien "dams" Krotkine
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2010 by Damien "dams" Krotkine.
+This software is copyright (c) 2011 by Damien "dams" Krotkine.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

@@ -1,7 +1,7 @@
 #
 # This file is part of Curses-Toolkit
 #
-# This software is copyright (c) 2010 by Damien "dams" Krotkine.
+# This software is copyright (c) 2011 by Damien "dams" Krotkine.
 #
 # This is free software; you can redistribute it and/or modify it under
 # the same terms as the Perl 5 programming language system itself.
@@ -11,7 +11,7 @@ use warnings;
 
 package Curses::Toolkit::Widget::ProgressBar;
 BEGIN {
-  $Curses::Toolkit::Widget::ProgressBar::VERSION = '0.200';
+  $Curses::Toolkit::Widget::ProgressBar::VERSION = '0.201';
 }
 
 # ABSTRACT: progress bar widget base class
@@ -31,10 +31,10 @@ extends qw(Curses::Toolkit::Widget::Border);
 # -- attributes
 
 
-has minimum  => ( rw, isa => 'Num', lazy_build, trigger => sub { shift->needs_redraw }, traits => [ 'Chained' ] );
-has maximum  => ( rw, isa => 'Num', lazy_build, trigger => sub { shift->needs_redraw }, traits => [ 'Chained' ]  );
-has position => ( rw, isa => 'Num', lazy_build, trigger => sub { shift->needs_redraw }, traits => [ 'Chained' ]  );
-has label_type => ( rw, isa => 'PROGRESS_BAR_LABEL', lazy_build, traits => [ 'Chained' ]  );
+has minimum  => ( rw, isa => 'Num', lazy_build, trigger => sub { shift->needs_redraw } );
+has maximum  => ( rw, isa => 'Num', lazy_build, trigger => sub { shift->needs_redraw } );
+has position => ( rw, isa => 'Num', lazy_build, trigger => sub { shift->needs_redraw } );
+has label_type => ( rw, isa => 'PROGRESS_BAR_LABEL', lazy_build );
 
 
 # -- builders & initializers
@@ -91,7 +91,7 @@ Curses::Toolkit::Widget::ProgressBar - progress bar widget base class
 
 =head1 VERSION
 
-version 0.200
+version 0.201
 
 =head1 SYNOPSIS
 
@@ -218,7 +218,7 @@ Damien "dams" Krotkine
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2010 by Damien "dams" Krotkine.
+This software is copyright (c) 2011 by Damien "dams" Krotkine.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

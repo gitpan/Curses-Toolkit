@@ -13,7 +13,7 @@ build_requires:
 configure_requires:
   ExtUtils::MakeMaker: 6.31
 dynamic_config: 0
-generated_by: 'Dist::Zilla version 4.200000, CPAN::Meta::Converter version 2.102400'
+generated_by: 'Dist::Zilla version 4.200001, CPAN::Meta::Converter version 2.110320'
 license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
@@ -22,175 +22,178 @@ name: Curses-Toolkit
 provides:
   Curses::Toolkit:
     file: lib/Curses/Toolkit.pm
-    version: 0.200
+    version: 0.201
   Curses::Toolkit::Event:
     file: lib/Curses/Toolkit/Event.pm
-    version: 0.200
+    version: 0.201
   Curses::Toolkit::Event::Content:
     file: lib/Curses/Toolkit/Event/Content.pm
-    version: 0.200
+    version: 0.201
   Curses::Toolkit::Event::Content::Changed:
     file: lib/Curses/Toolkit/Event/Content/Changed.pm
-    version: 0.200
+    version: 0.201
   Curses::Toolkit::Event::Focus:
     file: lib/Curses/Toolkit/Event/Focus.pm
-    version: 0.200
+    version: 0.201
   Curses::Toolkit::Event::Focus::In:
     file: lib/Curses/Toolkit/Event/Focus/In.pm
-    version: 0.200
+    version: 0.201
   Curses::Toolkit::Event::Focus::Out:
     file: lib/Curses/Toolkit/Event/Focus/Out.pm
-    version: 0.200
+    version: 0.201
   Curses::Toolkit::Event::Key:
     file: lib/Curses/Toolkit/Event/Key.pm
-    version: 0.200
+    version: 0.201
   Curses::Toolkit::Event::Mouse:
     file: lib/Curses/Toolkit/Event/Mouse.pm
-    version: 0.200
+    version: 0.201
   Curses::Toolkit::Event::Mouse::Click:
     file: lib/Curses/Toolkit/Event/Mouse/Click.pm
-    version: 0.200
+    version: 0.201
   Curses::Toolkit::Event::Shape:
     file: lib/Curses/Toolkit/Event/Shape.pm
-    version: 0.200
+    version: 0.201
   Curses::Toolkit::EventListener:
     file: lib/Curses/Toolkit/EventListener.pm
-    version: 0.200
+    version: 0.201
   Curses::Toolkit::EventListener::Key:
     file: lib/Curses/Toolkit/EventListener/Key.pm
-    version: 0.200
+    version: 0.201
   Curses::Toolkit::Object:
     file: lib/Curses/Toolkit/Object.pm
-    version: 0.200
+    version: 0.201
   Curses::Toolkit::Object::Coordinates:
     file: lib/Curses/Toolkit/Object/Coordinates.pm
-    version: 0.200
+    version: 0.201
   Curses::Toolkit::Object::Flags:
     file: lib/Curses/Toolkit/Object/Flags.pm
-    version: 0.200
+    version: 0.201
   Curses::Toolkit::Object::MarkupString:
     file: lib/Curses/Toolkit/Object/MarkupString.pm
-    version: 0.200
+    version: 0.201
   Curses::Toolkit::Object::Shape:
     file: lib/Curses/Toolkit/Object/Shape.pm
-    version: 0.200
+    version: 0.201
   Curses::Toolkit::Role:
     file: lib/Curses/Toolkit/Role.pm
-    version: 0.200
+    version: 0.201
   Curses::Toolkit::Role::Focusable:
     file: lib/Curses/Toolkit/Role/Focusable.pm
-    version: 0.200
+    version: 0.201
   Curses::Toolkit::Signal:
     file: lib/Curses/Toolkit/Signal.pm
-    version: 0.200
+    version: 0.201
   Curses::Toolkit::Signal::Clicked:
     file: lib/Curses/Toolkit/Signal/Clicked.pm
-    version: 0.200
+    version: 0.201
   Curses::Toolkit::Signal::Content:
     file: lib/Curses/Toolkit/Signal/Content.pm
-    version: 0.200
+    version: 0.201
   Curses::Toolkit::Signal::Content::Changed:
     file: lib/Curses/Toolkit/Signal/Content/Changed.pm
-    version: 0.200
+    version: 0.201
   Curses::Toolkit::Signal::Focused:
     file: lib/Curses/Toolkit/Signal/Focused.pm
-    version: 0.200
+    version: 0.201
   Curses::Toolkit::Signal::Focused::In:
     file: lib/Curses/Toolkit/Signal/Focused/In.pm
-    version: 0.200
+    version: 0.201
   Curses::Toolkit::Signal::Focused::Out:
     file: lib/Curses/Toolkit/Signal/Focused/Out.pm
-    version: 0.200
+    version: 0.201
   Curses::Toolkit::Theme:
     file: lib/Curses/Toolkit/Theme.pm
-    version: 0.200
+    version: 0.201
   Curses::Toolkit::Theme::Default:
     file: lib/Curses/Toolkit/Theme/Default.pm
-    version: 0.200
+    version: 0.201
   Curses::Toolkit::Theme::Default::Color:
     file: lib/Curses/Toolkit/Theme/Default/Color.pm
-    version: 0.200
+    version: 0.201
+  Curses::Toolkit::Theme::Default::Color::BlueWhite:
+    file: lib/Curses/Toolkit/Theme/Default/Color/BlueWhite.pm
+    version: 0.201
   Curses::Toolkit::Theme::Default::Color::Pink:
     file: lib/Curses/Toolkit/Theme/Default/Color/Pink.pm
-    version: 0.200
+    version: 0.201
   Curses::Toolkit::Theme::Default::Color::Yellow:
     file: lib/Curses/Toolkit/Theme/Default/Color/Yellow.pm
-    version: 0.200
+    version: 0.201
   Curses::Toolkit::Types:
     file: lib/Curses/Toolkit/Types.pm
-    version: 0.200
+    version: 0.201
   Curses::Toolkit::Widget:
     file: lib/Curses/Toolkit/Widget.pm
-    version: 0.200
+    version: 0.201
   Curses::Toolkit::Widget::Bin:
     file: lib/Curses/Toolkit/Widget/Bin.pm
-    version: 0.200
+    version: 0.201
   Curses::Toolkit::Widget::Border:
     file: lib/Curses/Toolkit/Widget/Border.pm
-    version: 0.200
+    version: 0.201
   Curses::Toolkit::Widget::Button:
     file: lib/Curses/Toolkit/Widget/Button.pm
-    version: 0.200
+    version: 0.201
   Curses::Toolkit::Widget::Container:
     file: lib/Curses/Toolkit/Widget/Container.pm
-    version: 0.200
+    version: 0.201
   Curses::Toolkit::Widget::Entry:
     file: lib/Curses/Toolkit/Widget/Entry.pm
-    version: 0.200
+    version: 0.201
   Curses::Toolkit::Widget::GenericButton:
     file: lib/Curses/Toolkit/Widget/GenericButton.pm
-    version: 0.200
+    version: 0.201
   Curses::Toolkit::Widget::HBox:
     file: lib/Curses/Toolkit/Widget/HBox.pm
-    version: 0.200
+    version: 0.201
   Curses::Toolkit::Widget::HPaned:
     file: lib/Curses/Toolkit/Widget/HPaned.pm
-    version: 0.200
+    version: 0.201
   Curses::Toolkit::Widget::HProgressBar:
     file: lib/Curses/Toolkit/Widget/HProgressBar.pm
-    version: 0.200
+    version: 0.201
   Curses::Toolkit::Widget::HScrollBar:
     file: lib/Curses/Toolkit/Widget/HScrollBar.pm
-    version: 0.200
+    version: 0.201
   Curses::Toolkit::Widget::Label:
     file: lib/Curses/Toolkit/Widget/Label.pm
-    version: 0.200
+    version: 0.201
   Curses::Toolkit::Widget::Paned:
     file: lib/Curses/Toolkit/Widget/Paned.pm
-    version: 0.200
+    version: 0.201
   Curses::Toolkit::Widget::ProgressBar:
     file: lib/Curses/Toolkit/Widget/ProgressBar.pm
-    version: 0.200
+    version: 0.201
   Curses::Toolkit::Widget::ScrollArea:
     file: lib/Curses/Toolkit/Widget/ScrollArea.pm
-    version: 0.200
+    version: 0.201
   Curses::Toolkit::Widget::VBox:
     file: lib/Curses/Toolkit/Widget/VBox.pm
-    version: 0.200
+    version: 0.201
   Curses::Toolkit::Widget::VPaned:
     file: lib/Curses/Toolkit/Widget/VPaned.pm
-    version: 0.200
+    version: 0.201
   Curses::Toolkit::Widget::VProgressBar:
     file: lib/Curses/Toolkit/Widget/VProgressBar.pm
-    version: 0.200
+    version: 0.201
   Curses::Toolkit::Widget::VScrollBar:
     file: lib/Curses/Toolkit/Widget/VScrollBar.pm
-    version: 0.200
+    version: 0.201
   Curses::Toolkit::Widget::Window:
     file: lib/Curses/Toolkit/Widget/Window.pm
-    version: 0.200
+    version: 0.201
   Curses::Toolkit::Widget::Window::Dialog:
     file: lib/Curses/Toolkit/Widget/Window/Dialog.pm
-    version: 0.200
+    version: 0.201
   Curses::Toolkit::Widget::Window::Dialog::About:
     file: lib/Curses/Toolkit/Widget/Window/Dialog/About.pm
-    version: 0.200
+    version: 0.201
   POE::Component::Curses:
     file: lib/POE/Component/Curses.pm
-    version: 0.200
+    version: 0.201
   POE::Component::Curses::MainLoop:
     file: lib/POE/Component/Curses/MainLoop.pm
-    version: 0.200
+    version: 0.201
 requires:
   Curses: 0
   Data::Dumper: 0
@@ -212,4 +215,4 @@ requires:
 resources:
   homepage: http://search.cpan.org/dist/Curses-Toolkit
   repository: http://github.com/dams/curses-toolkit
-version: 0.200
+version: 0.201

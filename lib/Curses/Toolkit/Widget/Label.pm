@@ -1,7 +1,7 @@
 #
 # This file is part of Curses-Toolkit
 #
-# This software is copyright (c) 2010 by Damien "dams" Krotkine.
+# This software is copyright (c) 2011 by Damien "dams" Krotkine.
 #
 # This is free software; you can redistribute it and/or modify it under
 # the same terms as the Perl 5 programming language system itself.
@@ -11,10 +11,10 @@ use strict;
 
 package Curses::Toolkit::Widget::Label;
 BEGIN {
-  $Curses::Toolkit::Widget::Label::VERSION = '0.200';
+  $Curses::Toolkit::Widget::Label::VERSION = '0.201';
 }
 
-# ABSTRACT: a container with two panes arranged horizontally
+# ABSTRACT: a widget to display text
 
 use parent qw(Curses::Toolkit::Widget);
 
@@ -114,14 +114,14 @@ sub draw {
         }
         if ( $justify eq 'center' ) {
             $theme->draw_string(
-                $c->get_x1() + ( $c->width() - length $t ) / 2,
+                $c->get_x1() + ( $c->width() - $t->stripped_length() ) / 2,
                 $c->get_y1() + $y,
                 $t
             );
         }
         if ( $justify eq 'right' ) {
             $theme->draw_string(
-                $c->get_x1() + $c->width() - length $t,
+                $c->get_x1() + $c->width() - $t->stripped_length(),
                 $c->get_y1() + $y,
                 $t
             );
@@ -191,20 +191,21 @@ sub _textwrap {
 
 sub get_desired_space {
     my ( $self, $available_space ) = @_;
-    return $self->_get_space($available_space, $self->get_wrap_method);
+    return $self->_get_space($available_space, $self->get_wrap_mode);
 }
 
 
 sub get_minimum_space {
     my ( $self, $available_space ) = @_;
-    return $self->_get_space($available_space, 'active');
+    return $self->_get_space($available_space, $self->get_wrap_mode);
 }
 
 sub _get_space {
-    my ( $self, $available_space ) = @_;
+    my ( $self, $available_space, $wrap_mode ) = @_;
+
+    $wrap_mode      ||= $self->get_wrap_mode();
 
     my $minimum_space = $available_space->clone();
-    my $wrap_mode     = $self->get_wrap_mode();
     my $text          = $self->{_markup_string}->stripped();
     if ( $wrap_mode eq 'never' ) {
         $text =~ s/\n(\s)/$1/g;
@@ -238,8 +239,9 @@ sub _get_space {
         return $minimum_space;
     } elsif ( $wrap_mode eq 'lazy' ) {
         my @text = _textwrap( $self->{_markup_string}, max( $available_space->width(), 1 ) );
-        $minimum_space->set( y2 => $minimum_space->get_y1() + scalar(@text) );
-        $minimum_space->set( x2 => $minimum_space->get_x1() + max( map { $_->stripped_length() } @text ) );
+        $minimum_space->set( x2 => $minimum_space->get_x1() + max( map { $_->stripped_length() } @text ) + 1,
+                             y2 => $minimum_space->get_y1() + scalar(@text)
+                           );
         return $minimum_space;
     }
     die;
@@ -254,11 +256,11 @@ __END__
 
 =head1 NAME
 
-Curses::Toolkit::Widget::Label - a container with two panes arranged horizontally
+Curses::Toolkit::Widget::Label - a widget to display text
 
 =head1 VERSION
 
-version 0.200
+version 0.201
 
 =head1 DESCRIPTION
 
@@ -438,7 +440,7 @@ Damien "dams" Krotkine
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2010 by Damien "dams" Krotkine.
+This software is copyright (c) 2011 by Damien "dams" Krotkine.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

@@ -1,7 +1,7 @@
 #
 # This file is part of Curses-Toolkit
 #
-# This software is copyright (c) 2010 by Damien "dams" Krotkine.
+# This software is copyright (c) 2011 by Damien "dams" Krotkine.
 #
 # This is free software; you can redistribute it and/or modify it under
 # the same terms as the Perl 5 programming language system itself.
@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::Widget::ScrollArea;
 BEGIN {
-  $Curses::Toolkit::Widget::ScrollArea::VERSION = '0.200';
+  $Curses::Toolkit::Widget::ScrollArea::VERSION = '0.201';
 }
 
 # ABSTRACT: a vertical scrollable area
@@ -40,7 +40,7 @@ sub _get_available_space {
     use Curses::Toolkit::Object::Coordinates;
     return Curses::Toolkit::Object::Coordinates->new(
         x1 => 0,   y1 => 0,
-        x2 => 20, y2 => 20,
+        x2 => 300, y2 => 300,
     );
 }
 
@@ -64,7 +64,7 @@ Curses::Toolkit::Widget::ScrollArea - a vertical scrollable area
 
 =head1 VERSION
 
-version 0.200
+version 0.201
 
 =head2 get_desired_space
 
@@ -80,7 +80,7 @@ Damien "dams" Krotkine
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2010 by Damien "dams" Krotkine.
+This software is copyright (c) 2011 by Damien "dams" Krotkine.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

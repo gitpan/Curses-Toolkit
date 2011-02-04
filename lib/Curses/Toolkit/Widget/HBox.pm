@@ -1,7 +1,7 @@
 #
 # This file is part of Curses-Toolkit
 #
-# This software is copyright (c) 2010 by Damien "dams" Krotkine.
+# This software is copyright (c) 2011 by Damien "dams" Krotkine.
 #
 # This is free software; you can redistribute it and/or modify it under
 # the same terms as the Perl 5 programming language system itself.
@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::Widget::HBox;
 BEGIN {
-  $Curses::Toolkit::Widget::HBox::VERSION = '0.200';
+  $Curses::Toolkit::Widget::HBox::VERSION = '0.201';
 }
 
 # ABSTRACT: an horizontal box widget
@@ -76,6 +76,7 @@ sub _rebuild_children_coordinates {
     my $available_space = $self->_get_available_space();
 
     my @children_widths;
+    my @children_padding;
 
     my $desired_space   = $available_space->clone();
     my $remaining_space = $available_space->clone();
@@ -95,6 +96,7 @@ sub _rebuild_children_coordinates {
             $remaining_space->subtract( { x2 => $w } );
             $children_widths[$idx] = $w;
             $idx++;
+            $children_padding[$idx] = { before => 0, after => 0 };
         }
     }
 
@@ -111,7 +113,16 @@ sub _rebuild_children_coordinates {
             $avg_space->set( x2 => $avg_space->get_x1() + $avg_width );
             my $space = $child->get_desired_space($avg_space);
             my $w     = $space->width();
-            $remaining_space->subtract( { x2 => $w } );
+            if ($w < $avg_width) {
+                if ($child->get_property(packing => 'fill')) {
+                    $w = $avg_width;
+                    $children_padding[$idx] = { before => 0, after => 0 };
+                } else {
+                    my $p = int(($avg_width - $w) / 2);
+                    $children_padding[$idx] = { before => $p, after => ($avg_width-$w-$p) };
+                }
+            }
+            $remaining_space->subtract( { x2 => $w + $children_padding[$idx]{before} + $children_padding[$idx]{after} } );
             $width += $w;
             $children_widths[$idx] = $w;
             $count--;
@@ -124,6 +135,7 @@ sub _rebuild_children_coordinates {
     my $x2 = 0;
     foreach my $child (@children) {
         my $child_space = $available_space->clone();
+        $x1 += $children_padding[$idx]{before};
         $x2 = $x1 + $children_widths[$idx];
         $child_space->set( x1 => $x1, x2 => $x2 );
         $child_space->restrict_to($available_space);
@@ -132,6 +144,7 @@ sub _rebuild_children_coordinates {
             and $child->_rebuild_children_coordinates();
 
         $x1 = $x2;
+        $x1 += $children_padding[$idx]{after};
         $idx++;
     }
 
@@ -143,36 +156,39 @@ sub get_desired_space {
     my ( $self, $available_space ) = @_;
 
     my $desired_space   = $available_space->clone();
-    my $remaining_space = $available_space->clone();
 
-    # first, compute how large all the non expanding children are
-    my @children = $self->get_children();
-    my $width    = 0;
-    foreach my $child ( grep { !$_->get_property( 'packing', 'expand' ) } @children ) {
-        my $space = $child->get_minimum_space($remaining_space);
-        my $w     = $space->width();
-        $width += $w;
-        $remaining_space->subtract( { x2 => $w } );
-    }
+return $desired_space;
 
-    # add to it the width of the expanding children, restricted
-    my @expanding_children = grep { $_->get_property( 'packing', 'expand' ) } @children;
+#     my $remaining_space = $available_space->clone();
 
-    my $count = @expanding_children;
-    foreach my $child (@expanding_children) {
-        my $avg_width = int( $remaining_space->width() / $count );
-        my $avg_space = $remaining_space->clone();
-        $avg_space->set( x2 => $avg_space->get_x1() + $avg_width );
-        my $space = $child->get_desired_space($avg_space);
-        my $w     = $space->width();
-        $remaining_space->subtract( { x2 => $w } );
-        $width += $w;
-        $count--;
-    }
+#     # first, compute how large all the non expanding children are
+#     my @children = $self->get_children();
+#     my $width    = 0;
+#     foreach my $child ( grep { !$_->get_property( 'packing', 'expand' ) } @children ) {
+#         my $space = $child->get_minimum_space($remaining_space);
+#         my $w     = $space->width();
+#         $width += $w;
+#         $remaining_space->subtract( { x2 => $w } );
+#     }
 
-    $desired_space->set( x2 => $desired_space->get_x1() + $width );
+#     # add to it the width of the expanding children, restricted
+#     my @expanding_children = grep { $_->get_property( 'packing', 'expand' ) } @children;
 
-    return $desired_space;
+#     my $count = @expanding_children;
+#     foreach my $child (@expanding_children) {
+#         my $avg_width = int( $remaining_space->width() / $count );
+#         my $avg_space = $remaining_space->clone();
+#         $avg_space->set( x2 => $avg_space->get_x1() + $avg_width );
+#         my $space = $child->get_desired_space($avg_space);
+#         my $w     = $space->width();
+#         $remaining_space->subtract( { x2 => $w } );
+#         $width += $w;
+#         $count--;
+#     }
+
+#     $desired_space->set( x2 => $desired_space->get_x1() + $width );
+
+#     return $desired_space;
 
 }
 
@@ -213,7 +229,7 @@ Curses::Toolkit::Widget::HBox - an horizontal box widget
 
 =head1 VERSION
 
-version 0.200
+version 0.201
 
 =head1 DESCRIPTION
 
@@ -275,7 +291,7 @@ Damien "dams" Krotkine
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2010 by Damien "dams" Krotkine.
+This software is copyright (c) 2011 by Damien "dams" Krotkine.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

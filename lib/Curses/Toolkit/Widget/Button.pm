@@ -1,7 +1,7 @@
 #
 # This file is part of Curses-Toolkit
 #
-# This software is copyright (c) 2010 by Damien "dams" Krotkine.
+# This software is copyright (c) 2011 by Damien "dams" Krotkine.
 #
 # This is free software; you can redistribute it and/or modify it under
 # the same terms as the Perl 5 programming language system itself.
@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::Widget::Button;
 BEGIN {
-  $Curses::Toolkit::Widget::Button::VERSION = '0.200';
+  $Curses::Toolkit::Widget::Button::VERSION = '0.201';
 }
 
 # ABSTRACT: a simple text button widget
@@ -94,9 +94,10 @@ sub draw {
     my $t1 = ' ' x ( ( $w2 - length $text ) / 2 );
     my $t2 = ' ' x ( $w2 - length($text) - length($t1) );
 
-    $theme->draw_string( $c->get_x1() + $bw,       $c->get_y1() + $bw, $left_string );
-    $theme->draw_string( $c->get_x1() + $bw + $o2, $c->get_y1() + $bw, $right_string );
-    $theme->draw_string( $c->get_x1() + $bw + $o1, $c->get_y1() + $bw, $t1 . $text . $t2 );
+    my $y = $c->get_y1() + $bw + (  ($c->height - (2*$bw)) / 2);
+    $theme->draw_string( $c->get_x1() + $bw,       $y, $left_string );
+    $theme->draw_string( $c->get_x1() + $bw + $o2, $y, $right_string );
+    $theme->draw_string( $c->get_x1() + $bw + $o1, $y, $t1 . $text . $t2 );
 
     return;
 }
@@ -156,7 +157,7 @@ Curses::Toolkit::Widget::Button - a simple text button widget
 
 =head1 VERSION
 
-version 0.200
+version 0.201
 
 =head1 DESCRIPTION
 
@@ -281,7 +282,7 @@ Damien "dams" Krotkine
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2010 by Damien "dams" Krotkine.
+This software is copyright (c) 2011 by Damien "dams" Krotkine.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

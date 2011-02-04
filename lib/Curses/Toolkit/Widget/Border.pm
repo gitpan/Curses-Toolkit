@@ -1,7 +1,7 @@
 #
 # This file is part of Curses-Toolkit
 #
-# This software is copyright (c) 2010 by Damien "dams" Krotkine.
+# This software is copyright (c) 2011 by Damien "dams" Krotkine.
 #
 # This is free software; you can redistribute it and/or modify it under
 # the same terms as the Perl 5 programming language system itself.
@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::Widget::Border;
 BEGIN {
-  $Curses::Toolkit::Widget::Border::VERSION = '0.200';
+  $Curses::Toolkit::Widget::Border::VERSION = '0.201';
 }
 
 # ABSTRACT: a border widget
@@ -70,6 +70,8 @@ sub get_desired_space {
     my $child_space = Curses::Toolkit::Object::Coordinates->new_zero();
     my $bw          = $self->get_theme_property('border_width');
     if ( defined $child ) {
+        # computation goes like that :
+        # desired space =  child_desired_space(available_space - borders) + borders
         my $child_available_space = $available_space->clone();
         $child_available_space->set(
             x1 => $available_space->get_x1() + $bw, y1 => $available_space->get_y1() + $bw,
@@ -96,6 +98,8 @@ sub get_minimum_space {
     my ($child)     = $self->get_children();
     my $child_space = Curses::Toolkit::Object::Coordinates->new_zero();
     my $bw          = $self->get_theme_property('border_width');
+    # computation goes like that :
+    # minimum space = (child_minimum_space(available_space - borders) + borders)
     if ( defined $child ) {
         my $child_available_space = $available_space->clone();
         $child_available_space->set(
@@ -138,7 +142,7 @@ Curses::Toolkit::Widget::Border - a border widget
 
 =head1 VERSION
 
-version 0.200
+version 0.201
 
 =head1 DESCRIPTION
 
@@ -199,7 +203,7 @@ Damien "dams" Krotkine
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2010 by Damien "dams" Krotkine.
+This software is copyright (c) 2011 by Damien "dams" Krotkine.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
