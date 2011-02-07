@@ -17,7 +17,7 @@ my %WriteMakefileArgs = (
     'File::Temp' => '0',
     'IO::Pty::Easy' => '0',
     'Test::Exception' => '0',
-    'Test::More' => '0',
+    'Test::More' => '0.94',
     'aliased' => '0'
   },
   'CONFIGURE_REQUIRES' => {
@@ -29,9 +29,7 @@ my %WriteMakefileArgs = (
   'NAME' => 'Curses::Toolkit',
   'PREREQ_PM' => {
     'Curses' => '0',
-    'Data::Dumper' => '0',
     'HTML::Parser' => '0',
-    'IO::Pty::Easy' => '0',
     'List::MoreUtils' => '0',
     'List::Util' => '0',
     'Moose' => '0.92',
@@ -45,7 +43,7 @@ my %WriteMakefileArgs = (
     'overload' => '0',
     'parent' => '0'
   },
-  'VERSION' => '0.202',
+  'VERSION' => '0.203',
   'test' => {
     'TESTS' => 't/*.t t/object/*.t'
   }

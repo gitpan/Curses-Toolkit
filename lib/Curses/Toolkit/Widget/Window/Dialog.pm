@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::Widget::Window::Dialog;
 BEGIN {
-  $Curses::Toolkit::Widget::Window::Dialog::VERSION = '0.202';
+  $Curses::Toolkit::Widget::Window::Dialog::VERSION = '0.203';
 }
 
 # ABSTRACT: a dialog window
@@ -29,7 +29,7 @@ Curses::Toolkit::Widget::Window::Dialog - a dialog window
 
 =head1 VERSION
 
-version 0.202
+version 0.203
 
 =head1 SYNOPSIS
 

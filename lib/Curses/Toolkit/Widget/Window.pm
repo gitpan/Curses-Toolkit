@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::Widget::Window;
 BEGIN {
-  $Curses::Toolkit::Widget::Window::VERSION = '0.202';
+  $Curses::Toolkit::Widget::Window::VERSION = '0.203';
 }
 
 # ABSTRACT: a window
@@ -204,7 +204,6 @@ sub get_title {
 sub set_coordinates {
     my $self = shift;
     use Curses::Toolkit::Object::Coordinates;
-    use Data::Dumper;
     if ( !ref( $_[0] ) ) {
         my %params = @_;
         foreach my $x (qw(x1 x2)) {
@@ -603,7 +602,7 @@ Curses::Toolkit::Widget::Window - a window
 
 =head1 VERSION
 
-version 0.202
+version 0.203
 
 =head1 SYNOPSIS
 

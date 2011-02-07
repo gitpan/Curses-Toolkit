@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit;
 BEGIN {
-  $Curses::Toolkit::VERSION = '0.202';
+  $Curses::Toolkit::VERSION = '0.203';
 }
 
 # ABSTRACT: a modern Curses toolkit
@@ -67,10 +67,6 @@ sub init_root_window {
 
     my $old_mouse_mask;
     my $mouse_mask = mousemask( ALL_MOUSE_EVENTS | REPORT_MOUSE_POSITION, $old_mouse_mask );
-
-    # erase the window if asked.
-    #    print STDERR Dumper($params{clear}); use Data::Dumper;
-    #    $params{clear} and $curses_handler->erase();
 
     use Curses::Toolkit::Theme::Default;
     use Curses::Toolkit::Theme::Default::Color::Yellow;
@@ -578,7 +574,7 @@ Curses::Toolkit - a modern Curses toolkit
 
 =head1 VERSION
 
-version 0.202
+version 0.203
 
 =head1 SYNOPSIS
 

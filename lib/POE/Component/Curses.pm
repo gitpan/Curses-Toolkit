@@ -11,7 +11,7 @@ use strict;
 
 package POE::Component::Curses;
 BEGIN {
-  $POE::Component::Curses::VERSION = '0.202';
+  $POE::Component::Curses::VERSION = '0.203';
 }
 
 # ABSTRACT: the ( currently only ) loader for Curses::toolkit
@@ -63,7 +63,6 @@ sub spawn {
             },
             key_handler => sub {
                 my ( $kernel, $heap, $keystroke ) = @_[ KERNEL, HEAP, ARG0 ];
-                use Data::Dumper;
 
                 #				my $k = $keystroke;
                 #				while(length $k) {
@@ -205,7 +204,7 @@ POE::Component::Curses - the ( currently only ) loader for Curses::toolkit
 
 =head1 VERSION
 
-version 0.202
+version 0.203
 
 =head1 SYNOPSIS
 
