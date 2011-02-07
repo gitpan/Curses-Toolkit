@@ -14,6 +14,9 @@ use warnings;
 use FindBin qw( $Bin );
 use lib "$Bin/../../lib";
 
+use relative -to      => "Curses::Toolkit::Widget",
+             -aliased => qw(Window Label);
+
 main() unless caller;
 
 sub main {
@@ -24,9 +27,12 @@ sub main {
     use Curses::Toolkit::Widget::Border;
 
     my $root = POE::Component::Curses->spawn;
-    my $window1 =
-      Curses::Toolkit::Widget::Window->new->set_name('window')->set_title("label tests 1")
-          ->set_coordinates( x1 => 0, y1 => 0, x2 => '100%', y2 => 30 );
-    $root->add_window($window1);
+    my $window =
+      Window->new->set_name('window')->set_title("window")
+            ->set_coordinates( x1 => 5, y1 => 5, width => 40, height => 5 );
+    $root->add_window($window);
+
+    my $label = Label->new->set_text('Hello World ! hit [ q ] to exit');
+    $window->add_widget($label);
     POE::Kernel->run();
 }

@@ -35,7 +35,6 @@ my %WriteMakefileArgs = (
     'List::MoreUtils' => '0',
     'List::Util' => '0',
     'Moose' => '0.92',
-    'Moose::Meta::Attribute::Custom::Trait::Chained' => '0.01',
     'Moose::Util::TypeConstraints' => '0',
     'MooseX::FollowPBP' => '0',
     'MooseX::Has::Sugar' => '0',
@@ -46,7 +45,7 @@ my %WriteMakefileArgs = (
     'overload' => '0',
     'parent' => '0'
   },
-  'VERSION' => '0.201',
+  'VERSION' => '0.202',
   'test' => {
     'TESTS' => 't/*.t t/object/*.t'
   }

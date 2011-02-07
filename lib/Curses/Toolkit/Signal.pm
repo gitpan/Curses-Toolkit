@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::Signal;
 BEGIN {
-  $Curses::Toolkit::Signal::VERSION = '0.201';
+  $Curses::Toolkit::Signal::VERSION = '0.202';
 }
 
 use Params::Validate qw(:all);
@@ -40,7 +40,7 @@ Curses::Toolkit::Signal
 
 =head1 VERSION
 
-version 0.201
+version 0.202
 
 =head1 DESCRIPTION
 

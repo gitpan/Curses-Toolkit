@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit;
 BEGIN {
-  $Curses::Toolkit::VERSION = '0.201';
+  $Curses::Toolkit::VERSION = '0.202';
 }
 
 # ABSTRACT: a modern Curses toolkit
@@ -411,6 +411,7 @@ sub show_all {
 
 sub render {
     my ($self) = @_;
+
     $self->{curses_handler}->erase();
 
     if (!defined $self->{_root_theme}) {
@@ -425,7 +426,6 @@ sub render {
     foreach my $y ( $c->get_y1() .. $c->get_y2() - 1 ) {
         $self->{curses_handler}->addstr( $y, $c->get_x1(), $str );
     }
-
     
     foreach my $window ( sort { $a->get_property( window => 'stack' ) <=> $b->get_property( window => 'stack' ) }
         $self->get_windows() )
@@ -578,7 +578,7 @@ Curses::Toolkit - a modern Curses toolkit
 
 =head1 VERSION
 
-version 0.201
+version 0.202
 
 =head1 SYNOPSIS
 
