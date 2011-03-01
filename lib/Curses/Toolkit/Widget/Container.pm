@@ -11,14 +11,14 @@ use strict;
 
 package Curses::Toolkit::Widget::Container;
 BEGIN {
-  $Curses::Toolkit::Widget::Container::VERSION = '0.203';
+  $Curses::Toolkit::Widget::Container::VERSION = '0.204';
 }
 
 # ABSTRACT: a container widget
 
 use parent qw(Curses::Toolkit::Widget);
 
-use Params::Validate qw(:all);
+use Params::Validate qw(SCALAR ARRAYREF HASHREF CODEREF GLOB GLOBREF SCALARREF HANDLE BOOLEAN UNDEF validate validate_pos);
 
 
 
@@ -119,7 +119,7 @@ Curses::Toolkit::Widget::Container - a container widget
 
 =head1 VERSION
 
-version 0.203
+version 0.204
 
 =head1 DESCRIPTION
 

@@ -11,14 +11,14 @@ use strict;
 
 package Curses::Toolkit::Widget::HBox;
 BEGIN {
-  $Curses::Toolkit::Widget::HBox::VERSION = '0.203';
+  $Curses::Toolkit::Widget::HBox::VERSION = '0.204';
 }
 
 # ABSTRACT: an horizontal box widget
 
 use parent qw(Curses::Toolkit::Widget::Container);
 
-use Params::Validate qw(:all);
+use Params::Validate qw(SCALAR ARRAYREF HASHREF CODEREF GLOB GLOBREF SCALARREF HANDLE BOOLEAN UNDEF validate validate_pos);
 
 
 
@@ -95,8 +95,8 @@ sub _rebuild_children_coordinates {
             $width += $w;
             $remaining_space->subtract( { x2 => $w } );
             $children_widths[$idx] = $w;
-            $idx++;
             $children_padding[$idx] = { before => 0, after => 0 };
+            $idx++;
         }
     }
 
@@ -229,7 +229,7 @@ Curses::Toolkit::Widget::HBox - an horizontal box widget
 
 =head1 VERSION
 
-version 0.203
+version 0.204
 
 =head1 DESCRIPTION
 

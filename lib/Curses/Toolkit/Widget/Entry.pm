@@ -11,14 +11,14 @@ use strict;
 
 package Curses::Toolkit::Widget::Entry;
 BEGIN {
-  $Curses::Toolkit::Widget::Entry::VERSION = '0.203';
+  $Curses::Toolkit::Widget::Entry::VERSION = '0.204';
 }
 
 # ABSTRACT: base class for focus events
 
 use parent qw(Curses::Toolkit::Widget Curses::Toolkit::Role::Focusable);
 
-use Params::Validate qw(:all);
+use Params::Validate qw(SCALAR ARRAYREF HASHREF CODEREF GLOB GLOBREF SCALARREF HANDLE BOOLEAN UNDEF validate validate_pos);
 
 
 sub new {
@@ -397,7 +397,7 @@ Curses::Toolkit::Widget::Entry - base class for focus events
 
 =head1 VERSION
 
-version 0.203
+version 0.204
 
 =head1 DESCRIPTION
 

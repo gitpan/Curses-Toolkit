@@ -11,14 +11,14 @@ use strict;
 
 package Curses::Toolkit::Widget::GenericButton;
 BEGIN {
-  $Curses::Toolkit::Widget::GenericButton::VERSION = '0.203';
+  $Curses::Toolkit::Widget::GenericButton::VERSION = '0.204';
 }
 
 # ABSTRACT: a button widget that can hold any other widget
 
 use parent qw(Curses::Toolkit::Widget::Border Curses::Toolkit::Role::Focusable);
 
-use Params::Validate qw(:all);
+use Params::Validate qw(SCALAR ARRAYREF HASHREF CODEREF GLOB GLOBREF SCALARREF HANDLE BOOLEAN UNDEF validate validate_pos);
 use Curses::Toolkit::Object::Coordinates;
 
 
@@ -49,7 +49,7 @@ Curses::Toolkit::Widget::GenericButton - a button widget that can hold any other
 
 =head1 VERSION
 
-version 0.203
+version 0.204
 
 =head1 DESCRIPTION
 

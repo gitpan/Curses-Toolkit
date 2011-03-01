@@ -11,14 +11,14 @@ use strict;
 
 package Curses::Toolkit::Event::Focus::Out;
 BEGIN {
-  $Curses::Toolkit::Event::Focus::Out::VERSION = '0.203';
+  $Curses::Toolkit::Event::Focus::Out::VERSION = '0.204';
 }
 
 # ABSTRACT: event that is related to out-focus
 
 use parent qw(Curses::Toolkit::Event::Focus);
 
-use Params::Validate qw(:all);
+use Params::Validate qw(SCALAR ARRAYREF HASHREF CODEREF GLOB GLOBREF SCALARREF HANDLE BOOLEAN UNDEF validate validate_pos);
 
 
 # this event has to be dispatched on a specific widget, so get_matching_widget
@@ -36,7 +36,7 @@ Curses::Toolkit::Event::Focus::Out - event that is related to out-focus
 
 =head1 VERSION
 
-version 0.203
+version 0.204
 
 =head1 DESCRIPTION
 

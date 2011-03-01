@@ -11,14 +11,14 @@ use strict;
 
 package Curses::Toolkit::Widget::Button;
 BEGIN {
-  $Curses::Toolkit::Widget::Button::VERSION = '0.203';
+  $Curses::Toolkit::Widget::Button::VERSION = '0.204';
 }
 
 # ABSTRACT: a simple text button widget
 
 use parent qw(Curses::Toolkit::Widget::Border Curses::Toolkit::Role::Focusable);
 
-use Params::Validate qw(:all);
+use Params::Validate qw(SCALAR ARRAYREF HASHREF CODEREF GLOB GLOBREF SCALARREF HANDLE BOOLEAN UNDEF validate validate_pos);
 use Curses::Toolkit::Object::Coordinates;
 
 
@@ -157,7 +157,7 @@ Curses::Toolkit::Widget::Button - a simple text button widget
 
 =head1 VERSION
 
-version 0.203
+version 0.204
 
 =head1 DESCRIPTION
 

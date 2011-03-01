@@ -11,12 +11,12 @@ use strict;
 
 package Curses::Toolkit::EventListener;
 BEGIN {
-  $Curses::Toolkit::EventListener::VERSION = '0.203';
+  $Curses::Toolkit::EventListener::VERSION = '0.204';
 }
 
 # ABSTRACT: base class for event listeners
 
-use Params::Validate qw(:all);
+use Params::Validate qw(SCALAR ARRAYREF HASHREF CODEREF GLOB GLOBREF SCALARREF HANDLE BOOLEAN UNDEF validate validate_pos);
 
 
 sub new {
@@ -133,7 +133,7 @@ Curses::Toolkit::EventListener - base class for event listeners
 
 =head1 VERSION
 
-version 0.203
+version 0.204
 
 =head1 DESCRIPTION
 

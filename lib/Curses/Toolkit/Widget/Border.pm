@@ -11,14 +11,14 @@ use strict;
 
 package Curses::Toolkit::Widget::Border;
 BEGIN {
-  $Curses::Toolkit::Widget::Border::VERSION = '0.203';
+  $Curses::Toolkit::Widget::Border::VERSION = '0.204';
 }
 
 # ABSTRACT: a border widget
 
 use parent qw(Curses::Toolkit::Widget::Bin);
 
-use Params::Validate qw(:all);
+use Params::Validate qw(SCALAR ARRAYREF HASHREF CODEREF GLOB GLOBREF SCALARREF HANDLE BOOLEAN UNDEF validate validate_pos);
 
 use Curses::Toolkit::Object::Coordinates;
 
@@ -142,7 +142,7 @@ Curses::Toolkit::Widget::Border - a border widget
 
 =head1 VERSION
 
-version 0.203
+version 0.204
 
 =head1 DESCRIPTION
 

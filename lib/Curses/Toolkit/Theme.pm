@@ -11,12 +11,12 @@ use strict;
 
 package Curses::Toolkit::Theme;
 BEGIN {
-  $Curses::Toolkit::Theme::VERSION = '0.203';
+  $Curses::Toolkit::Theme::VERSION = '0.204';
 }
 
 # ABSTRACT: base class for widgets themes
 
-use Params::Validate qw(:all);
+use Params::Validate qw(SCALAR ARRAYREF HASHREF CODEREF GLOB GLOBREF SCALARREF HANDLE BOOLEAN UNDEF validate validate_pos);
 use Curses;
 
 
@@ -340,7 +340,7 @@ Curses::Toolkit::Theme - base class for widgets themes
 
 =head1 VERSION
 
-version 0.203
+version 0.204
 
 =head1 DESCRIPTION
 

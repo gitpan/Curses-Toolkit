@@ -11,14 +11,14 @@ use strict;
 
 package Curses::Toolkit::Widget::Label;
 BEGIN {
-  $Curses::Toolkit::Widget::Label::VERSION = '0.203';
+  $Curses::Toolkit::Widget::Label::VERSION = '0.204';
 }
 
 # ABSTRACT: a widget to display text
 
 use parent qw(Curses::Toolkit::Widget);
 
-use Params::Validate qw(:all);
+use Params::Validate qw(SCALAR ARRAYREF HASHREF CODEREF GLOB GLOBREF SCALARREF HANDLE BOOLEAN UNDEF validate validate_pos);
 use List::Util qw(min max);
 use Curses::Toolkit::Object::MarkupString;
 
@@ -260,7 +260,7 @@ Curses::Toolkit::Widget::Label - a widget to display text
 
 =head1 VERSION
 
-version 0.203
+version 0.204
 
 =head1 DESCRIPTION
 

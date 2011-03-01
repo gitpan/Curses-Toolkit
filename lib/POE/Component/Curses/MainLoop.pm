@@ -11,7 +11,7 @@ use strict;
 
 package POE::Component::Curses::MainLoop;
 BEGIN {
-  $POE::Component::Curses::MainLoop::VERSION = '0.203';
+  $POE::Component::Curses::MainLoop::VERSION = '0.204';
 }
 
 # ABSTRACT: <FIXME to be filled>
@@ -19,7 +19,7 @@ BEGIN {
 use Moose 0.92;
 use MooseX::FollowPBP;
 use POE;
-use Params::Validate qw(:all);
+use Params::Validate qw(SCALAR ARRAYREF HASHREF CODEREF GLOB GLOBREF SCALARREF HANDLE BOOLEAN UNDEF validate validate_pos);
 
 use Curses::Toolkit;
 
@@ -187,7 +187,7 @@ POE::Component::Curses::MainLoop - <FIXME to be filled>
 
 =head1 VERSION
 
-version 0.203
+version 0.204
 
 =head1 SYNOPSIS
 

@@ -11,14 +11,14 @@ use strict;
 
 package Curses::Toolkit::Widget::HPaned;
 BEGIN {
-  $Curses::Toolkit::Widget::HPaned::VERSION = '0.203';
+  $Curses::Toolkit::Widget::HPaned::VERSION = '0.204';
 }
 
 # ABSTRACT: a container with two panes arranged horizontally
 
 use parent qw(Curses::Toolkit::Widget::Paned);
 
-use Params::Validate qw(:all);
+use Params::Validate qw(SCALAR ARRAYREF HASHREF CODEREF GLOB GLOBREF SCALARREF HANDLE BOOLEAN UNDEF validate validate_pos);
 
 
 
@@ -101,7 +101,7 @@ Curses::Toolkit::Widget::HPaned - a container with two panes arranged horizontal
 
 =head1 VERSION
 
-version 0.203
+version 0.204
 
 =head1 DESCRIPTION
 

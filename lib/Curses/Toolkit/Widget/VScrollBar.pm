@@ -11,14 +11,14 @@ use strict;
 
 package Curses::Toolkit::Widget::VScrollBar;
 BEGIN {
-  $Curses::Toolkit::Widget::VScrollBar::VERSION = '0.203';
+  $Curses::Toolkit::Widget::VScrollBar::VERSION = '0.204';
 }
 
 # ABSTRACT: a vertical scrollbar widget
 
 use parent qw(Curses::Toolkit::Widget);
 
-use Params::Validate qw(:all);
+use Params::Validate qw(SCALAR ARRAYREF HASHREF CODEREF GLOB GLOBREF SCALARREF HANDLE BOOLEAN UNDEF validate validate_pos);
 
 
 sub new {
@@ -60,7 +60,7 @@ Curses::Toolkit::Widget::VScrollBar - a vertical scrollbar widget
 
 =head1 VERSION
 
-version 0.203
+version 0.204
 
 =head1 DESCRIPTION
 

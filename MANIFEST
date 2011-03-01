@@ -19,6 +19,8 @@ examples/conferences/fpw09/demo4.pl
 examples/conferences/fpw09/demo4_bw.pl
 examples/conferences/fpw09/demo5.pl
 examples/conferences/fpw09/demo7.pl
+examples/simple/simple1.pl
+examples/widgets/box.pl
 examples/widgets/label.pl
 examples/widgets/progressbar.pl
 examples/widgets/scroll_area.pl

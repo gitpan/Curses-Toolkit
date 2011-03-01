@@ -11,14 +11,14 @@ use strict;
 
 package Curses::Toolkit::Event::Content::Changed;
 BEGIN {
-  $Curses::Toolkit::Event::Content::Changed::VERSION = '0.203';
+  $Curses::Toolkit::Event::Content::Changed::VERSION = '0.204';
 }
 
 # ABSTRACT: event that is related to content change
 
 use parent qw(Curses::Toolkit::Event::Content);
 
-use Params::Validate qw(:all);
+use Params::Validate qw(SCALAR ARRAYREF HASHREF CODEREF GLOB GLOBREF SCALARREF HANDLE BOOLEAN UNDEF validate validate_pos);
 
 
 # this event has to be dispatched on a specific widget, so get_matching_widget
@@ -36,7 +36,7 @@ Curses::Toolkit::Event::Content::Changed - event that is related to content chan
 
 =head1 VERSION
 
-version 0.203
+version 0.204
 
 =head1 DESCRIPTION
 

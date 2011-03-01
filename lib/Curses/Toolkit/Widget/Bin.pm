@@ -11,14 +11,14 @@ use strict;
 
 package Curses::Toolkit::Widget::Bin;
 BEGIN {
-  $Curses::Toolkit::Widget::Bin::VERSION = '0.203';
+  $Curses::Toolkit::Widget::Bin::VERSION = '0.204';
 }
 
 # ABSTRACT: a bin widget
 
 use parent qw(Curses::Toolkit::Widget::Container);
 
-use Params::Validate qw(:all);
+use Params::Validate qw(SCALAR ARRAYREF HASHREF CODEREF GLOB GLOBREF SCALARREF HANDLE BOOLEAN UNDEF validate validate_pos);
 
 
 
@@ -79,7 +79,7 @@ Curses::Toolkit::Widget::Bin - a bin widget
 
 =head1 VERSION
 
-version 0.203
+version 0.204
 
 =head1 DESCRIPTION
 

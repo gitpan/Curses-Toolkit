@@ -11,14 +11,14 @@ use strict;
 
 package Curses::Toolkit::Widget::Window;
 BEGIN {
-  $Curses::Toolkit::Widget::Window::VERSION = '0.203';
+  $Curses::Toolkit::Widget::Window::VERSION = '0.204';
 }
 
 # ABSTRACT: a window
 
 use parent qw(Curses::Toolkit::Widget::Border);
 
-use Params::Validate qw(:all);
+use Params::Validate qw(SCALAR ARRAYREF HASHREF CODEREF GLOB GLOBREF SCALARREF HANDLE BOOLEAN UNDEF validate validate_pos);
 
 use List::MoreUtils qw(any none);
 use List::Util qw(min sum max);
@@ -207,7 +207,7 @@ sub set_coordinates {
     if ( !ref( $_[0] ) ) {
         my %params = @_;
         foreach my $x (qw(x1 x2)) {
-            if ( $params{$x} =~ /^(.+)%$/ ) {
+            if ( defined $params{$x} && $params{$x} =~ /^(.+)%$/ ) {
                 my $percent = $1;
                 $params{$x} = sub {
                     return $self->get_root_window()
@@ -217,7 +217,7 @@ sub set_coordinates {
             }
         }
         foreach my $y (qw(y1 y2)) {
-            if ( $params{$y} =~ /^(.+)%$/ ) {
+            if ( $params{$y} && $params{$y} =~ /^(.+)%$/ ) {
                 my $percent = $1;
                 $params{$y} = sub {
                     return $self->get_root_window()
@@ -602,7 +602,7 @@ Curses::Toolkit::Widget::Window - a window
 
 =head1 VERSION
 
-version 0.203
+version 0.204
 
 =head1 SYNOPSIS
 

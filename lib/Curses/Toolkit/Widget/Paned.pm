@@ -11,14 +11,14 @@ use strict;
 
 package Curses::Toolkit::Widget::Paned;
 BEGIN {
-  $Curses::Toolkit::Widget::Paned::VERSION = '0.203';
+  $Curses::Toolkit::Widget::Paned::VERSION = '0.204';
 }
 
 # ABSTRACT: generic paned widget
 
 use parent qw(Curses::Toolkit::Widget::Container);
 
-use Params::Validate qw(:all);
+use Params::Validate qw(SCALAR ARRAYREF HASHREF CODEREF GLOB GLOBREF SCALARREF HANDLE BOOLEAN UNDEF validate validate_pos);
 
 sub new {
     my $class = shift;
@@ -300,7 +300,7 @@ Curses::Toolkit::Widget::Paned - generic paned widget
 
 =head1 VERSION
 
-version 0.203
+version 0.204
 
 =head1 SYNOPSIS
 

@@ -11,14 +11,14 @@ use strict;
 
 package Curses::Toolkit::Widget::ScrollArea;
 BEGIN {
-  $Curses::Toolkit::Widget::ScrollArea::VERSION = '0.203';
+  $Curses::Toolkit::Widget::ScrollArea::VERSION = '0.204';
 }
 
 # ABSTRACT: a vertical scrollable area
 
 use parent qw(Curses::Toolkit::Widget::Bin);
 
-use Params::Validate qw(:all);
+use Params::Validate qw(SCALAR ARRAYREF HASHREF CODEREF GLOB GLOBREF SCALARREF HANDLE BOOLEAN UNDEF validate validate_pos);
 
 sub new {
     my $class = shift;
@@ -64,7 +64,7 @@ Curses::Toolkit::Widget::ScrollArea - a vertical scrollable area
 
 =head1 VERSION
 
-version 0.203
+version 0.204
 
 =head2 get_desired_space
 

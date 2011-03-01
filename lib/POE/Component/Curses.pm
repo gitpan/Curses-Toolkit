@@ -11,7 +11,7 @@ use strict;
 
 package POE::Component::Curses;
 BEGIN {
-  $POE::Component::Curses::VERSION = '0.203';
+  $POE::Component::Curses::VERSION = '0.204';
 }
 
 # ABSTRACT: the ( currently only ) loader for Curses::toolkit
@@ -20,7 +20,7 @@ use POE::Component::Curses::MainLoop;
 
 use POE qw(Session);
 use POE qw(Wheel::Curses);
-use Params::Validate qw(:all);
+use Params::Validate qw(SCALAR ARRAYREF HASHREF CODEREF GLOB GLOBREF SCALARREF HANDLE BOOLEAN UNDEF validate validate_pos);
 
 
 sub spawn {
@@ -204,7 +204,7 @@ POE::Component::Curses - the ( currently only ) loader for Curses::toolkit
 
 =head1 VERSION
 
-version 0.203
+version 0.204
 
 =head1 SYNOPSIS
 

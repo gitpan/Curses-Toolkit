@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::EventListener::Key;
 BEGIN {
-  $Curses::Toolkit::EventListener::Key::VERSION = '0.203';
+  $Curses::Toolkit::EventListener::Key::VERSION = '0.204';
 }
 
 # ABSTRACT: event listener listening for a keyboard action
@@ -20,7 +20,7 @@ BEGIN {
 
 use parent qw(Curses::Toolkit::EventListener);
 
-use Params::Validate qw(:all);
+use Params::Validate qw(SCALAR ARRAYREF HASHREF CODEREF GLOB GLOBREF SCALARREF HANDLE BOOLEAN UNDEF validate validate_pos);
 
 
 
@@ -35,7 +35,7 @@ Curses::Toolkit::EventListener::Key - event listener listening for a keyboard ac
 
 =head1 VERSION
 
-version 0.203
+version 0.204
 
 =head1 DESCRIPTION
 

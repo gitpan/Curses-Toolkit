@@ -11,14 +11,14 @@ use strict;
 
 package Curses::Toolkit::Event::Key;
 BEGIN {
-  $Curses::Toolkit::Event::Key::VERSION = '0.203';
+  $Curses::Toolkit::Event::Key::VERSION = '0.204';
 }
 
 # ABSTRACT: event that is related to keystrokes
 
 use parent qw(Curses::Toolkit::Event);
 
-use Params::Validate qw(:all);
+use Params::Validate qw(SCALAR ARRAYREF HASHREF CODEREF GLOB GLOBREF SCALARREF HANDLE BOOLEAN UNDEF validate validate_pos);
 
 
 sub new {
@@ -97,7 +97,7 @@ Curses::Toolkit::Event::Key - event that is related to keystrokes
 
 =head1 VERSION
 
-version 0.203
+version 0.204
 
 =head1 DESCRIPTION
 

@@ -11,13 +11,13 @@ use strict;
 
 package Curses::Toolkit::Object::Coordinates;
 BEGIN {
-  $Curses::Toolkit::Object::Coordinates::VERSION = '0.203';
+  $Curses::Toolkit::Object::Coordinates::VERSION = '0.204';
 }
 # ABSTRACT: simple coordinates class
 
 # We don't use Moose for speed purpose
 
-use Params::Validate qw(:all);
+use Params::Validate qw(SCALAR ARRAYREF HASHREF CODEREF GLOB GLOBREF SCALARREF HANDLE BOOLEAN UNDEF validate validate_pos);
 
 use parent qw(Curses::Toolkit::Object);
 
@@ -430,7 +430,7 @@ Curses::Toolkit::Object::Coordinates - simple coordinates class
 
 =head1 VERSION
 
-version 0.203
+version 0.204
 
 =head1 DESCRIPTION
 

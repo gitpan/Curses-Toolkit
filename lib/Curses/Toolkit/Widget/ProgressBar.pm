@@ -11,7 +11,7 @@ use warnings;
 
 package Curses::Toolkit::Widget::ProgressBar;
 BEGIN {
-  $Curses::Toolkit::Widget::ProgressBar::VERSION = '0.203';
+  $Curses::Toolkit::Widget::ProgressBar::VERSION = '0.204';
 }
 
 # ABSTRACT: progress bar widget base class
@@ -19,7 +19,7 @@ BEGIN {
 use Moose;
 use MooseX::Has::Sugar;
 use MooseX::FollowPBP;
-use Params::Validate qw(:all);
+use Params::Validate qw(SCALAR ARRAYREF HASHREF CODEREF GLOB GLOBREF SCALARREF HANDLE BOOLEAN UNDEF validate validate_pos);
 
 use Curses::Toolkit::Object::Coordinates;
 use Curses::Toolkit::Types;
@@ -91,7 +91,7 @@ Curses::Toolkit::Widget::ProgressBar - progress bar widget base class
 
 =head1 VERSION
 
-version 0.203
+version 0.204
 
 =head1 SYNOPSIS
 

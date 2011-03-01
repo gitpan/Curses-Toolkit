@@ -11,14 +11,14 @@ use strict;
 
 package Curses::Toolkit::Theme::Default::Color;
 BEGIN {
-  $Curses::Toolkit::Theme::Default::Color::VERSION = '0.203';
+  $Curses::Toolkit::Theme::Default::Color::VERSION = '0.204';
 }
 
 # ABSTRACT: base class for default coloured widgets themes
 
 use parent qw(Curses::Toolkit::Theme::Default);
 
-use Params::Validate qw(:all);
+use Params::Validate qw(SCALAR ARRAYREF HASHREF CODEREF GLOB GLOBREF SCALARREF HANDLE BOOLEAN UNDEF validate validate_pos);
 use Curses;
 
 
@@ -33,7 +33,7 @@ Curses::Toolkit::Theme::Default::Color - base class for default coloured widgets
 
 =head1 VERSION
 
-version 0.203
+version 0.204
 
 =head1 DESCRIPTION
 

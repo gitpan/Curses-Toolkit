@@ -11,14 +11,14 @@ use strict;
 
 package Curses::Toolkit::Theme::Default;
 BEGIN {
-  $Curses::Toolkit::Theme::Default::VERSION = '0.203';
+  $Curses::Toolkit::Theme::Default::VERSION = '0.204';
 }
 
 # ABSTRACT: default widget theme
 
 use parent qw(Curses::Toolkit::Theme);
 
-use Params::Validate qw(:all);
+use Params::Validate qw(SCALAR ARRAYREF HASHREF CODEREF GLOB GLOBREF SCALARREF HANDLE BOOLEAN UNDEF validate validate_pos);
 use Curses;
 
 
@@ -273,7 +273,7 @@ Curses::Toolkit::Theme::Default - default widget theme
 
 =head1 VERSION
 
-version 0.203
+version 0.204
 
 =head1 DESCRIPTION
 

@@ -11,12 +11,12 @@ use strict;
 
 package Curses::Toolkit::Signal::Focused;
 BEGIN {
-  $Curses::Toolkit::Signal::Focused::VERSION = '0.203';
+  $Curses::Toolkit::Signal::Focused::VERSION = '0.204';
 }
 
 use parent qw(Curses::Toolkit::Signal);
 
-use Params::Validate qw(:all);
+use Params::Validate qw(SCALAR ARRAYREF HASHREF CODEREF GLOB GLOBREF SCALARREF HANDLE BOOLEAN UNDEF validate validate_pos);
 
 
 sub generate_listener {
@@ -56,7 +56,7 @@ Curses::Toolkit::Signal::Focused
 
 =head1 VERSION
 
-version 0.203
+version 0.204
 
 =head1 DESCRIPTION
 

@@ -41,9 +41,10 @@ my %WriteMakefileArgs = (
     'Tie::Array::Iterable' => '0',
     'UNIVERSAL::require' => '0.13',
     'overload' => '0',
-    'parent' => '0'
+    'parent' => '0',
+    'relative' => '0'
   },
-  'VERSION' => '0.203',
+  'VERSION' => '0.204',
   'test' => {
     'TESTS' => 't/*.t t/object/*.t'
   }

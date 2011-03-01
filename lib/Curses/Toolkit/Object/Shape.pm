@@ -11,14 +11,14 @@ use strict;
 
 package Curses::Toolkit::Object::Shape;
 BEGIN {
-  $Curses::Toolkit::Object::Shape::VERSION = '0.203';
+  $Curses::Toolkit::Object::Shape::VERSION = '0.204';
 }
 
 # ABSTRACT: simple shape class
 
 use parent qw(Curses::Toolkit::Object::Coordinates);
 
-use Params::Validate qw(:all);
+use Params::Validate qw(SCALAR ARRAYREF HASHREF CODEREF GLOB GLOBREF SCALARREF HANDLE BOOLEAN UNDEF validate validate_pos);
 
 
 # Making it readonly
@@ -51,7 +51,7 @@ Curses::Toolkit::Object::Shape - simple shape class
 
 =head1 VERSION
 
-version 0.203
+version 0.204
 
 =head1 DESCRIPTION
 

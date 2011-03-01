@@ -11,12 +11,12 @@ use strict;
 
 package Curses::Toolkit;
 BEGIN {
-  $Curses::Toolkit::VERSION = '0.203';
+  $Curses::Toolkit::VERSION = '0.204';
 }
 
 # ABSTRACT: a modern Curses toolkit
 
-use Params::Validate qw(:all);
+use Params::Validate qw(SCALAR ARRAYREF HASHREF CODEREF GLOB GLOBREF SCALARREF HANDLE BOOLEAN UNDEF validate validate_pos);
 
 use Curses::Toolkit::Theme;
 
@@ -574,31 +574,30 @@ Curses::Toolkit - a modern Curses toolkit
 
 =head1 VERSION
 
-version 0.203
+version 0.204
 
 =head1 SYNOPSIS
 
+  use POE::Component::Curses;
+  use Curses::Toolkit::Widget::Window;
+  use Curses::Toolkit::Widget::Button;
+  
   # spawn a root window
   my $root = POE::Component::Curses->spawn();
-  # adds some widget
-  $root->add_window(
-      my $window = Curses::Toolkit::Widget::Window
-        ->new()
-        ->set_name('main_window')
-        ->add_widget(
-          my $button = Curses::Toolkit::Widget::Button
-            ->new_with_label('Click Me to quit')
-            ->set_name('my_button')
-            ->signal_connect(clicked => sub { exit(0); })
-        )
-        ->set_coordinates(x1 => 0,   y1 => 0,
-                          x2 => '100%',
-                          y2 => '100%',
-                         )
-  );
-
-  # start main loop
-  POE::Kernel->run();
+    # adds some widget
+    $root->add_window(
+        my $window = Curses::Toolkit::Widget::Window
+          ->new()
+          ->set_name('main_window')
+          ->add_widget(
+            my $button = Curses::Toolkit::Widget::Button
+              ->new_with_label('Click Me to quit')
+              ->set_name('my_button')
+              ->signal_connect(clicked => sub { exit(0); })
+          )
+          ->set_coordinates( x1 => '20%',   y1 => '20%',
+                             x2 => '80%',   y2 => '80%', )
+    );
 
 =head1 DESCRIPTION
 
