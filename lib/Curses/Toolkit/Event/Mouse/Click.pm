@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::Event::Mouse::Click;
 BEGIN {
-  $Curses::Toolkit::Event::Mouse::Click::VERSION = '0.204';
+  $Curses::Toolkit::Event::Mouse::Click::VERSION = '0.205';
 }
 
 # ABSTRACT: event that is related to mouse click
@@ -103,7 +103,7 @@ Curses::Toolkit::Event::Mouse::Click - event that is related to mouse click
 
 =head1 VERSION
 
-version 0.204
+version 0.205
 
 =head1 DESCRIPTION
 

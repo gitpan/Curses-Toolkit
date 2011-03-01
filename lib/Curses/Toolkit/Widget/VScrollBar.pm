@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::Widget::VScrollBar;
 BEGIN {
-  $Curses::Toolkit::Widget::VScrollBar::VERSION = '0.204';
+  $Curses::Toolkit::Widget::VScrollBar::VERSION = '0.205';
 }
 
 # ABSTRACT: a vertical scrollbar widget
@@ -60,7 +60,7 @@ Curses::Toolkit::Widget::VScrollBar - a vertical scrollbar widget
 
 =head1 VERSION
 
-version 0.204
+version 0.205
 
 =head1 DESCRIPTION
 

@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::Widget::Border;
 BEGIN {
-  $Curses::Toolkit::Widget::Border::VERSION = '0.204';
+  $Curses::Toolkit::Widget::Border::VERSION = '0.205';
 }
 
 # ABSTRACT: a border widget
@@ -142,7 +142,7 @@ Curses::Toolkit::Widget::Border - a border widget
 
 =head1 VERSION
 
-version 0.204
+version 0.205
 
 =head1 DESCRIPTION
 

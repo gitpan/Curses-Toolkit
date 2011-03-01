@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::Widget::HScrollBar;
 BEGIN {
-  $Curses::Toolkit::Widget::HScrollBar::VERSION = '0.204';
+  $Curses::Toolkit::Widget::HScrollBar::VERSION = '0.205';
 }
 
 # ABSTRACT: a horizontal scrollbar widget
@@ -29,7 +29,7 @@ Curses::Toolkit::Widget::HScrollBar - a horizontal scrollbar widget
 
 =head1 VERSION
 
-version 0.204
+version 0.205
 
 =head1 SYNOPSIS
 

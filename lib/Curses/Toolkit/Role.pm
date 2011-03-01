@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::Role;
 BEGIN {
-  $Curses::Toolkit::Role::VERSION = '0.204';
+  $Curses::Toolkit::Role::VERSION = '0.205';
 }
 
 # ABSTRACT: base class for roles, before migrating to Moose
@@ -35,7 +35,7 @@ Curses::Toolkit::Role - base class for roles, before migrating to Moose
 
 =head1 VERSION
 
-version 0.204
+version 0.205
 
 =head1 DESCRIPTION
 

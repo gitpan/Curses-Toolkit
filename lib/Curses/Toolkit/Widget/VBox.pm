@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::Widget::VBox;
 BEGIN {
-  $Curses::Toolkit::Widget::VBox::VERSION = '0.204';
+  $Curses::Toolkit::Widget::VBox::VERSION = '0.205';
 }
 
 # ABSTRACT: a vertical box widget
@@ -234,7 +234,7 @@ Curses::Toolkit::Widget::VBox - a vertical box widget
 
 =head1 VERSION
 
-version 0.204
+version 0.205
 
 =head1 DESCRIPTION
 

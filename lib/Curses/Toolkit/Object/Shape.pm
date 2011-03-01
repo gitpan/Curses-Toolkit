@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::Object::Shape;
 BEGIN {
-  $Curses::Toolkit::Object::Shape::VERSION = '0.204';
+  $Curses::Toolkit::Object::Shape::VERSION = '0.205';
 }
 
 # ABSTRACT: simple shape class
@@ -51,7 +51,7 @@ Curses::Toolkit::Object::Shape - simple shape class
 
 =head1 VERSION
 
-version 0.204
+version 0.205
 
 =head1 DESCRIPTION
 

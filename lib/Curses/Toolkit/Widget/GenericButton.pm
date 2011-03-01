@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::Widget::GenericButton;
 BEGIN {
-  $Curses::Toolkit::Widget::GenericButton::VERSION = '0.204';
+  $Curses::Toolkit::Widget::GenericButton::VERSION = '0.205';
 }
 
 # ABSTRACT: a button widget that can hold any other widget
@@ -49,7 +49,7 @@ Curses::Toolkit::Widget::GenericButton - a button widget that can hold any other
 
 =head1 VERSION
 
-version 0.204
+version 0.205
 
 =head1 DESCRIPTION
 

@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::Widget::Label;
 BEGIN {
-  $Curses::Toolkit::Widget::Label::VERSION = '0.204';
+  $Curses::Toolkit::Widget::Label::VERSION = '0.205';
 }
 
 # ABSTRACT: a widget to display text
@@ -260,7 +260,7 @@ Curses::Toolkit::Widget::Label - a widget to display text
 
 =head1 VERSION
 
-version 0.204
+version 0.205
 
 =head1 DESCRIPTION
 

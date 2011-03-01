@@ -11,7 +11,7 @@ use warnings;
 
 package Curses::Toolkit::Widget::HProgressBar;
 BEGIN {
-  $Curses::Toolkit::Widget::HProgressBar::VERSION = '0.204';
+  $Curses::Toolkit::Widget::HProgressBar::VERSION = '0.205';
 }
 
 # ABSTRACT: a horizontal progress bar widget
@@ -133,7 +133,7 @@ Curses::Toolkit::Widget::HProgressBar - a horizontal progress bar widget
 
 =head1 VERSION
 
-version 0.204
+version 0.205
 
 =head1 DESCRIPTION
 

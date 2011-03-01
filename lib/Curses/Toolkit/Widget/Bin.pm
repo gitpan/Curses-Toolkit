@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::Widget::Bin;
 BEGIN {
-  $Curses::Toolkit::Widget::Bin::VERSION = '0.204';
+  $Curses::Toolkit::Widget::Bin::VERSION = '0.205';
 }
 
 # ABSTRACT: a bin widget
@@ -79,7 +79,7 @@ Curses::Toolkit::Widget::Bin - a bin widget
 
 =head1 VERSION
 
-version 0.204
+version 0.205
 
 =head1 DESCRIPTION
 
