@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::Signal::Content;
 BEGIN {
-  $Curses::Toolkit::Signal::Content::VERSION = '0.205';
+  $Curses::Toolkit::Signal::Content::VERSION = '0.206';
 }
 
 use Params::Validate qw(SCALAR ARRAYREF HASHREF CODEREF GLOB GLOBREF SCALARREF HANDLE BOOLEAN UNDEF validate validate_pos);
@@ -28,7 +28,7 @@ Curses::Toolkit::Signal::Content
 
 =head1 VERSION
 
-version 0.205
+version 0.206
 
 =head1 DESCRIPTION
 

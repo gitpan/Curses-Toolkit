@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::Theme;
 BEGIN {
-  $Curses::Toolkit::Theme::VERSION = '0.205';
+  $Curses::Toolkit::Theme::VERSION = '0.206';
 }
 
 # ABSTRACT: base class for widgets themes
@@ -340,7 +340,7 @@ Curses::Toolkit::Theme - base class for widgets themes
 
 =head1 VERSION
 
-version 0.205
+version 0.206
 
 =head1 DESCRIPTION
 

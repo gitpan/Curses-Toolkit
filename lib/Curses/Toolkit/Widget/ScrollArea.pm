@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::Widget::ScrollArea;
 BEGIN {
-  $Curses::Toolkit::Widget::ScrollArea::VERSION = '0.205';
+  $Curses::Toolkit::Widget::ScrollArea::VERSION = '0.206';
 }
 
 # ABSTRACT: a vertical scrollable area
@@ -64,7 +64,7 @@ Curses::Toolkit::Widget::ScrollArea - a vertical scrollable area
 
 =head1 VERSION
 
-version 0.205
+version 0.206
 
 =head2 get_desired_space
 

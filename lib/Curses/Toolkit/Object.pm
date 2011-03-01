@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::Object;
 BEGIN {
-  $Curses::Toolkit::Object::VERSION = '0.205';
+  $Curses::Toolkit::Object::VERSION = '0.206';
 }
 # ABSTRACT: base class for objects
 
@@ -37,7 +37,7 @@ Curses::Toolkit::Object - base class for objects
 
 =head1 VERSION
 
-version 0.205
+version 0.206
 
 =head1 DESCRIPTION
 

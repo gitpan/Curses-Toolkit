@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::Widget::Container;
 BEGIN {
-  $Curses::Toolkit::Widget::Container::VERSION = '0.205';
+  $Curses::Toolkit::Widget::Container::VERSION = '0.206';
 }
 
 # ABSTRACT: a container widget
@@ -119,7 +119,7 @@ Curses::Toolkit::Widget::Container - a container widget
 
 =head1 VERSION
 
-version 0.205
+version 0.206
 
 =head1 DESCRIPTION
 

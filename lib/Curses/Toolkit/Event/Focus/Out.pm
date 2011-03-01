@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::Event::Focus::Out;
 BEGIN {
-  $Curses::Toolkit::Event::Focus::Out::VERSION = '0.205';
+  $Curses::Toolkit::Event::Focus::Out::VERSION = '0.206';
 }
 
 # ABSTRACT: event that is related to out-focus
@@ -36,7 +36,7 @@ Curses::Toolkit::Event::Focus::Out - event that is related to out-focus
 
 =head1 VERSION
 
-version 0.205
+version 0.206
 
 =head1 DESCRIPTION
 

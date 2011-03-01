@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::Signal::Clicked;
 BEGIN {
-  $Curses::Toolkit::Signal::Clicked::VERSION = '0.205';
+  $Curses::Toolkit::Signal::Clicked::VERSION = '0.206';
 }
 
 use parent qw(Curses::Toolkit::Signal);
@@ -68,7 +68,7 @@ Curses::Toolkit::Signal::Clicked
 
 =head1 VERSION
 
-version 0.205
+version 0.206
 
 =head1 SYNOPSIS
 

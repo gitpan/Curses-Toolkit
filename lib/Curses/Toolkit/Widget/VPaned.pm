@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::Widget::VPaned;
 BEGIN {
-  $Curses::Toolkit::Widget::VPaned::VERSION = '0.205';
+  $Curses::Toolkit::Widget::VPaned::VERSION = '0.206';
 }
 
 # ABSTRACT: a container with two panes arranged horizontally
@@ -100,7 +100,7 @@ Curses::Toolkit::Widget::VPaned - a container with two panes arranged horizontal
 
 =head1 VERSION
 
-version 0.205
+version 0.206
 
 =head1 DESCRIPTION
 

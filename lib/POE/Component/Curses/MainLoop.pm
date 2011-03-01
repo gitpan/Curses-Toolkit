@@ -11,7 +11,7 @@ use strict;
 
 package POE::Component::Curses::MainLoop;
 BEGIN {
-  $POE::Component::Curses::MainLoop::VERSION = '0.205';
+  $POE::Component::Curses::MainLoop::VERSION = '0.206';
 }
 
 # ABSTRACT: <FIXME to be filled>
@@ -187,7 +187,7 @@ POE::Component::Curses::MainLoop - <FIXME to be filled>
 
 =head1 VERSION
 
-version 0.205
+version 0.206
 
 =head1 SYNOPSIS
 

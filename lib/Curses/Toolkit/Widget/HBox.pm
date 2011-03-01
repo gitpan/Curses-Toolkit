@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::Widget::HBox;
 BEGIN {
-  $Curses::Toolkit::Widget::HBox::VERSION = '0.205';
+  $Curses::Toolkit::Widget::HBox::VERSION = '0.206';
 }
 
 # ABSTRACT: an horizontal box widget
@@ -229,7 +229,7 @@ Curses::Toolkit::Widget::HBox - an horizontal box widget
 
 =head1 VERSION
 
-version 0.205
+version 0.206
 
 =head1 DESCRIPTION
 

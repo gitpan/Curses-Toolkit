@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::Theme::Default::Color::BlueWhite;
 BEGIN {
-  $Curses::Toolkit::Theme::Default::Color::BlueWhite::VERSION = '0.205';
+  $Curses::Toolkit::Theme::Default::Color::BlueWhite::VERSION = '0.206';
 }
 
 # ABSTRACT: default widget theme with blue-ish foreground on white-ish background
@@ -108,7 +108,7 @@ Curses::Toolkit::Theme::Default::Color::BlueWhite - default widget theme with bl
 
 =head1 VERSION
 
-version 0.205
+version 0.206
 
 =head1 DESCRIPTION
 

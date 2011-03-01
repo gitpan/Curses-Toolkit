@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::Event::Content::Changed;
 BEGIN {
-  $Curses::Toolkit::Event::Content::Changed::VERSION = '0.205';
+  $Curses::Toolkit::Event::Content::Changed::VERSION = '0.206';
 }
 
 # ABSTRACT: event that is related to content change
@@ -36,7 +36,7 @@ Curses::Toolkit::Event::Content::Changed - event that is related to content chan
 
 =head1 VERSION
 
-version 0.205
+version 0.206
 
 =head1 DESCRIPTION
 

@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::Widget::Button;
 BEGIN {
-  $Curses::Toolkit::Widget::Button::VERSION = '0.205';
+  $Curses::Toolkit::Widget::Button::VERSION = '0.206';
 }
 
 # ABSTRACT: a simple text button widget
@@ -157,7 +157,7 @@ Curses::Toolkit::Widget::Button - a simple text button widget
 
 =head1 VERSION
 
-version 0.205
+version 0.206
 
 =head1 DESCRIPTION
 
