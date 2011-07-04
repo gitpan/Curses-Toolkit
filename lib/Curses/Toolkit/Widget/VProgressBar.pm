@@ -11,7 +11,7 @@ use warnings;
 
 package Curses::Toolkit::Widget::VProgressBar;
 BEGIN {
-  $Curses::Toolkit::Widget::VProgressBar::VERSION = '0.206';
+  $Curses::Toolkit::Widget::VProgressBar::VERSION = '0.207';
 }
 
 # ABSTRACT: a vertical progress bar widget
@@ -98,6 +98,10 @@ sub draw {
 
 sub get_desired_space {
     my ( $self, $available_space ) = @_;
+
+    defined $available_space
+      or return $self->get_minimum_space();
+
     my $desired_space = $available_space->clone;
     $desired_space->set( y2 => $desired_space->get_y1 + 1 );
     $desired_space->grow_to($self->get_minimum_space($available_space));
@@ -108,6 +112,8 @@ sub get_desired_space {
 sub get_minimum_space {
     my ( $self, $available_space ) = @_;
 
+    defined $available_space
+      or $available_space = Curses::Toolkit::Object::Coordinates->new_zero();
     my $minimum_space = $available_space->clone;
     my $default_height = $self->get_theme_property('default_length');
     my $bw            = $self->get_theme_property('border_width');
@@ -138,7 +144,7 @@ Curses::Toolkit::Widget::VProgressBar - a vertical progress bar widget
 
 =head1 VERSION
 
-version 0.206
+version 0.207
 
 =head1 DESCRIPTION
 

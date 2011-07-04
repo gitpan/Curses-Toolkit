@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::Object::Coordinates;
 BEGIN {
-  $Curses::Toolkit::Object::Coordinates::VERSION = '0.206';
+  $Curses::Toolkit::Object::Coordinates::VERSION = '0.207';
 }
 # ABSTRACT: simple coordinates class
 
@@ -341,6 +341,17 @@ sub is_in_widget {
 }
 
 
+sub is_in_widget_visible_shape {
+    my ( $self, $widget ) = @_;
+    my $w_coord = $widget->get_visible_shape();
+    return
+           $w_coord->get_x1 <= $self->get_x1
+        && $w_coord->get_x2 >= $self->get_x2
+        && $w_coord->get_y1 <= $self->get_y1
+        && $w_coord->get_y2 >= $self->get_y2;
+}
+
+
 # -- private methods
 
 #
@@ -430,7 +441,7 @@ Curses::Toolkit::Object::Coordinates - simple coordinates class
 
 =head1 VERSION
 
-version 0.206
+version 0.207
 
 =head1 DESCRIPTION
 
@@ -665,6 +676,15 @@ Return true if the coordinates is inside the given coordinates
     my $bool = $coord->is_in_widget( $widget );
 
 Return true if the coordinates is inside the given widget
+
+  input  : Curses::Toolkit::Widget : the widget
+  output : true or false
+
+=head2 is_in_widget_visible_shape
+
+    my $bool = $coord->is_in_widget_visible_shape( $widget );
+
+Return true if the coordinates is inside the visible part of a given widget
 
   input  : Curses::Toolkit::Widget : the widget
   output : true or false

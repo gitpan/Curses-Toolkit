@@ -9,6 +9,7 @@ dist.ini
 examples/conferences/fosdem_2011/1_packing.pl
 examples/conferences/fosdem_2011/2_windows.pl
 examples/conferences/fosdem_2011/3_theme.pl
+examples/conferences/fosdem_2011/42_global.pl
 examples/conferences/fosdem_2011/4_global.pl
 examples/conferences/fosdem_2011/5_twitter.pl
 examples/conferences/fpw09/demo1.pl
@@ -19,6 +20,12 @@ examples/conferences/fpw09/demo4.pl
 examples/conferences/fpw09/demo4_bw.pl
 examples/conferences/fpw09/demo5.pl
 examples/conferences/fpw09/demo7.pl
+examples/conferences/fpw_2011/1_theme.pl
+examples/conferences/fpw_2011/2_windows.pl
+examples/conferences/fpw_2011/3_packing.pl
+examples/conferences/fpw_2011/4_global.pl
+examples/conferences/fpw_2011/5_twitter.pl
+examples/conferences/fpw_2011/6_progressbar.pl
 examples/simple/simple1.pl
 examples/widgets/box.pl
 examples/widgets/label.pl
@@ -57,6 +64,7 @@ lib/Curses/Toolkit/Theme/Default/Color.pm
 lib/Curses/Toolkit/Theme/Default/Color/BlueWhite.pm
 lib/Curses/Toolkit/Theme/Default/Color/Pink.pm
 lib/Curses/Toolkit/Theme/Default/Color/Yellow.pm
+lib/Curses/Toolkit/Theme/Default/Test.pm
 lib/Curses/Toolkit/Types.pm
 lib/Curses/Toolkit/Widget.pm
 lib/Curses/Toolkit/Widget/Bin.pm
@@ -73,6 +81,7 @@ lib/Curses/Toolkit/Widget/Label.pm
 lib/Curses/Toolkit/Widget/Paned.pm
 lib/Curses/Toolkit/Widget/ProgressBar.pm
 lib/Curses/Toolkit/Widget/ScrollArea.pm
+lib/Curses/Toolkit/Widget/ScrollBar.pm
 lib/Curses/Toolkit/Widget/VBox.pm
 lib/Curses/Toolkit/Widget/VPaned.pm
 lib/Curses/Toolkit/Widget/VProgressBar.pm
@@ -83,10 +92,8 @@ lib/Curses/Toolkit/Widget/Window/Dialog/About.pm
 lib/POE/Component/Curses.pm
 lib/POE/Component/Curses/MainLoop.pm
 t/00-compile.t
-t/author-critic.t
 t/boilerplate.t
 t/object/coordinates.t
 t/release-distmeta.t
-t/release-pod-coverage.t
 tools/perltidyrc
 tools/tidy_project.pl

@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::Widget::Border;
 BEGIN {
-  $Curses::Toolkit::Widget::Border::VERSION = '0.206';
+  $Curses::Toolkit::Widget::Border::VERSION = '0.207';
 }
 
 # ABSTRACT: a border widget
@@ -58,6 +58,7 @@ sub _get_available_space {
     return Curses::Toolkit::Object::Coordinates->new(
         x1 => $bw,                y1 => $bw,
         x2 => $rc->width() - $bw, y2 => $rc->height() - $bw,
+#        x2 => $rc->get_x2() - $bw, y2 => $rc->get_y2() - $bw,
     );
 }
 
@@ -65,6 +66,9 @@ sub _get_available_space {
 sub get_desired_space {
 
     my ( $self, $available_space ) = @_;
+
+    defined $available_space
+      or return $self->get_minimum_space();
 
     my ($child)     = $self->get_children();
     my $child_space = Curses::Toolkit::Object::Coordinates->new_zero();
@@ -96,8 +100,23 @@ sub get_desired_space {
 sub get_minimum_space {
     my ( $self, $available_space ) = @_;
     my ($child)     = $self->get_children();
-    my $child_space = Curses::Toolkit::Object::Coordinates->new_zero();
     my $bw          = $self->get_theme_property('border_width');
+
+    if ( ! defined $available_space) {
+        defined $child
+          or return Curses::Toolkit::Object::Coordinates->new(
+                        x1 => 0 , y1 => 0,
+                        x2 => 2*$bw, y2 => 2*$bw, 
+             );
+        my $minimum_space = $child->get_minimum_space();
+        $minimum_space->set(
+            x2 => $minimum_space->get_x2() + 2*$bw,
+            y2 => $minimum_space->get_y2() + 2*$bw,
+        );
+        return $minimum_space;
+    }
+
+    my $child_space = Curses::Toolkit::Object::Coordinates->new_zero();
     # computation goes like that :
     # minimum space = (child_minimum_space(available_space - borders) + borders)
     if ( defined $child ) {
@@ -131,6 +150,17 @@ sub _get_theme_properties_definition {
     };
 }
 
+sub get_visible_shape_for_children {
+    my ($self) = @_;
+    my $shape = $self->get_visible_shape();
+    my $bw = $self->get_theme_property('border_width');
+    $shape->width >= 2 * $bw
+      and $shape->set( x1 => $shape->get_x1() + $bw, x2 => $shape->get_x2() - $bw);
+    $shape->height >= 2 * $bw
+      and $shape->set( y1 => $shape->get_y1() + $bw, y2 => $shape->get_y2() - $bw);
+    return $shape;
+}
+
 1;
 
 __END__
@@ -142,7 +172,7 @@ Curses::Toolkit::Widget::Border - a border widget
 
 =head1 VERSION
 
-version 0.206
+version 0.207
 
 =head1 DESCRIPTION
 

@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::Widget::Entry;
 BEGIN {
-  $Curses::Toolkit::Widget::Entry::VERSION = '0.206';
+  $Curses::Toolkit::Widget::Entry::VERSION = '0.207';
 }
 
 # ABSTRACT: base class for focus events
@@ -329,6 +329,9 @@ sub draw {
 sub get_desired_space {
     my ( $self, $available_space ) = @_;
 
+    defined $available_space
+      or return $self->get_minimum_space();
+
     my $desired_space = $available_space->clone();
 
     #	$desired_space->set( x2 => $available_space->get_x1() + $self->get_width(),
@@ -343,6 +346,9 @@ sub get_desired_space {
 
 sub get_minimum_space {
     my ( $self, $available_space ) = @_;
+
+    defined $available_space
+      or $available_space = Curses::Toolkit::Object::Coordinates->new_zero();
 
     my $minimum_space = $available_space->clone();
     my $default_width = $self->get_theme_property('default_width');
@@ -397,7 +403,7 @@ Curses::Toolkit::Widget::Entry - base class for focus events
 
 =head1 VERSION
 
-version 0.206
+version 0.207
 
 =head1 DESCRIPTION
 

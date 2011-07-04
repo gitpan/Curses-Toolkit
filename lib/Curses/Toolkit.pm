@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit;
 BEGIN {
-  $Curses::Toolkit::VERSION = '0.206';
+  $Curses::Toolkit::VERSION = '0.207';
 }
 
 # ABSTRACT: a modern Curses toolkit
@@ -39,6 +39,10 @@ sub init_root_window {
                 type    => SCALAR,
                 default => 'r',
             },
+            test_environment => {
+                type    => HASHREF,
+                optional => 1,
+            },
         }
     );
 
@@ -54,13 +58,6 @@ sub init_root_window {
 
     if (has_colors) {
         start_color();
-
-        #          print STDERR "color is supported\n";
-        #          print STDERR "colors number : " . COLORS . "\n";
-        #          print STDERR "colors pairs : " . COLOR_PAIRS . "\n";
-        #          print STDERR "can change colors ? : " . Curses::can_change_color() . "\n";
-
-
     }
 
     eval { Curses->can('NCURSES_MOUSE_VERSION') && ( NCURSES_MOUSE_VERSION() >= 1 ) };
@@ -85,6 +82,7 @@ sub init_root_window {
         last_stack      => 0,
         event_listeners => [],
         window_iterator => undef,
+        test_environment => $params{test_environment},
     }, $class;
     $self->_recompute_shape();
 
@@ -408,7 +406,8 @@ sub show_all {
 sub render {
     my ($self) = @_;
 
-    $self->{curses_handler}->erase();
+    $self->{test_environment}
+      or $self->{curses_handler}->erase();
 
     if (!defined $self->{_root_theme}) {
         $self->{_root_theme} = $self->get_theme_name->new(Curses::Toolkit::Widget::Window->new());
@@ -543,8 +542,13 @@ sub _recompute_shape {
     use Curses::Toolkit::Object::Coordinates;
     my ( $screen_h, $screen_w );
     use Curses;
-    endwin;
-    $self->{curses_handler}->getmaxyx( $screen_h, $screen_w );
+    if ($self->{test_environment}) {
+        $screen_h = $self->{test_environment}->{screen_h};
+        $screen_w = $self->{test_environment}->{screen_w};
+    } else {
+        endwin;
+        $self->{curses_handler}->getmaxyx( $screen_h, $screen_w );
+    }
     use Curses::Toolkit::Object::Shape;
     $self->{shape} ||= Curses::Toolkit::Object::Shape->new_zero();
     $self->{shape}->_set(
@@ -574,7 +578,7 @@ Curses::Toolkit - a modern Curses toolkit
 
 =head1 VERSION
 
-version 0.206
+version 0.207
 
 =head1 SYNOPSIS
 
@@ -603,11 +607,6 @@ version 0.206
 
 This module tries to be a modern curses toolkit, based on the Curses module, to
 build "semi-graphical" user interfaces easily.
-
-B<WARNING> : This is still in "beta" version, not all the features are
-implemented, and the API may change. However, most of the components are there,
-and things should not change that much in the future... Still, don't use it in
-production, and don't consider it stable.
 
 L<Curses::Toolkit> is meant to be used with a mainloop, which is not part of this
 module. I recommend you L<POE::Component::Curses>, which is probably what you
@@ -822,10 +821,11 @@ is not really a constructor, because you can't have more than one
 Curses::Toolkit object for one Curses environment. Think of it more like a
 service.
 
-  input  : theme_name        : optional, the name of them to use as default display theme
+  input  : theme_name        : optional, the name of the theme to use as default display theme
            mainloop          : optional, the mainloop object that will be used for event handling
            quit_key          : the key used to quit the whole application. Default to 'q'. If set to undef, it's disabled
            switch_key        : the key used to switch between windows. Default to 'r'. If set to undef, it's disabled
+           test_environment  : optional, a hashref, if set, Curses::Toolkit will be in test mode
   output : a Curses::Toolkit object
 
 =head1 METHODS
@@ -835,7 +835,7 @@ service.
   my $theme_name = $root_window->get_theme_name();
 
 Return the theme associated with the root window. Typically used to get a
-usable default theme name. Use tha instead of hard-wiring
+usable default theme name. Use that instead of hard-coding
 'Curses::Toolkit::Theme::Default'
 
 =head2 add_event_listener
@@ -1021,7 +1021,7 @@ Sends an event to the mainloop so it gets dispatched. You probably don't want
 to use this method.
 
   input  : a Curses::Toolkit::Event
-           optional, a widget. if given, the event dispatching will start with this wisget (and not the focused one)
+           optional, a widget. if given, the event dispatching will start with this widget (and not the focused one)
   output : the root_window
 
 =head2 add_delay

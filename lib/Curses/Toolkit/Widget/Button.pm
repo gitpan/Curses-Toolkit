@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::Widget::Button;
 BEGIN {
-  $Curses::Toolkit::Widget::Button::VERSION = '0.206';
+  $Curses::Toolkit::Widget::Button::VERSION = '0.207';
 }
 
 # ABSTRACT: a simple text button widget
@@ -109,7 +109,8 @@ sub get_desired_space { shift->get_minimum_space(@_) }
 sub get_minimum_space {
     my ( $self, $available_space ) = @_;
     my $text = $self->get_text();
-
+    defined $available_space
+      or $available_space = Curses::Toolkit::Object::Coordinates->new_zero();
     my $minimum_space = $available_space->clone();
     my $bw            = $self->get_theme_property('border_width');
     my $left_string   = $self->get_theme_property('left_enclosing');
@@ -157,7 +158,7 @@ Curses::Toolkit::Widget::Button - a simple text button widget
 
 =head1 VERSION
 
-version 0.206
+version 0.207
 
 =head1 DESCRIPTION
 

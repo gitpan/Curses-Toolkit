@@ -11,7 +11,7 @@ use strict;
 
 package POE::Component::Curses::MainLoop;
 BEGIN {
-  $POE::Component::Curses::MainLoop::VERSION = '0.206';
+  $POE::Component::Curses::MainLoop::VERSION = '0.207';
 }
 
 # ABSTRACT: <FIXME to be filled>
@@ -125,7 +125,6 @@ sub event_key {
 
     use Curses::Toolkit::Event::Key;
 
-    #		print STDERR " -- Mainloop stroke : [$params{key}] \n";
     my $event = Curses::Toolkit::Event::Key->new(
         type        => 'stroke',
         params      => { key => $params{key} },
@@ -187,7 +186,7 @@ POE::Component::Curses::MainLoop - <FIXME to be filled>
 
 =head1 VERSION
 
-version 0.206
+version 0.207
 
 =head1 SYNOPSIS
 

@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::Widget::VBox;
 BEGIN {
-  $Curses::Toolkit::Widget::VBox::VERSION = '0.206';
+  $Curses::Toolkit::Widget::VBox::VERSION = '0.207';
 }
 
 # ABSTRACT: a vertical box widget
@@ -124,6 +124,8 @@ sub _rebuild_children_coordinates {
                     $children_padding[$idx] = { before => $p, after => ($avg_height-$h-$p) };
                 }
             }
+            $children_padding[$idx]{before} ||= 0;
+            $children_padding[$idx]{after} ||= 0;
             $remaining_space->subtract( { y2 => $h + $children_padding[$idx]{before} + $children_padding[$idx]{after} } );
             $height += $h;
             $children_heights[$idx] = $h;
@@ -157,9 +159,12 @@ sub _rebuild_children_coordinates {
 sub get_desired_space {
     my ( $self, $available_space ) = @_;
 
+    defined $available_space
+      or return $self->get_minimum_space();
+
     my $desired_space   = $available_space->clone();
 
-return $desired_space;
+    return $desired_space;
 
 #     my $remaining_space = $available_space->clone();
 
@@ -198,13 +203,28 @@ return $desired_space;
 sub get_minimum_space {
     my ( $self, $available_space ) = @_;
 
+    my @children = $self->get_children();
+
+    # compute how high all the children are
+    my $height   = 0;
+    my $width    = 0;
+
+    if (! defined $available_space) {
+        foreach my $child (@children) {
+            my $space = $child->get_minimum_space();
+            my $h     = $space->width();
+            $height += $h;
+            use List::Util qw(max);
+            $width = max $width, $space->width();
+        }
+        return Curses::Toolkit::Object::Coordinates->new(
+                   x1 => 0, y1 => 0,
+                   x2 => $width, y2 => $height );
+    }
+
     my $minimum_space   = $available_space->clone();
     my $remaining_space = $available_space->clone();
 
-    # compute how high all the children are
-    my @children = $self->get_children();
-    my $height   = 0;
-    my $width    = 0;
     foreach my $child (@children) {
         my $space = $child->get_minimum_space($remaining_space);
         my $h     = $space->height();
@@ -234,7 +254,7 @@ Curses::Toolkit::Widget::VBox - a vertical box widget
 
 =head1 VERSION
 
-version 0.206
+version 0.207
 
 =head1 DESCRIPTION
 

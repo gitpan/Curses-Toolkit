@@ -4,7 +4,7 @@ use warnings;
 
 
 
-use ExtUtils::MakeMaker 6.31;
+use ExtUtils::MakeMaker 6.30;
 
 
 
@@ -12,7 +12,6 @@ my %WriteMakefileArgs = (
   'ABSTRACT' => 'a modern Curses toolkit',
   'AUTHOR' => 'Damien "dams" Krotkine',
   'BUILD_REQUIRES' => {
-    'English' => '0',
     'File::Find' => '0',
     'File::Temp' => '0',
     'IO::Pty::Easy' => '0',
@@ -21,14 +20,16 @@ my %WriteMakefileArgs = (
     'aliased' => '0'
   },
   'CONFIGURE_REQUIRES' => {
-    'ExtUtils::MakeMaker' => '6.31'
+    'ExtUtils::MakeMaker' => '6.30'
   },
   'DISTNAME' => 'Curses-Toolkit',
   'EXE_FILES' => [],
   'LICENSE' => 'perl',
   'NAME' => 'Curses::Toolkit',
   'PREREQ_PM' => {
+    'Carp' => '0',
     'Curses' => '0',
+    'Data::Dumper' => '0',
     'HTML::Parser' => '0',
     'List::MoreUtils' => '0',
     'List::Util' => '0',
@@ -44,7 +45,7 @@ my %WriteMakefileArgs = (
     'parent' => '0',
     'relative' => '0'
   },
-  'VERSION' => '0.206',
+  'VERSION' => '0.207',
   'test' => {
     'TESTS' => 't/*.t t/object/*.t'
   }

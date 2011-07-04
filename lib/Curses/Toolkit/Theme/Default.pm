@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::Theme::Default;
 BEGIN {
-  $Curses::Toolkit::Theme::Default::VERSION = '0.206';
+  $Curses::Toolkit::Theme::Default::VERSION = '0.207';
 }
 
 # ABSTRACT: default widget theme
@@ -139,7 +139,9 @@ sub draw_hline {
     $y1 >= 0 or return;
     my $c = $self->restrict_to_shape( x1 => $x1, y1 => $y1, width => $width, height => 1 )
         or return;
-    $self->curses($attr)->hline( $c->get_y1(), $c->get_x1(), HLINE(), $c->width() );
+    my ($cx1,$cy1,$cx2,$cy2) = ($c->get_x1, $c->get_y1, $c->get_x2, $c->get_y2);
+    $c->height > 0
+      and $self->curses($attr)->hline( $c->get_y1(), $c->get_x1(), $self->HLINE(), $c->width() );
     return $self;
 }
 
@@ -149,7 +151,8 @@ sub draw_vline {
     $x1 >= 0 or return;
     my $c = $self->restrict_to_shape( x1 => $x1, y1 => $y1, width => 1, height => $height )
         or return;
-    $self->curses($attr)->vline( $c->get_y1(), $c->get_x1(), VLINE(), $c->height() );
+    $c->width > 0
+      and $self->curses($attr)->vline( $c->get_y1(), $c->get_x1(), $self->VLINE(), $c->height() );
     return $self;
 }
 
@@ -157,7 +160,7 @@ sub draw_corner_ul {
     my ( $self, $x1, $y1, $attr ) = @_;
     $self->get_widget->is_visible() or return;
     $self->is_in_shape( x1 => $x1, y1 => $y1, x2 => $x1, y2 => $y1 ) or return;
-    $self->curses($attr)->addch( $y1, $x1, ULCORNER() );
+    $self->curses($attr)->addch( $y1, $x1, $self->ULCORNER() );
     return $self;
 }
 
@@ -165,7 +168,7 @@ sub draw_corner_ll {
     my ( $self, $x1, $y1, $attr ) = @_;
     $self->get_widget->is_visible() or return;
     $self->is_in_shape( x1 => $x1, y1 => $y1, x2 => $x1, y2 => $y1 ) or return;
-    $self->curses($attr)->addch( $y1, $x1, LLCORNER() );
+    $self->curses($attr)->addch( $y1, $x1, $self->LLCORNER() );
     return $self;
 }
 
@@ -173,7 +176,7 @@ sub draw_corner_ur {
     my ( $self, $x1, $y1, $attr ) = @_;
     $self->get_widget->is_visible() or return;
     $self->is_in_shape( x1 => $x1, y1 => $y1, x2 => $x1, y2 => $y1 ) or return;
-    $self->curses($attr)->addch( $y1, $x1, URCORNER() );
+    $self->curses($attr)->addch( $y1, $x1, $self->URCORNER() );
     return $self;
 }
 
@@ -181,7 +184,7 @@ sub draw_corner_lr {
     my ( $self, $x1, $y1, $attr ) = @_;
     $self->get_widget->is_visible() or return;
     $self->is_in_shape( x1 => $x1, y1 => $y1, x2 => $x1, y2 => $y1 ) or return;
-    $self->curses($attr)->addch( $y1, $x1, LRCORNER() );
+    $self->curses($attr)->addch( $y1, $x1, $self->LRCORNER() );
     return $self;
 }
 
@@ -194,7 +197,8 @@ sub draw_string {
         or $text = Curses::Toolkit::Object::MarkupString->new($text);
 
     my $c = $self->restrict_to_shape( x1 => $x1, y1 => $y1, width => $text->stripped_length(), height => 1 ) or return;
-
+    $c->height > 0
+      or return;
     my $start = $c->get_x1() - $x1;
     my $end   = $c->get_x1() - $x1 + $c->width();
     my $width = $end - $start;
@@ -213,6 +217,8 @@ sub draw_vstring {
         or $text = Curses::Toolkit::Object::MarkupString->new($text);
 
     my $c = $self->restrict_to_shape( x1 => $x1, y1 => $y1, width => 1, height => $text->stripped_length() ) or return;
+    $c->width > 0
+      or return;
 
     my $start  = $c->get_y1() - $y1;
     my $end    = $c->get_y1() - $y1 + $c->height();
@@ -273,7 +279,7 @@ Curses::Toolkit::Theme::Default - default widget theme
 
 =head1 VERSION
 
-version 0.206
+version 0.207
 
 =head1 DESCRIPTION
 

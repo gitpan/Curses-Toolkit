@@ -11,14 +11,14 @@ use strict;
 
 package Curses::Toolkit::Object::MarkupString;
 BEGIN {
-  $Curses::Toolkit::Object::MarkupString::VERSION = '0.206';
+  $Curses::Toolkit::Object::MarkupString::VERSION = '0.207';
 }
 
 # ABSTRACT: a string that contains markups
 
 use parent qw(Curses::Toolkit::Object);
 
-use Curses;
+#use Curses;
 
 
 # Warning
@@ -285,7 +285,7 @@ Curses::Toolkit::Object::MarkupString - a string that contains markups
 
 =head1 VERSION
 
-version 0.206
+version 0.207
 
 =head1 DESCRIPTION
 

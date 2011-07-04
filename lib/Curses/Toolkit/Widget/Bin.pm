@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::Widget::Bin;
 BEGIN {
-  $Curses::Toolkit::Widget::Bin::VERSION = '0.206';
+  $Curses::Toolkit::Widget::Bin::VERSION = '0.207';
 }
 
 # ABSTRACT: a bin widget
@@ -43,6 +43,7 @@ sub remove_widget {
     my ($self) = @_;
     my @children = ();
 
+    use Tie::Array::Iterable;
     $self->{children} = Tie::Array::Iterable->new(@children);
     return $self;
 }
@@ -79,7 +80,7 @@ Curses::Toolkit::Widget::Bin - a bin widget
 
 =head1 VERSION
 
-version 0.206
+version 0.207
 
 =head1 DESCRIPTION
 

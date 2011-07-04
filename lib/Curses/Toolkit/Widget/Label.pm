@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::Widget::Label;
 BEGIN {
-  $Curses::Toolkit::Widget::Label::VERSION = '0.206';
+  $Curses::Toolkit::Widget::Label::VERSION = '0.207';
 }
 
 # ABSTRACT: a widget to display text
@@ -21,6 +21,7 @@ use parent qw(Curses::Toolkit::Widget);
 use Params::Validate qw(SCALAR ARRAYREF HASHREF CODEREF GLOB GLOBREF SCALARREF HANDLE BOOLEAN UNDEF validate validate_pos);
 use List::Util qw(min max);
 use Curses::Toolkit::Object::MarkupString;
+use Curses::Toolkit::Object::Coordinates;
 
 
 sub new {
@@ -147,7 +148,7 @@ sub _textwrap {
     $tmp[-1]->chomp_string() unless $text->stripped() =~ /\n$/;
 
     # Split each paragraph into lines, according to whitespace
-    for $p (@tmp) {
+    for my $p (@tmp) {
 
         # Snag lines that meet column limits (not counting newlines
         # as a character)
@@ -191,17 +192,29 @@ sub _textwrap {
 
 sub get_desired_space {
     my ( $self, $available_space ) = @_;
+
+    defined $available_space
+      or return $self->get_minimum_space();
+
     return $self->_get_space($available_space, $self->get_wrap_mode);
 }
 
 
 sub get_minimum_space {
     my ( $self, $available_space ) = @_;
+#     defined $available_space
+#       or return Curses::Toolkit::Object::Coordinates->new(
+#           x1 => 0, y1 => 0,
+#           x2 => 4, y2 => 2,
+# );
+    defined $available_space
+      or return $self->_get_space(Curses::Toolkit::Object::Coordinates->new_zero(), 'lazy', 5000);
     return $self->_get_space($available_space, $self->get_wrap_mode);
 }
 
 sub _get_space {
-    my ( $self, $available_space, $wrap_mode ) = @_;
+    my ( $self, $available_space, $wrap_mode, $max_length ) = @_;
+    $max_length ||= 0;
 
     $wrap_mode      ||= $self->get_wrap_mode();
 
@@ -238,7 +251,7 @@ sub _get_space {
         }
         return $minimum_space;
     } elsif ( $wrap_mode eq 'lazy' ) {
-        my @text = _textwrap( $self->{_markup_string}, max( $available_space->width(), 1 ) );
+        my @text = _textwrap( $self->{_markup_string}, max( $available_space->width(), 1, $max_length ) );
         $minimum_space->set( x2 => $minimum_space->get_x1() + max( map { $_->stripped_length() } @text ) + 1,
                              y2 => $minimum_space->get_y1() + scalar(@text)
                            );
@@ -260,7 +273,7 @@ Curses::Toolkit::Widget::Label - a widget to display text
 
 =head1 VERSION
 
-version 0.206
+version 0.207
 
 =head1 DESCRIPTION
 

@@ -11,7 +11,7 @@ use strict;
 
 package POE::Component::Curses;
 BEGIN {
-  $POE::Component::Curses::VERSION = '0.206';
+  $POE::Component::Curses::VERSION = '0.207';
 }
 
 # ABSTRACT: the ( currently only ) loader for Curses::toolkit
@@ -64,11 +64,6 @@ sub spawn {
             key_handler => sub {
                 my ( $kernel, $heap, $keystroke ) = @_[ KERNEL, HEAP, ARG0 ];
 
-                #				my $k = $keystroke;
-                #				while(length $k) {
-                #					my $c = substr($k, 0, 1, '');
-                #					print STDERR sprintf(" -- A D H O  : [%s] [%d] [%x] [%o]- \n", $c, ord($c), ord($c), ord($c));
-                #				}
                 use Curses; # for keyname and unctrl
                 if ( $keystroke ne -1 ) {
                     if ( $keystroke lt ' ' ) {
@@ -204,7 +199,7 @@ POE::Component::Curses - the ( currently only ) loader for Curses::toolkit
 
 =head1 VERSION
 
-version 0.206
+version 0.207
 
 =head1 SYNOPSIS
 

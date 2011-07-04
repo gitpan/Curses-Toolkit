@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::Widget::HBox;
 BEGIN {
-  $Curses::Toolkit::Widget::HBox::VERSION = '0.206';
+  $Curses::Toolkit::Widget::HBox::VERSION = '0.207';
 }
 
 # ABSTRACT: an horizontal box widget
@@ -19,6 +19,8 @@ BEGIN {
 use parent qw(Curses::Toolkit::Widget::Container);
 
 use Params::Validate qw(SCALAR ARRAYREF HASHREF CODEREF GLOB GLOBREF SCALARREF HANDLE BOOLEAN UNDEF validate validate_pos);
+
+use Curses::Toolkit::Object::Coordinates;
 
 
 
@@ -122,6 +124,8 @@ sub _rebuild_children_coordinates {
                     $children_padding[$idx] = { before => $p, after => ($avg_width-$w-$p) };
                 }
             }
+            $children_padding[$idx]{before} ||= 0;
+            $children_padding[$idx]{after} ||= 0;
             $remaining_space->subtract( { x2 => $w + $children_padding[$idx]{before} + $children_padding[$idx]{after} } );
             $width += $w;
             $children_widths[$idx] = $w;
@@ -154,6 +158,9 @@ sub _rebuild_children_coordinates {
 
 sub get_desired_space {
     my ( $self, $available_space ) = @_;
+
+    defined $available_space
+      or return $self->get_minimum_space();
 
     my $desired_space   = $available_space->clone();
 
@@ -196,13 +203,27 @@ return $desired_space;
 sub get_minimum_space {
     my ( $self, $available_space ) = @_;
 
+    my @children = $self->get_children();
+    # compute how high all the children are
+    my $width    = 0;
+    my $height   = 0;
+
+    if (! defined $available_space) {
+        foreach my $child (@children) {
+            my $space = $child->get_minimum_space();
+            my $w     = $space->width();
+            $width += $w;
+            use List::Util qw(max);
+            $height = max $height, $space->height();
+        }
+        return Curses::Toolkit::Object::Coordinates->new(
+                   x1 => 0, y1 => 0,
+                   x2 => $width, y2 => $height );
+    }
+
     my $minimum_space   = $available_space->clone();
     my $remaining_space = $available_space->clone();
 
-    # compute how high all the children are
-    my @children = $self->get_children();
-    my $width    = 0;
-    my $height   = 0;
     foreach my $child (@children) {
         my $space = $child->get_minimum_space($remaining_space);
         my $w     = $space->width();
@@ -229,7 +250,7 @@ Curses::Toolkit::Widget::HBox - an horizontal box widget
 
 =head1 VERSION
 
-version 0.206
+version 0.207
 
 =head1 DESCRIPTION
 

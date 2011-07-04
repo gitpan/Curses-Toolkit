@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::Widget;
 BEGIN {
-  $Curses::Toolkit::Widget::VERSION = '0.206';
+  $Curses::Toolkit::Widget::VERSION = '0.207';
 }
 
 # ABSTRACT: base class for widgets
@@ -317,8 +317,14 @@ sub get_visible_shape {
     my $shape  = $self->get_coordinates->clone;
     my $parent = $self->get_parent;
     defined $parent
-        and $shape->restrict_to( $parent->get_visible_shape );
+        and $shape->restrict_to( $parent->get_visible_shape_for_children );
     return $shape;
+}
+
+
+sub get_visible_shape_for_children {
+    my ($self) = @_;
+    return $self->get_visible_shape();
 }
 
 
@@ -352,13 +358,21 @@ sub needs_redraw {
 }
 
 # sets the relatives coordinates, from the origin of the parent widget
-#  input  : any Curses::Toolkit::Object::Coordinates costructor input
+#  input  : any Curses::Toolkit::Object::Coordinates constructor input
 #  output : the widget
 sub _set_relatives_coordinates {
     my $self = shift;
     use Curses::Toolkit::Object::Coordinates;
     $self->{relatives_coordinates} = Curses::Toolkit::Object::Coordinates->new(@_);
     return $self;
+}
+
+# gets the relatives coordinates, from the origin of the parent widget
+#  input  : none
+#  output : Curses::Toolkit::Object::Coordinates
+sub _get_relatives_coordinates {
+    my ($self) = @_;
+    return $self->{relatives_coordinates};
 }
 
 # Sets the Curses object to the widget.
@@ -615,7 +629,7 @@ Curses::Toolkit::Widget - base class for widgets
 
 =head1 VERSION
 
-version 0.206
+version 0.207
 
 =head1 DESCRIPTION
 
@@ -831,6 +845,15 @@ Get the relative coordinates (see L<Curses::Toolkit::Object::Coordinates> )
 =head2 get_visible_shape
 
 Gets the Coordinates of the part of the widget which is visible
+
+  input  : none
+  output : the shape (Curses::Toolkit::Object::Coordinates) or void
+
+=head2 get_visible_shape_for_children
+
+Gets the Coordinates of the part of the widget which is visible and that its
+children can draw on. By default it's the same as get_visible_shape, but it may
+be overloaded to reduce it some time (for instance if the widget has borders)
 
   input  : none
   output : the shape (Curses::Toolkit::Object::Coordinates) or void
