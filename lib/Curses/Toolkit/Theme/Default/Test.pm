@@ -10,8 +10,8 @@ use warnings;
 use strict;
 
 package Curses::Toolkit::Theme::Default::Test;
-BEGIN {
-  $Curses::Toolkit::Theme::Default::Test::VERSION = '0.207';
+{
+  $Curses::Toolkit::Theme::Default::Test::VERSION = '0.208';
 }
 
 # ABSTRACT: widget test theme
@@ -94,8 +94,8 @@ sub BLANK_CLICKED { }
 
 
 package Curses::Toolkit::Theme::Default::Test::CursesMockup;
-BEGIN {
-  $Curses::Toolkit::Theme::Default::Test::CursesMockup::VERSION = '0.207';
+{
+  $Curses::Toolkit::Theme::Default::Test::CursesMockup::VERSION = '0.208';
 }
 
 sub new { bless { %{$_[1]} }, $_[0] }
@@ -119,7 +119,7 @@ Curses::Toolkit::Theme::Default::Test - widget test theme
 
 =head1 VERSION
 
-version 0.207
+version 0.208
 
 =head1 DESCRIPTION
 

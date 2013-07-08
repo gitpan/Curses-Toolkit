@@ -10,8 +10,8 @@ use warnings;
 use strict;
 
 package Curses::Toolkit::Widget::Window::Dialog::About;
-BEGIN {
-  $Curses::Toolkit::Widget::Window::Dialog::About::VERSION = '0.207';
+{
+  $Curses::Toolkit::Widget::Window::Dialog::About::VERSION = '0.208';
 }
 
 # ABSTRACT: an about dialog window
@@ -29,7 +29,7 @@ Curses::Toolkit::Widget::Window::Dialog::About - an about dialog window
 
 =head1 VERSION
 
-version 0.207
+version 0.208
 
 =head1 SYNOPSIS
 

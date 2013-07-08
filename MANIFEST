@@ -26,8 +26,17 @@ examples/conferences/fpw_2011/3_packing.pl
 examples/conferences/fpw_2011/4_global.pl
 examples/conferences/fpw_2011/5_twitter.pl
 examples/conferences/fpw_2011/6_progressbar.pl
+examples/conferences/ipw_2011/07_scroll_area.pl
+examples/conferences/ipw_2011/1_theme.pl
+examples/conferences/ipw_2011/2_windows.pl
+examples/conferences/ipw_2011/3_packing_0.pl
+examples/conferences/ipw_2011/3_packing_1.pl
+examples/conferences/ipw_2011/4_global.pl
+examples/conferences/ipw_2011/5_twitter.pl
+examples/conferences/ipw_2011/6_progressbar.pl
 examples/simple/simple1.pl
 examples/widgets/box.pl
+examples/widgets/entry.pl
 examples/widgets/label.pl
 examples/widgets/progressbar.pl
 examples/widgets/scroll_area.pl

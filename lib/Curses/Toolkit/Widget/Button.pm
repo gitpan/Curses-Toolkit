@@ -10,8 +10,8 @@ use warnings;
 use strict;
 
 package Curses::Toolkit::Widget::Button;
-BEGIN {
-  $Curses::Toolkit::Widget::Button::VERSION = '0.207';
+{
+  $Curses::Toolkit::Widget::Button::VERSION = '0.208';
 }
 
 # ABSTRACT: a simple text button widget
@@ -21,6 +21,10 @@ use parent qw(Curses::Toolkit::Widget::Border Curses::Toolkit::Role::Focusable);
 use Params::Validate qw(SCALAR ARRAYREF HASHREF CODEREF GLOB GLOBREF SCALARREF HANDLE BOOLEAN UNDEF validate validate_pos);
 use Curses::Toolkit::Object::Coordinates;
 
+our @EXPORT_OK = qw(Button);
+our %EXPORT_TAGS = (all => [qw(Button)]);
+
+sub Button { 'Curses::Toolkit::Widget::Button' }
 
 
 sub new {
@@ -158,7 +162,7 @@ Curses::Toolkit::Widget::Button - a simple text button widget
 
 =head1 VERSION
 
-version 0.207
+version 0.208
 
 =head1 DESCRIPTION
 

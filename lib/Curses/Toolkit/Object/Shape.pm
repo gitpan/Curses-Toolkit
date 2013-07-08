@@ -10,8 +10,8 @@ use warnings;
 use strict;
 
 package Curses::Toolkit::Object::Shape;
-BEGIN {
-  $Curses::Toolkit::Object::Shape::VERSION = '0.207';
+{
+  $Curses::Toolkit::Object::Shape::VERSION = '0.208';
 }
 
 # ABSTRACT: simple shape class
@@ -51,7 +51,7 @@ Curses::Toolkit::Object::Shape - simple shape class
 
 =head1 VERSION
 
-version 0.207
+version 0.208
 
 =head1 DESCRIPTION
 

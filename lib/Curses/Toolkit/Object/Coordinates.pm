@@ -10,12 +10,10 @@ use warnings;
 use strict;
 
 package Curses::Toolkit::Object::Coordinates;
-BEGIN {
-  $Curses::Toolkit::Object::Coordinates::VERSION = '0.207';
+{
+  $Curses::Toolkit::Object::Coordinates::VERSION = '0.208';
 }
 # ABSTRACT: simple coordinates class
-
-# We don't use Moose for speed purpose
 
 use Params::Validate qw(SCALAR ARRAYREF HASHREF CODEREF GLOB GLOBREF SCALARREF HANDLE BOOLEAN UNDEF validate validate_pos);
 
@@ -441,7 +439,7 @@ Curses::Toolkit::Object::Coordinates - simple coordinates class
 
 =head1 VERSION
 
-version 0.207
+version 0.208
 
 =head1 DESCRIPTION
 

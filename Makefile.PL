@@ -9,45 +9,44 @@ use ExtUtils::MakeMaker 6.30;
 
 
 my %WriteMakefileArgs = (
-  'ABSTRACT' => 'a modern Curses toolkit',
-  'AUTHOR' => 'Damien "dams" Krotkine',
-  'BUILD_REQUIRES' => {
-    'File::Find' => '0',
-    'File::Temp' => '0',
-    'IO::Pty::Easy' => '0',
-    'Test::Exception' => '0',
-    'Test::More' => '0.94',
-    'aliased' => '0'
+  "ABSTRACT" => "a modern Curses toolkit",
+  "AUTHOR" => "Damien \"dams\" Krotkine",
+  "BUILD_REQUIRES" => {
+    "File::Find" => 0,
+    "File::Temp" => 0,
+    "IO::Pty::Easy" => 0,
+    "Test::Exception" => 0,
+    "Test::More" => "0.94",
+    "aliased" => 0
   },
-  'CONFIGURE_REQUIRES' => {
-    'ExtUtils::MakeMaker' => '6.30'
+  "CONFIGURE_REQUIRES" => {
+    "ExtUtils::MakeMaker" => "6.30"
   },
-  'DISTNAME' => 'Curses-Toolkit',
-  'EXE_FILES' => [],
-  'LICENSE' => 'perl',
-  'NAME' => 'Curses::Toolkit',
-  'PREREQ_PM' => {
-    'Carp' => '0',
-    'Curses' => '0',
-    'Data::Dumper' => '0',
-    'HTML::Parser' => '0',
-    'List::MoreUtils' => '0',
-    'List::Util' => '0',
-    'Moose' => '0.92',
-    'Moose::Util::TypeConstraints' => '0',
-    'MooseX::FollowPBP' => '0',
-    'MooseX::Has::Sugar' => '0',
-    'POE' => '0',
-    'Params::Validate' => '0',
-    'Tie::Array::Iterable' => '0',
-    'UNIVERSAL::require' => '0.13',
-    'overload' => '0',
-    'parent' => '0',
-    'relative' => '0'
+  "DISTNAME" => "Curses-Toolkit",
+  "EXE_FILES" => [],
+  "LICENSE" => "perl",
+  "NAME" => "Curses::Toolkit",
+  "PREREQ_PM" => {
+    "Carp" => 0,
+    "Curses" => 0,
+    "HTML::Parser" => 0,
+    "List::MoreUtils" => 0,
+    "List::Util" => 0,
+    "POE" => 0,
+    "POE::Session" => 0,
+    "POE::Wheel::Curses" => 0,
+    "Params::Validate" => 0,
+    "Tie::Array::Iterable" => 0,
+    "UNIVERSAL::require" => "0.13",
+    "overload" => 0,
+    "parent" => 0,
+    "relative" => 0,
+    "strict" => 0,
+    "warnings" => 0
   },
-  'VERSION' => '0.207',
-  'test' => {
-    'TESTS' => 't/*.t t/object/*.t'
+  "VERSION" => "0.208",
+  "test" => {
+    "TESTS" => "t/*.t t/object/*.t"
   }
 );
 

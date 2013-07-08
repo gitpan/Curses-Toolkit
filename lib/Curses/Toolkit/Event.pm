@@ -10,8 +10,8 @@ use warnings;
 use strict;
 
 package Curses::Toolkit::Event;
-BEGIN {
-  $Curses::Toolkit::Event::VERSION = '0.207';
+{
+  $Curses::Toolkit::Event::VERSION = '0.208';
 }
 
 # ABSTRACT: base class for events
@@ -25,6 +25,7 @@ sub new {
     return bless {
         can_propagate => 1,
         restricted    => 0,
+        custom_data   => {},
     }, $class;
 }
 
@@ -72,6 +73,11 @@ sub restricted_to_widget {
     return shift->{restricted};
 }
 
+
+sub custom_data {
+    return shift->{custom_data};
+}
+
 1;
 
 __END__
@@ -83,7 +89,7 @@ Curses::Toolkit::Event - base class for events
 
 =head1 VERSION
 
-version 0.207
+version 0.208
 
 =head1 DESCRIPTION
 
@@ -143,6 +149,12 @@ passed to parent widgets
 =head2 restricted_to_widget
 
 Returns wether the event is restricted to the widget
+
+=head2 custom_data
+
+Returns a HashRef, which is attached to the event. The pointed Hash can be
+modified to store custom temporary data in the event. Mostly useful when
+creating an event listener.
 
 =head1 AUTHOR
 

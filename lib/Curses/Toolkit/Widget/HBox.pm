@@ -10,8 +10,8 @@ use warnings;
 use strict;
 
 package Curses::Toolkit::Widget::HBox;
-BEGIN {
-  $Curses::Toolkit::Widget::HBox::VERSION = '0.207';
+{
+  $Curses::Toolkit::Widget::HBox::VERSION = '0.208';
 }
 
 # ABSTRACT: an horizontal box widget
@@ -21,6 +21,11 @@ use parent qw(Curses::Toolkit::Widget::Container);
 use Params::Validate qw(SCALAR ARRAYREF HASHREF CODEREF GLOB GLOBREF SCALARREF HANDLE BOOLEAN UNDEF validate validate_pos);
 
 use Curses::Toolkit::Object::Coordinates;
+
+our @EXPORT_OK = qw(HBox);
+our %EXPORT_TAGS = (all => [qw(HBox)]);
+
+sub HBox { 'Curses::Toolkit::Widget::HBox' }
 
 
 
@@ -250,7 +255,7 @@ Curses::Toolkit::Widget::HBox - an horizontal box widget
 
 =head1 VERSION
 
-version 0.207
+version 0.208
 
 =head1 DESCRIPTION
 

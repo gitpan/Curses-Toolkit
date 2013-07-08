@@ -10,13 +10,19 @@ use warnings;
 use strict;
 
 package Curses::Toolkit::Widget;
-BEGIN {
-  $Curses::Toolkit::Widget::VERSION = '0.207';
+{
+  $Curses::Toolkit::Widget::VERSION = '0.208';
 }
 
 # ABSTRACT: base class for widgets
 
 use Params::Validate qw(SCALAR ARRAYREF HASHREF CODEREF GLOB GLOBREF SCALARREF HANDLE BOOLEAN UNDEF validate validate_pos);
+
+our @ISA = qw(Exporter);
+our @EXPORT_OK = qw(Widget);
+our @EXPORT_TAGS = qw(:all);
+
+sub Widget { 'Curses::Toolkit::Widget' }
 
 
 sub new {
@@ -629,15 +635,20 @@ Curses::Toolkit::Widget - base class for widgets
 
 =head1 VERSION
 
-version 0.207
+version 0.208
 
 =head1 DESCRIPTION
 
 Base class for widgets
 
+=head1 EXPORTS
+
+  use Curses::Toolkit::Widget qw(Widget)
+  use Curses::Toolkit::Widget qw(:all)
+
 =head1 CONSTRUCTOR
 
-None, this is an abstract class
+None, this is an abstract class.
 
 =head1 METHODS
 

@@ -10,8 +10,8 @@ use warnings;
 use strict;
 
 package Curses::Toolkit::Widget::Label;
-BEGIN {
-  $Curses::Toolkit::Widget::Label::VERSION = '0.207';
+{
+  $Curses::Toolkit::Widget::Label::VERSION = '0.208';
 }
 
 # ABSTRACT: a widget to display text
@@ -22,6 +22,11 @@ use Params::Validate qw(SCALAR ARRAYREF HASHREF CODEREF GLOB GLOBREF SCALARREF H
 use List::Util qw(min max);
 use Curses::Toolkit::Object::MarkupString;
 use Curses::Toolkit::Object::Coordinates;
+
+our @EXPORT_OK = qw(Label);
+our %EXPORT_TAGS = (all => [qw(Label)]);
+
+sub Label { 'Curses::Toolkit::Widget::Label' }
 
 
 sub new {
@@ -273,7 +278,7 @@ Curses::Toolkit::Widget::Label - a widget to display text
 
 =head1 VERSION
 
-version 0.207
+version 0.208
 
 =head1 DESCRIPTION
 

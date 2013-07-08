@@ -10,21 +10,16 @@ use warnings;
 use strict;
 
 package Curses::Toolkit::Object;
-BEGIN {
-  $Curses::Toolkit::Object::VERSION = '0.207';
+{
+  $Curses::Toolkit::Object::VERSION = '0.208';
 }
 # ABSTRACT: base class for objects
 
-use Moose;
-
-sub BUILDARGS {
-    my ($class) = shift;
-    # TODO : use Exception;
+sub new {
+    my $class = shift;
     $class eq __PACKAGE__ and die "abstract class";
+    return bless { }, $class;
 }
-
-no Moose;
-__PACKAGE__->meta->make_immutable;
 
 1;
 
@@ -37,7 +32,7 @@ Curses::Toolkit::Object - base class for objects
 
 =head1 VERSION
 
-version 0.207
+version 0.208
 
 =head1 DESCRIPTION
 

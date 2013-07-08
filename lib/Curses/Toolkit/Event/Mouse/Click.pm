@@ -10,8 +10,8 @@ use warnings;
 use strict;
 
 package Curses::Toolkit::Event::Mouse::Click;
-BEGIN {
-  $Curses::Toolkit::Event::Mouse::Click::VERSION = '0.207';
+{
+  $Curses::Toolkit::Event::Mouse::Click::VERSION = '0.208';
 }
 
 # ABSTRACT: event that is related to mouse click
@@ -46,7 +46,7 @@ sub new {
             root_window => { isa => 'Curses::Toolkit' },
         }
     );
-    $self = bless( \%args, $class );
+    @{$self}{keys %args} = values %args;
     return $self;
 }
 
@@ -89,7 +89,6 @@ sub get_matching_widget {
 
     foreach my $w (@all_widgets) {
         my $n = $w->[2];
-        use Data::Dumper;
     }
 
     @all_widgets and return $all_widgets[0]->[2];
@@ -107,7 +106,7 @@ Curses::Toolkit::Event::Mouse::Click - event that is related to mouse click
 
 =head1 VERSION
 
-version 0.207
+version 0.208
 
 =head1 DESCRIPTION
 

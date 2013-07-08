@@ -10,8 +10,8 @@ use warnings;
 use strict;
 
 package Curses::Toolkit::Widget::Paned;
-BEGIN {
-  $Curses::Toolkit::Widget::Paned::VERSION = '0.207';
+{
+  $Curses::Toolkit::Widget::Paned::VERSION = '0.208';
 }
 
 # ABSTRACT: generic paned widget
@@ -21,6 +21,11 @@ use parent qw(Curses::Toolkit::Widget::Container);
 use Params::Validate qw(SCALAR ARRAYREF HASHREF CODEREF GLOB GLOBREF SCALARREF HANDLE BOOLEAN UNDEF validate validate_pos);
 
 use Curses::Toolkit::Object::Coordinates;
+
+our @EXPORT_OK = qw(Paned);
+our %EXPORT_TAGS = (all => [qw(Paned)]);
+
+sub Paned { 'Curses::Toolkit::Widget::Paned' }
 
 sub new {
     my $class = shift;
@@ -310,7 +315,7 @@ Curses::Toolkit::Widget::Paned - generic paned widget
 
 =head1 VERSION
 
-version 0.207
+version 0.208
 
 =head1 SYNOPSIS
 

@@ -10,8 +10,8 @@ use warnings;
 use strict;
 
 package Curses::Toolkit::Widget::Container;
-BEGIN {
-  $Curses::Toolkit::Widget::Container::VERSION = '0.207';
+{
+  $Curses::Toolkit::Widget::Container::VERSION = '0.208';
 }
 
 # ABSTRACT: a container widget
@@ -20,6 +20,10 @@ use parent qw(Curses::Toolkit::Widget);
 
 use Params::Validate qw(SCALAR ARRAYREF HASHREF CODEREF GLOB GLOBREF SCALARREF HANDLE BOOLEAN UNDEF validate validate_pos);
 
+our @EXPORT_OK = qw(Container);
+our %EXPORT_TAGS = (all => [qw(Container)]);
+
+sub Container { 'Curses::Toolkit::Widget::Container' }
 
 
 sub new {
@@ -119,7 +123,7 @@ Curses::Toolkit::Widget::Container - a container widget
 
 =head1 VERSION
 
-version 0.207
+version 0.208
 
 =head1 DESCRIPTION
 

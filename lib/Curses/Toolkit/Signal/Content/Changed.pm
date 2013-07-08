@@ -10,8 +10,8 @@ use warnings;
 use strict;
 
 package Curses::Toolkit::Signal::Content::Changed;
-BEGIN {
-  $Curses::Toolkit::Signal::Content::Changed::VERSION = '0.207';
+{
+  $Curses::Toolkit::Signal::Content::Changed::VERSION = '0.208';
 }
 
 use parent qw(Curses::Toolkit::Signal::Content);
@@ -56,7 +56,7 @@ Curses::Toolkit::Signal::Content::Changed
 
 =head1 VERSION
 
-version 0.207
+version 0.208
 
 =head1 DESCRIPTION
 

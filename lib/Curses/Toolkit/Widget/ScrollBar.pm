@@ -10,12 +10,17 @@ use warnings;
 use strict;
 
 package Curses::Toolkit::Widget::ScrollBar;
-BEGIN {
-  $Curses::Toolkit::Widget::ScrollBar::VERSION = '0.207';
+{
+  $Curses::Toolkit::Widget::ScrollBar::VERSION = '0.208';
 }
 
 use parent qw(Curses::Toolkit::Widget);
 use Carp;
+
+our @EXPORT_OK = qw(ScrollBar);
+our %EXPORT_TAGS = (all => [qw(ScrollBar)]);
+
+sub ScrollBar { 'Curses::Toolkit::Widget::Scrollbar' }
 
 sub new {
     my $class = shift;
@@ -24,6 +29,8 @@ sub new {
         "This is an abstract class, please see Curses::Toolkit::Widget::VScrollBar and Curses::Toolkit::Widget::HScrollBar";
     my $self  = $class->SUPER::new();
     $self->{fill} = 1;
+    $self->{_pressed} = 0;
+    $self->{_scrolling} = { enabled => 0 };
     return $self;
 }
 
@@ -67,7 +74,7 @@ Curses::Toolkit::Widget::ScrollBar
 
 =head1 VERSION
 
-version 0.207
+version 0.208
 
 =head1 METHODS
 

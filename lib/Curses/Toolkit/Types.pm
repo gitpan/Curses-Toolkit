@@ -10,15 +10,15 @@ use strict;
 use warnings;
 
 package Curses::Toolkit::Types;
-BEGIN {
-  $Curses::Toolkit::Types::VERSION = '0.207';
+{
+  $Curses::Toolkit::Types::VERSION = '0.208';
 }
 
 # ABSTRACT: various types used within the dist
 
-use Moose::Util::TypeConstraints;
-
-enum PROGRESS_BAR_LABEL => qw( none value percent );
+sub PROGRESS_BAR_LABEL {
+    return({ map { $_ => 1 } (qw(none value percent)) });
+}
 
 1;
 
@@ -31,20 +31,17 @@ Curses::Toolkit::Types - various types used within the dist
 
 =head1 VERSION
 
-version 0.207
+version 0.208
 
 =head1 DESCRIPTION
 
-This module implements the specific types used by the distribution, and
-exports them (exporting is done directly by
-L<Moose::Util::TypeConstraints>.
+This module implements the specific types used by the distribution
 
 Current types defined:
 
-=over 4
+=over
 
-=item * PROGRESS_BAR_LABEL - a simple enumeration, allowing only
-C<none>, C<value> or C<percent>.
+=item * PROGRESS_BAR_LABEL - C<none>, C<value> or C<percent>.
 
 =back
 

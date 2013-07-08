@@ -10,8 +10,8 @@ use warnings;
 use strict;
 
 package Curses::Toolkit::Widget::Window;
-BEGIN {
-  $Curses::Toolkit::Widget::Window::VERSION = '0.207';
+{
+  $Curses::Toolkit::Widget::Window::VERSION = '0.208';
 }
 
 # ABSTRACT: a window
@@ -24,6 +24,11 @@ use List::MoreUtils qw(any none);
 use List::Util qw(min sum max);
 
 use Curses::Toolkit::EventListener;
+
+our @EXPORT_OK = qw(Window);
+our %EXPORT_TAGS = (all => [qw(Window)]);
+
+sub Window { 'Curses::Toolkit::Widget::Window' }
 
 
 sub new {
@@ -123,11 +128,18 @@ sub new {
                     $window->needs_redraw();
                     $self->{_move_pressed} = 0;
                     $self->{_move_coord}   = undef;
+                    $self->{_candy1}{enabled} = 0;
+                    $self->{_candy1}{offset} = 0;
                 } else {
 
                     # means we pressed it
                     $window->set_modal();
                     $self->{_move_pressed} = 1;
+#                    $self->{_candy1}{enabled} = 1;
+                    $self->{_candy1}{enabled} = 0;
+                    $self->{_candy1}{offset} = 0;
+                    $self->{_candy1}{coordinates} = $event->{coordinates};
+                    $self->_start_candy1_animation();
                     $self->needs_redraw();
                     $self->{_move_coord} = $event->{coordinates};
                 }
@@ -149,8 +161,8 @@ sub new {
                     my $wc = $self->get_coordinates();
                           !$self->{_resize_pressed}
                         && $event->{type} eq 'pressed'
-                        && $c->get_x2() == $wc->get_x2() - 1
-                        && $c->get_y2() == $wc->get_y2() - 1
+                        && ( $c->get_x2() == $wc->get_x2() - 1 || $c->get_x2() == $wc->get_x2() - 2)
+                        && ( $c->get_y2() == $wc->get_y2() - 1 || $c->get_y2() == $wc->get_y2() - 2)
                         and return 1;
                     return 0;
                 },
@@ -166,12 +178,19 @@ sub new {
                     my $wc = $window->get_coordinates();
                     $wc->set( x2 => $c->get_x2() + 1, y2 => $c->get_y2() + 1 );
                     $window->set_coordinates($wc);
-                    $window->needs_redraw();
                     $self->{_resize_pressed} = 0;
+                    $self->{_candy1}{enabled} = 0;
+                    $self->{_candy1}{offset} = 0;
+                    $window->needs_redraw();
                 } else {
 
                     # means we pressed it
                     $window->set_modal();
+#                    $self->{_candy1}{enabled} = 1;
+                    $self->{_candy1}{enabled} = 0;
+                    $self->{_candy1}{offset} = 0;
+                    $self->{_candy1}{coordinates} = $event->{coordinates};
+                    $self->_start_candy1_animation();
                     $self->needs_redraw();
                     $self->{_resize_pressed} = 1;
                 }
@@ -271,7 +290,8 @@ sub get_root_window {
 
 sub bring_to_front {
     my ($self) = @_;
-    my $root_window = $self->get_root_window();
+    my $
+root_window = $self->get_root_window();
     defined $root_window or return;
     $root_window->bring_window_to_front($self);
     return $self;
@@ -383,8 +403,20 @@ sub draw {
         );
     }
 
+    if ($self->{_candy1}{enabled}) {
+        my $c = $self->{_candy1}{coordinates};
+        my $offset = $self->{_candy1}{offset};
+        foreach my $p (1..$offset) {
+            my $o = $p-1;
+            $theme->draw_title( $c->get_x1() + 1 + $o, $c->get_y1() + 1 + $o, '\\', { clicked => 1, no_shape_restriction => 1 } );
+            $theme->draw_title( $c->get_x1() - 1 - $o, $c->get_y1() + 1 + $o, '/', { clicked => 1, no_shape_restriction => 1 } );
+            $theme->draw_title( $c->get_x1() + 1 + $o, $c->get_y1() - 1 - $o, '/', { clicked => 1, no_shape_restriction => 1 } );
+            $theme->draw_title( $c->get_x1() - 1 - $o, $c->get_y1() - 1 - $o, '\\', { clicked => 1, no_shape_restriction => 1 } );
+        }
+    }
     #	$theme->draw_corner_lr($c->get_x2() - 1, $c->get_y2() - 1);
     $theme->draw_resize( $c->get_x2() - 1, $c->get_y2() - 1, { clicked => $self->{_resize_pressed} } );
+
 }
 
 
@@ -470,6 +502,34 @@ sub _start_animation {
 
     # launch the animation in 1 second
     $root_window->add_delay( 1, $delay_sub );
+    return;
+}
+
+# when moving the window
+
+sub _start_candy1_animation {
+    my ($self) = @_;
+
+    my $root_window = $self->get_root_window();
+    my $delay = 1/6;
+
+    my $delay_sub;
+    $delay_sub = sub {
+
+        $self->{_candy1}{enabled}
+          or return;
+
+        $self->{_candy1}{offset}++;
+        $self->{_candy1}{offset} == 3
+          and $self->{_candy1}{offset} = 0;
+
+        $self->needs_redraw();
+        my $root_window = $self->get_root_window();
+
+        $root_window->add_delay( $delay, $delay_sub );
+    };
+
+    $root_window->add_delay( $delay, $delay_sub );
     return;
 }
 
@@ -602,7 +662,7 @@ Curses::Toolkit::Widget::Window - a window
 
 =head1 VERSION
 
-version 0.207
+version 0.208
 
 =head1 SYNOPSIS
 

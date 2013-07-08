@@ -10,8 +10,8 @@ use warnings;
 use strict;
 
 package Curses::Toolkit::Signal::Focused::In;
-BEGIN {
-  $Curses::Toolkit::Signal::Focused::In::VERSION = '0.207';
+{
+  $Curses::Toolkit::Signal::Focused::In::VERSION = '0.208';
 }
 
 use parent qw(Curses::Toolkit::Signal::Focused);
@@ -56,7 +56,7 @@ Curses::Toolkit::Signal::Focused::In
 
 =head1 VERSION
 
-version 0.207
+version 0.208
 
 =head1 DESCRIPTION
 

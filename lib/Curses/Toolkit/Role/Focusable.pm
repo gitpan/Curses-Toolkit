@@ -10,8 +10,8 @@ use warnings;
 use strict;
 
 package Curses::Toolkit::Role::Focusable;
-BEGIN {
-  $Curses::Toolkit::Role::Focusable::VERSION = '0.207';
+{
+  $Curses::Toolkit::Role::Focusable::VERSION = '0.208';
 }
 
 # ABSTRACT: This role implements the fact that a widget can have focus
@@ -84,13 +84,12 @@ Curses::Toolkit::Role::Focusable - This role implements the fact that a widget c
 
 =head1 VERSION
 
-version 0.207
+version 0.208
 
 =head1 DESCRIPTION
 
 If a widget inherits of this role, it can be focused (except if its sensitivity
-is set to false). This will disappear once I use Moose and don't need
-multiple inheritance anymore.
+is set to false).
 
 This role can be merged in anything that is a Curses::Toolkit::Widget
 

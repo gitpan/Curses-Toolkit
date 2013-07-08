@@ -10,8 +10,8 @@ use warnings;
 use strict;
 
 package Curses::Toolkit::Widget::VBox;
-BEGIN {
-  $Curses::Toolkit::Widget::VBox::VERSION = '0.207';
+{
+  $Curses::Toolkit::Widget::VBox::VERSION = '0.208';
 }
 
 # ABSTRACT: a vertical box widget
@@ -20,6 +20,10 @@ use parent qw(Curses::Toolkit::Widget::Container);
 
 use Params::Validate qw(SCALAR ARRAYREF HASHREF CODEREF GLOB GLOBREF SCALARREF HANDLE BOOLEAN UNDEF validate validate_pos);
 
+our @EXPORT_OK = qw(VBox);
+our %EXPORT_TAGS = (all => [qw(VBox)]);
+
+sub VBox { 'Curses::Toolkit::Widget::VBox' }
 
 
 
@@ -254,7 +258,7 @@ Curses::Toolkit::Widget::VBox - a vertical box widget
 
 =head1 VERSION
 
-version 0.207
+version 0.208
 
 =head1 DESCRIPTION
 

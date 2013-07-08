@@ -10,8 +10,8 @@ use warnings;
 use strict;
 
 package Curses::Toolkit::Widget::Entry;
-BEGIN {
-  $Curses::Toolkit::Widget::Entry::VERSION = '0.207';
+{
+  $Curses::Toolkit::Widget::Entry::VERSION = '0.208';
 }
 
 # ABSTRACT: base class for focus events
@@ -19,6 +19,11 @@ BEGIN {
 use parent qw(Curses::Toolkit::Widget Curses::Toolkit::Role::Focusable);
 
 use Params::Validate qw(SCALAR ARRAYREF HASHREF CODEREF GLOB GLOBREF SCALARREF HANDLE BOOLEAN UNDEF validate validate_pos);
+
+our @EXPORT_OK = qw(Entry);
+our %EXPORT_TAGS = (all => [qw(Entry)]);
+
+sub Entry { 'Curses::Toolkit::Widget::Entry' }
 
 
 sub new {
@@ -239,6 +244,19 @@ sub get_edit_mode {
 }
 
 
+sub set_password_mode {
+    my ( $self, $bool ) = @_;
+    $self->{password_mode} = $bool;
+    return $self;
+}
+
+
+sub get_password_mode {
+    my ($self) = @_;
+    return $self->{password_mode};
+}
+
+
 sub set_cursor_position {
     my $self = shift;
     my ($position) = validate_pos( @_, { type => SCALAR } );
@@ -274,6 +292,9 @@ sub draw {
     my $theme  = $self->get_theme();
     my $c      = $self->get_coordinates();
     my $text   = $self->get_text();
+    if ($self->get_password_mode) {
+        $text = '*' x length($text);
+    }
 
     my $left_enclosing  = $self->get_theme_property('left_enclosing');
     my $right_enclosing = $self->get_theme_property('right_enclosing');
@@ -403,7 +424,7 @@ Curses::Toolkit::Widget::Entry - base class for focus events
 
 =head1 VERSION
 
-version 0.207
+version 0.208
 
 =head1 DESCRIPTION
 
@@ -453,6 +474,20 @@ output : the entry widget
 =head2 get_edit_mode
 
 Returns true if the entry is in edit mode, false otherwise
+
+input  : none
+output : true or false
+
+=head2 set_password_mode
+
+Set the entry to be in password mode or not
+
+input  : true or false
+output : the entry widget
+
+=head2 get_password_mode
+
+Returns true if the entry is in password mode, false otherwise
 
 input  : none
 output : true or false

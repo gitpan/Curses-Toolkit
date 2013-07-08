@@ -10,8 +10,8 @@ use warnings;
 use strict;
 
 package Curses::Toolkit::Object::MarkupString;
-BEGIN {
-  $Curses::Toolkit::Object::MarkupString::VERSION = '0.207';
+{
+  $Curses::Toolkit::Object::MarkupString::VERSION = '0.208';
 }
 
 # ABSTRACT: a string that contains markups
@@ -285,7 +285,7 @@ Curses::Toolkit::Object::MarkupString - a string that contains markups
 
 =head1 VERSION
 
-version 0.207
+version 0.208
 
 =head1 DESCRIPTION
 

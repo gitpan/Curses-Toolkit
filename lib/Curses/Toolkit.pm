@@ -10,8 +10,8 @@ use warnings;
 use strict;
 
 package Curses::Toolkit;
-BEGIN {
-  $Curses::Toolkit::VERSION = '0.207';
+{
+  $Curses::Toolkit::VERSION = '0.208';
 }
 
 # ABSTRACT: a modern Curses toolkit
@@ -578,7 +578,7 @@ Curses::Toolkit - a modern Curses toolkit
 
 =head1 VERSION
 
-version 0.207
+version 0.208
 
 =head1 SYNOPSIS
 
@@ -602,6 +602,8 @@ version 0.207
           ->set_coordinates( x1 => '20%',   y1 => '20%',
                              x2 => '80%',   y2 => '80%', )
     );
+    
+    POE::Kernel->run();
 
 =head1 DESCRIPTION
 

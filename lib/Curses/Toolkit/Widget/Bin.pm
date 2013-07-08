@@ -10,8 +10,8 @@ use warnings;
 use strict;
 
 package Curses::Toolkit::Widget::Bin;
-BEGIN {
-  $Curses::Toolkit::Widget::Bin::VERSION = '0.207';
+{
+  $Curses::Toolkit::Widget::Bin::VERSION = '0.208';
 }
 
 # ABSTRACT: a bin widget
@@ -19,6 +19,11 @@ BEGIN {
 use parent qw(Curses::Toolkit::Widget::Container);
 
 use Params::Validate qw(SCALAR ARRAYREF HASHREF CODEREF GLOB GLOBREF SCALARREF HANDLE BOOLEAN UNDEF validate validate_pos);
+
+our @EXPORT_OK = qw(Bin);
+our %EXPORT_TAGS = (all => [qw(Bin)]);
+
+sub Bin { 'Curses::Toolkit::Widget::Bin' }
 
 
 
@@ -80,7 +85,7 @@ Curses::Toolkit::Widget::Bin - a bin widget
 
 =head1 VERSION
 
-version 0.207
+version 0.208
 
 =head1 DESCRIPTION
 

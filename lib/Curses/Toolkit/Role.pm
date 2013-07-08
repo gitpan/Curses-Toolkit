@@ -10,11 +10,11 @@ use warnings;
 use strict;
 
 package Curses::Toolkit::Role;
-BEGIN {
-  $Curses::Toolkit::Role::VERSION = '0.207';
+{
+  $Curses::Toolkit::Role::VERSION = '0.208';
 }
 
-# ABSTRACT: base class for roles, before migrating to Moose
+# ABSTRACT: base class for roles
 
 
 sub new {
@@ -31,16 +31,15 @@ __END__
 
 =head1 NAME
 
-Curses::Toolkit::Role - base class for roles, before migrating to Moose
+Curses::Toolkit::Role - base class for roles
 
 =head1 VERSION
 
-version 0.207
+version 0.208
 
 =head1 DESCRIPTION
 
-Base class for Roles. Thiw will disappear once I use Moose and don't need
-multiple inheriatance anmore.
+Base class for Roles.
 
 =head1 CONSTRUCTOR
 

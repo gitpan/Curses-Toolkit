@@ -10,8 +10,8 @@ use warnings;
 use strict;
 
 package Curses::Toolkit::Widget::Border;
-BEGIN {
-  $Curses::Toolkit::Widget::Border::VERSION = '0.207';
+{
+  $Curses::Toolkit::Widget::Border::VERSION = '0.208';
 }
 
 # ABSTRACT: a border widget
@@ -21,6 +21,11 @@ use parent qw(Curses::Toolkit::Widget::Bin);
 use Params::Validate qw(SCALAR ARRAYREF HASHREF CODEREF GLOB GLOBREF SCALARREF HANDLE BOOLEAN UNDEF validate validate_pos);
 
 use Curses::Toolkit::Object::Coordinates;
+
+our @EXPORT_OK = qw(Border);
+our %EXPORT_TAGS = (all => [qw(Border)]);
+
+sub Border { 'Curses::Toolkit::Widget::Border' }
 
 
 sub draw {
@@ -172,7 +177,7 @@ Curses::Toolkit::Widget::Border - a border widget
 
 =head1 VERSION
 
-version 0.207
+version 0.208
 
 =head1 DESCRIPTION
 

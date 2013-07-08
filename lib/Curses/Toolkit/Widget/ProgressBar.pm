@@ -10,31 +10,85 @@ use strict;
 use warnings;
 
 package Curses::Toolkit::Widget::ProgressBar;
-BEGIN {
-  $Curses::Toolkit::Widget::ProgressBar::VERSION = '0.207';
+{
+  $Curses::Toolkit::Widget::ProgressBar::VERSION = '0.208';
 }
 
 # ABSTRACT: progress bar widget base class
 
-use Moose;
-use MooseX::Has::Sugar;
-use MooseX::FollowPBP;
-use Params::Validate qw(SCALAR ARRAYREF HASHREF CODEREF GLOB GLOBREF SCALARREF HANDLE BOOLEAN UNDEF validate validate_pos);
+use parent qw(Curses::Toolkit::Widget::Border);
 
 use Curses::Toolkit::Object::Coordinates;
 use Curses::Toolkit::Types;
 
-extends qw(Curses::Toolkit::Widget::Border);
+use Params::Validate qw(SCALAR ARRAYREF HASHREF CODEREF GLOB GLOBREF SCALARREF HANDLE BOOLEAN UNDEF validate validate_pos);
 
-# FIXME this is an abstract class. How do you specify this in moose ?
+our @EXPORT_OK = qw(ProgressBar);
+our %EXPORT_TAGS = (all => [qw(ProgressBar)]);
+
+sub ProgressBar { 'Curses::Toolkit::Widget::ProgressBar' }
 
 # -- attributes
 
 
-has minimum  => ( rw, isa => 'Num', lazy_build, trigger => sub { shift->needs_redraw } );
-has maximum  => ( rw, isa => 'Num', lazy_build, trigger => sub { shift->needs_redraw } );
-has position => ( rw, isa => 'Num', lazy_build, trigger => sub { shift->needs_redraw } );
-has label_type => ( rw, isa => 'PROGRESS_BAR_LABEL', lazy_build );
+sub new {
+    my $class = shift;
+
+    # TODO : use Exception;
+    $class eq __PACKAGE__
+        and die
+        "This is an abstract class, please see Curses::Toolkit::Widget::HProgressBar and Curses::Toolkit::Widget::VProgressBar";
+
+    my $self = $class->SUPER::new();
+    $self->{minimum} = 0;
+    $self->{maximum} = 100;
+    $self->{position} = 0;
+    $self->{label_type} = 'percent';
+    return $self;
+}
+
+sub set_minimum {
+    my ($self, $value) = @_;
+    $self->{minimum} = $value;
+    $self->needs_redraw;
+    return $self;
+}
+
+sub get_minimum { $_[0]->{minimum}; }
+
+sub set_maximum {
+    my ($self, $value) = @_;
+    $self->{maximum} = $value;
+    $self->needs_redraw;
+    return $self;
+}
+
+sub get_maximum { $_[0]->{maximum}; }
+
+sub set_position {
+    my ($self, $value) = @_;
+    $value < $self->get_minimum
+        and $value = $self->get_minimum;
+    $value > $self->get_maximum
+        and $value = $self->get_maximum;
+    $self->{position} = $value;
+    $self->needs_redraw;
+    return $self;
+}
+
+sub get_position { $_[0]->{position}; }
+
+sub set_label_type {
+    my ($self, $value) = @_;
+    my $label_types = Curses::Toolkit::Types->PROGRESS_BAR_LABEL();
+    $label_types->{$value}
+      or die "label_type must be one of " . join(', ', keys %$label_types) . ", and not '$value'";
+    $self->{label_type} = $value;
+    $self->needs_redraw;
+    return $self;
+}
+
+sub get_label_type { $_[0]->{label_type}; }
 
 
 # -- builders & initializers
@@ -44,17 +98,6 @@ sub _build_minimum    { 0; }
 sub _build_maximum    { 100; }
 sub _build_position   { 0; }
 sub _build_label_type { 'percent'; }
-
-#
-# prevent position attribute to be out of bounds
-around set_position => sub {
-    my ( $orig, $self, $pos ) = @_;
-    $pos < $self->get_minimum
-        and $pos = $self->get_minimum;
-    $pos > $self->get_maximum
-        and $pos = $self->get_maximum;
-    $self->$orig($pos);
-};
 
 
 sub possible_signals {
@@ -76,9 +119,6 @@ sub _get_theme_properties_definition {
     };
 }
 
-no Moose;
-__PACKAGE__->meta->make_immutable(inline_constructor => 0);
-
 1;
 
 
@@ -91,7 +131,7 @@ Curses::Toolkit::Widget::ProgressBar - progress bar widget base class
 
 =head1 VERSION
 
-version 0.207
+version 0.208
 
 =head1 SYNOPSIS
 

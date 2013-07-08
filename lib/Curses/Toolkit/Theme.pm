@@ -10,8 +10,8 @@ use warnings;
 use strict;
 
 package Curses::Toolkit::Theme;
-BEGIN {
-  $Curses::Toolkit::Theme::VERSION = '0.207';
+{
+  $Curses::Toolkit::Theme::VERSION = '0.208';
 }
 
 # ABSTRACT: base class for widgets themes
@@ -186,9 +186,14 @@ sub is_in_shape {
 
 sub restrict_to_shape {
     my $self  = shift;
+    my %args = @_;
+    my $attr = delete $args{attr} || {};
+    my $c = Curses::Toolkit::Object::Coordinates->new(%args);
+    $attr->{no_shape_restriction}
+      and return $c;
     my $shape = $self->get_shape()
         or return;
-    return Curses::Toolkit::Object::Coordinates->new(@_)->restrict_to($shape);
+    return $c->restrict_to($shape);
 }
 
 
@@ -340,7 +345,7 @@ Curses::Toolkit::Theme - base class for widgets themes
 
 =head1 VERSION
 
-version 0.207
+version 0.208
 
 =head1 DESCRIPTION
 

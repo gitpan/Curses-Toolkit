@@ -10,22 +10,23 @@ use strict;
 use warnings;
 
 package Curses::Toolkit::Widget::VProgressBar;
-BEGIN {
-  $Curses::Toolkit::Widget::VProgressBar::VERSION = '0.207';
+{
+  $Curses::Toolkit::Widget::VProgressBar::VERSION = '0.208';
 }
 
 # ABSTRACT: a vertical progress bar widget
 
-use Moose;
-use MooseX::Has::Sugar;
-use MooseX::FollowPBP;
 use Params::Validate qw(SCALAR ARRAYREF HASHREF CODEREF GLOB GLOBREF SCALARREF HANDLE BOOLEAN UNDEF validate validate_pos);
 
 use Curses::Toolkit::Object::Coordinates;
 use Curses::Toolkit::Types;
 
-extends qw(Curses::Toolkit::Widget::ProgressBar);
+use parent qw(Curses::Toolkit::Widget::ProgressBar);
 
+our @EXPORT_OK = qw(VProgressBar);
+our %EXPORT_TAGS = (all => [qw(VProgressBar)]);
+
+sub VProgressBar { 'Curses::Toolkit::Widget::VProgressBar' }
 
 # -- attributes
 
@@ -129,9 +130,6 @@ sub get_minimum_space {
 
 
 
-no Moose;
-__PACKAGE__->meta->make_immutable (inline_constructor => 0);
-
 1;
 
 
@@ -144,11 +142,11 @@ Curses::Toolkit::Widget::VProgressBar - a vertical progress bar widget
 
 =head1 VERSION
 
-version 0.207
+version 0.208
 
 =head1 DESCRIPTION
 
-The C<Curses::Toolkit::Widget::VProgressBar> widget is a classical
+The C<Curses::Toolkit::Widget::VProgressBar> widget is a classic
 progress bar widget, used to provide some sort of progress information
 to your program user.
 

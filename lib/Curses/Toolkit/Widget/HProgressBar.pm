@@ -10,24 +10,26 @@ use strict;
 use warnings;
 
 package Curses::Toolkit::Widget::HProgressBar;
-BEGIN {
-  $Curses::Toolkit::Widget::HProgressBar::VERSION = '0.207';
+{
+  $Curses::Toolkit::Widget::HProgressBar::VERSION = '0.208';
 }
 
 # ABSTRACT: a horizontal progress bar widget
 
-use Moose;
-use MooseX::Has::Sugar;
-use MooseX::FollowPBP;
 use Params::Validate qw(SCALAR ARRAYREF HASHREF CODEREF GLOB GLOBREF SCALARREF HANDLE BOOLEAN UNDEF validate validate_pos);
 
 use Curses::Toolkit::Object::Coordinates;
 use Curses::Toolkit::Types;
 
-extends qw(Curses::Toolkit::Widget::ProgressBar);
+use parent qw(Curses::Toolkit::Widget::ProgressBar);
 
+our @EXPORT_OK = qw(HProgressBar);
+our %EXPORT_TAGS = (all => [qw(HProgressBar)]);
+
+sub HProgressBar { 'Curses::Toolkit::Widget::HProgressBar' }
 
 # -- attributes
+
 
 
 
@@ -124,9 +126,6 @@ sub get_minimum_space {
 
 
 
-no Moose;
-__PACKAGE__->meta->make_immutable (inline_constructor => 0);
-
 1;
 
 
@@ -139,11 +138,11 @@ Curses::Toolkit::Widget::HProgressBar - a horizontal progress bar widget
 
 =head1 VERSION
 
-version 0.207
+version 0.208
 
 =head1 DESCRIPTION
 
-The C<Curses::Toolkit::Widget::HProgressBar> widget is a classical
+The C<Curses::Toolkit::Widget::HProgressBar> widget is a classic
 progress bar widget, used to provide some sort of progress information
 to your program user.
 

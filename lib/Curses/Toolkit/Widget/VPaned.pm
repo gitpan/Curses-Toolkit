@@ -10,14 +10,19 @@ use warnings;
 use strict;
 
 package Curses::Toolkit::Widget::VPaned;
-BEGIN {
-  $Curses::Toolkit::Widget::VPaned::VERSION = '0.207';
+{
+  $Curses::Toolkit::Widget::VPaned::VERSION = '0.208';
 }
 
 # ABSTRACT: a container with two panes arranged horizontally
 use parent qw(Curses::Toolkit::Widget::Paned);
 
 use Params::Validate qw(SCALAR ARRAYREF HASHREF CODEREF GLOB GLOBREF SCALARREF HANDLE BOOLEAN UNDEF validate validate_pos);
+
+our @EXPORT_OK = qw(VPaned);
+our %EXPORT_TAGS = (all => [qw(VPaned)]);
+
+sub VPaned { 'Curses::Toolkit::Widget::VPaned' }
 
 
 
@@ -100,7 +105,7 @@ Curses::Toolkit::Widget::VPaned - a container with two panes arranged horizontal
 
 =head1 VERSION
 
-version 0.207
+version 0.208
 
 =head1 DESCRIPTION
 

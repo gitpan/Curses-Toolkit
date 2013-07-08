@@ -10,8 +10,8 @@ use warnings;
 use strict;
 
 package Curses::Toolkit::Widget::VScrollBar;
-BEGIN {
-  $Curses::Toolkit::Widget::VScrollBar::VERSION = '0.207';
+{
+  $Curses::Toolkit::Widget::VScrollBar::VERSION = '0.208';
 }
 
 # ABSTRACT: a vertical scrollbar widget
@@ -19,6 +19,11 @@ BEGIN {
 use parent qw(Curses::Toolkit::Widget::ScrollBar);
 
 use Params::Validate qw(SCALAR ARRAYREF HASHREF CODEREF GLOB GLOBREF SCALARREF HANDLE BOOLEAN UNDEF validate validate_pos);
+
+our @EXPORT_OK = qw(VScrollBar);
+our %EXPORT_TAGS = (all => [qw(VScrollBar)]);
+
+sub VScrollBar { 'Curses::Toolkit::Widget::VScrollBar' }
 
 
 sub new {
@@ -32,13 +37,79 @@ sub new {
             accepted_events => {
                 'Curses::Toolkit::Event::Mouse::Click' => sub {
                     my ($event) = @_;
-                    $event->{type}   eq 'clicked' or return 0;
+
                     $event->{button} eq 'button1' or return 0;
+                    $self->{_pressed} && $event->{type} eq 'released'
+                      and return 1;
+                    $self->{_pressed}
+                      and return 0;
+                    $event->{type} eq 'pressed'
+                      or return 0;
+                    my $scroll_delta = 1;
+                    my $c  = $event->{coordinates};
+                    my $wc = $self->get_coordinates();
+                    $c->get_y1() == $wc->get_y1() || $c->get_y1() == $wc->get_y2() - 1
+                      or return 0;
+                    $c->get_y1() == $wc->get_y1()
+                      or $scroll_delta = -$scroll_delta;
+                    $event->custom_data->{scroll_delta} = $scroll_delta;
+                    return 1;
+                },
+            },
+            code => sub {
+                my ( $event, $vscrollbar ) = @_;
+
+                if ($self->{_pressed}) {
+                    # means we released it
+                    $vscrollbar->unset_modal();
+                    $self->{_pressed} = 0;
+                    $self->{_scrolling}{enabled} = 0;
+                    return;
+                }
+
+                # means we pressed it
+                $vscrollbar->set_modal();
+                my $scroll_area = $vscrollbar->get_scroll_area;
+                defined $scroll_area
+                  or return;
+
+                my $scroll_delta = $event->custom_data->{scroll_delta};
+                $scroll_area->scroll(y => $scroll_delta);
+
+                $self->{_pressed} = 1;
+                $self->{_scrolling}{enabled} = 1;
+                $self->{_scrolling}{scroll_delta} = $scroll_delta;
+                $self->_start_scrolling_animation();
+                return;
+            },
+        )
+    );
+
+    $self->add_event_listener(
+        Curses::Toolkit::EventListener->new(
+            accepted_events => {
+                'Curses::Toolkit::Event::Mouse::Click' => sub {
+                    my ($event) = @_;
+
+                    $event->{button} eq 'button1' or return 0;
+
+                    my $scroll_delta = 0;
+                    $event->{type}   eq 'clicked'
+                      and $scroll_delta = 1;
+                    $event->{type}   eq 'double_clicked'
+                      and $scroll_delta = 2;
+                    $event->{type}   eq 'triple_clicked'
+                      and $scroll_delta = 3;
+                    $scroll_delta or return 0;
 
                     my $c  = $event->{coordinates};
                     my $wc = $self->get_coordinates();
-                    $c->get_y1() == $wc->get_y1() || $c->get_y1() == $wc->get_y2()
+                    $c->get_y1() == $wc->get_y1() || $c->get_y1() == $wc->get_y2() - 1
                       or return 0;
+                    $c->get_y1() == $wc->get_y1()
+                      or $scroll_delta = -$scroll_delta;
+
+                    $event->custom_data->{scroll_delta} = $scroll_delta;
                     return 1;
                 },
             },
@@ -49,18 +120,41 @@ sub new {
                 defined $scroll_area
                   or return;
 
-                my $c  = $event->{coordinates};
-                my $wc = $self->get_coordinates();
-                $c->get_y1() == $wc->get_y1()
-                  and $scroll_area->scroll(y => -1);
-                $c->get_y1() == $wc->get_y2()
-                  and $scroll_area->scroll(y => 1);
+                my $scroll_delta = $event->custom_data->{scroll_delta};
+                $scroll_area->scroll(y => $scroll_delta);
                 return;
             },
         )
     );
 
     return $self;
+}
+
+sub _start_scrolling_animation {
+    my ($self) = @_;
+
+    my $root_window = $self->get_root_window();
+    my $delay = 1/8;
+
+    my $delay_sub;
+    $delay_sub = sub {
+
+        $self->{_scrolling}{enabled}
+          or return;
+
+        my $scroll_area = $self->get_scroll_area;
+        defined $scroll_area
+          or return;
+
+        my $scroll_delta = $self->{_scrolling}{scroll_delta};
+        $scroll_area->scroll(y => $scroll_delta);
+
+        my $root_window = $self->get_root_window();
+        $root_window->add_delay( $delay, $delay_sub );
+    };
+
+    $root_window->add_delay( $delay, $delay_sub );
+    return;
 }
 
 # attach the scrollbar to a given scroll area
@@ -77,6 +171,8 @@ sub get_scroll_area {
 
 sub draw {
     my ($self) = @_;
+    $self->is_visible
+      or return;
     my $theme = $self->get_theme();
     my $c = $self->get_coordinates();
 
@@ -84,7 +180,7 @@ sub draw {
     my $fill_height = $fill * ($c->height()-2);
     $theme->draw_string( $c->get_x1(), $c->get_y1(), '^');
     foreach my $y (0..$fill_height) {
-        $theme->draw_string( $c->get_x1(), $c->get_y1()+1+$y, '#');
+        $theme->draw_resize( $c->get_x1(), $c->get_y1()+1+$y,);
     }
     $theme->draw_vline( $c->get_x1(), $c->get_y1()+1+$fill_height+1, $c->height()-2-$fill_height);
     $theme->draw_string( $c->get_x1(), $c->get_y2()-1, 'v');
@@ -111,7 +207,7 @@ Curses::Toolkit::Widget::VScrollBar - a vertical scrollbar widget
 
 =head1 VERSION
 
-version 0.207
+version 0.208
 
 =head1 DESCRIPTION
 

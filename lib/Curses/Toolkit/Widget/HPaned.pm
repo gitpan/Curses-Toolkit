@@ -10,8 +10,8 @@ use warnings;
 use strict;
 
 package Curses::Toolkit::Widget::HPaned;
-BEGIN {
-  $Curses::Toolkit::Widget::HPaned::VERSION = '0.207';
+{
+  $Curses::Toolkit::Widget::HPaned::VERSION = '0.208';
 }
 
 # ABSTRACT: a container with two panes arranged horizontally
@@ -19,6 +19,11 @@ BEGIN {
 use parent qw(Curses::Toolkit::Widget::Paned);
 
 use Params::Validate qw(SCALAR ARRAYREF HASHREF CODEREF GLOB GLOBREF SCALARREF HANDLE BOOLEAN UNDEF validate validate_pos);
+
+our @EXPORT_OK = qw(HPaned);
+our %EXPORT_TAGS = (all => [qw(HPaned)]);
+
+sub HPaned { 'Curses::Toolkit::Widget::HPaned' }
 
 
 
@@ -101,7 +106,7 @@ Curses::Toolkit::Widget::HPaned - a container with two panes arranged horizontal
 
 =head1 VERSION
 
-version 0.207
+version 0.208
 
 =head1 DESCRIPTION
 

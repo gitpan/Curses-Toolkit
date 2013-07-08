@@ -20,9 +20,14 @@ use lib "$Bin/../../../lib";
 use Net::Twitter;
 my $nt = Net::Twitter->new();
 
-
-use relative -to      => "Curses::Toolkit::Widget",
-             -aliased => qw(Window Label VBox HBox Button HPaned Entry Border);
+use Curses::Toolkit::Widget::Window qw(:all);
+use Curses::Toolkit::Widget::Label qw(:all);
+use Curses::Toolkit::Widget::VBox qw(:all);
+use Curses::Toolkit::Widget::HBox qw(:all);
+use Curses::Toolkit::Widget::Button qw(:all);
+use Curses::Toolkit::Widget::HPaned qw(:all);
+use Curses::Toolkit::Widget::Entry qw(:all);
+use Curses::Toolkit::Widget::Border qw(:all);
 
 use relative -to      => "Curses::Toolkit::Theme::Default::Color",
              -aliased => qw(BlueWhite Yellow Pink);
@@ -30,7 +35,6 @@ use relative -to      => "Curses::Toolkit::Theme::Default::Color",
 use relative -to      => "Curses::Toolkit::Theme",
              -aliased => qw(Default);
 
-use Curses::Toolkit::Widget::ScrollArea;
 main() unless caller;
 
 my $border;
@@ -71,11 +75,7 @@ sub search_twitter {
             { expand => 0 }
         );
     }
-    $border->add_widget(
-      my $s = Curses::Toolkit::Widget::ScrollArea->new
-                        ->set_name('scroll_area')
-                        ->add_widget($vbox)
-                       );
+    $border->add_widget($vbox);
     $border->needs_redraw();
 
 }
@@ -92,7 +92,7 @@ sub main {
     my $entry;
 
     my $window1 =
-      Window->new->set_name('window')->set_title("Twitter Search demonstration at FOSDEM")
+      Window->new->set_name('window')->set_title("Twitter Search demonstration at FPW 2011")
           ->set_coordinates( x1 => '5%', y1 => '5%',
                              x2 => '95%', y2 => '95%' );
 

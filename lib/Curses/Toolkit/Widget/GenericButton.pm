@@ -10,8 +10,8 @@ use warnings;
 use strict;
 
 package Curses::Toolkit::Widget::GenericButton;
-BEGIN {
-  $Curses::Toolkit::Widget::GenericButton::VERSION = '0.207';
+{
+  $Curses::Toolkit::Widget::GenericButton::VERSION = '0.208';
 }
 
 # ABSTRACT: a button widget that can hold any other widget
@@ -20,6 +20,11 @@ use parent qw(Curses::Toolkit::Widget::Border Curses::Toolkit::Role::Focusable);
 
 use Params::Validate qw(SCALAR ARRAYREF HASHREF CODEREF GLOB GLOBREF SCALARREF HANDLE BOOLEAN UNDEF validate validate_pos);
 use Curses::Toolkit::Object::Coordinates;
+
+our @EXPORT_OK = qw(GenericButton);
+our %EXPORT_TAGS = (all => [qw(GenericButton)]);
+
+sub GenericButton { 'Curses::Toolkit::Widget::GenericButton' }
 
 
 sub new_with_label {
@@ -49,7 +54,7 @@ Curses::Toolkit::Widget::GenericButton - a button widget that can hold any other
 
 =head1 VERSION
 
-version 0.207
+version 0.208
 
 =head1 DESCRIPTION
 
