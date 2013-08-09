@@ -11,7 +11,7 @@ use strict;
 
 package POE::Component::Curses;
 {
-  $POE::Component::Curses::VERSION = '0.208';
+  $POE::Component::Curses::VERSION = '0.209';
 }
 
 # ABSTRACT: the ( currently only ) loader for Curses::toolkit
@@ -191,6 +191,7 @@ sub spawn {
 1;
 
 __END__
+
 =pod
 
 =head1 NAME
@@ -199,7 +200,7 @@ POE::Component::Curses - the ( currently only ) loader for Curses::toolkit
 
 =head1 VERSION
 
-version 0.208
+version 0.209
 
 =head1 SYNOPSIS
 
@@ -267,4 +268,3 @@ This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
-

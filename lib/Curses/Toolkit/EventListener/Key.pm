@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::EventListener::Key;
 {
-  $Curses::Toolkit::EventListener::Key::VERSION = '0.208';
+  $Curses::Toolkit::EventListener::Key::VERSION = '0.209';
 }
 
 # ABSTRACT: event listener listening for a keyboard action
@@ -27,6 +27,7 @@ use Params::Validate qw(SCALAR ARRAYREF HASHREF CODEREF GLOB GLOBREF SCALARREF H
 1;
 
 __END__
+
 =pod
 
 =head1 NAME
@@ -35,7 +36,7 @@ Curses::Toolkit::EventListener::Key - event listener listening for a keyboard ac
 
 =head1 VERSION
 
-version 0.208
+version 0.209
 
 =head1 DESCRIPTION
 
@@ -57,4 +58,3 @@ This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
-

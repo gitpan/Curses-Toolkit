@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::Widget::Bin;
 {
-  $Curses::Toolkit::Widget::Bin::VERSION = '0.208';
+  $Curses::Toolkit::Widget::Bin::VERSION = '0.209';
 }
 
 # ABSTRACT: a bin widget
@@ -77,6 +77,7 @@ sub _rebuild_children_coordinates {
 1;
 
 __END__
+
 =pod
 
 =head1 NAME
@@ -85,7 +86,7 @@ Curses::Toolkit::Widget::Bin - a bin widget
 
 =head1 VERSION
 
-version 0.208
+version 0.209
 
 =head1 DESCRIPTION
 
@@ -130,4 +131,3 @@ This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
-

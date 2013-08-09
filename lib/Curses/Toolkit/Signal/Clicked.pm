@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::Signal::Clicked;
 {
-  $Curses::Toolkit::Signal::Clicked::VERSION = '0.208';
+  $Curses::Toolkit::Signal::Clicked::VERSION = '0.209';
 }
 
 use parent qw(Curses::Toolkit::Signal);
@@ -60,6 +60,7 @@ sub generate_listener {
 1;
 
 __END__
+
 =pod
 
 =head1 NAME
@@ -68,7 +69,7 @@ Curses::Toolkit::Signal::Clicked
 
 =head1 VERSION
 
-version 0.208
+version 0.209
 
 =head1 SYNOPSIS
 
@@ -94,4 +95,3 @@ This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
-

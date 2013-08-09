@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::Widget::Button;
 {
-  $Curses::Toolkit::Widget::Button::VERSION = '0.208';
+  $Curses::Toolkit::Widget::Button::VERSION = '0.209';
 }
 
 # ABSTRACT: a simple text button widget
@@ -154,6 +154,7 @@ sub _get_theme_properties_definition {
 1;
 
 __END__
+
 =pod
 
 =head1 NAME
@@ -162,7 +163,7 @@ Curses::Toolkit::Widget::Button - a simple text button widget
 
 =head1 VERSION
 
-version 0.208
+version 0.209
 
 =head1 DESCRIPTION
 
@@ -293,4 +294,3 @@ This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
-

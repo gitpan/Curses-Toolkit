@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::Event::Focus::In;
 {
-  $Curses::Toolkit::Event::Focus::In::VERSION = '0.208';
+  $Curses::Toolkit::Event::Focus::In::VERSION = '0.209';
 }
 
 # ABSTRACT: event that is related to in-focus
@@ -28,6 +28,7 @@ sub get_matching_widget { return }
 1;
 
 __END__
+
 =pod
 
 =head1 NAME
@@ -36,7 +37,7 @@ Curses::Toolkit::Event::Focus::In - event that is related to in-focus
 
 =head1 VERSION
 
-version 0.208
+version 0.209
 
 =head1 DESCRIPTION
 
@@ -61,4 +62,3 @@ This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
-

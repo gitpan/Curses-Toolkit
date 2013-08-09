@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::Widget::Label;
 {
-  $Curses::Toolkit::Widget::Label::VERSION = '0.208';
+  $Curses::Toolkit::Widget::Label::VERSION = '0.209';
 }
 
 # ABSTRACT: a widget to display text
@@ -270,6 +270,7 @@ sub _get_space {
 1;
 
 __END__
+
 =pod
 
 =head1 NAME
@@ -278,7 +279,7 @@ Curses::Toolkit::Widget::Label - a widget to display text
 
 =head1 VERSION
 
-version 0.208
+version 0.209
 
 =head1 DESCRIPTION
 
@@ -464,4 +465,3 @@ This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
-

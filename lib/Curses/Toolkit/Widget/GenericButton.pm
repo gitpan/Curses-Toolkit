@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::Widget::GenericButton;
 {
-  $Curses::Toolkit::Widget::GenericButton::VERSION = '0.208';
+  $Curses::Toolkit::Widget::GenericButton::VERSION = '0.209';
 }
 
 # ABSTRACT: a button widget that can hold any other widget
@@ -46,6 +46,7 @@ sub get_desired_space {
 1;
 
 __END__
+
 =pod
 
 =head1 NAME
@@ -54,7 +55,7 @@ Curses::Toolkit::Widget::GenericButton - a button widget that can hold any other
 
 =head1 VERSION
 
-version 0.208
+version 0.209
 
 =head1 DESCRIPTION
 
@@ -99,4 +100,3 @@ This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
-

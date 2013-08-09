@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::Object::Coordinates;
 {
-  $Curses::Toolkit::Object::Coordinates::VERSION = '0.208';
+  $Curses::Toolkit::Object::Coordinates::VERSION = '0.209';
 }
 # ABSTRACT: simple coordinates class
 
@@ -430,6 +430,7 @@ sub _normalize {
 
 1;
 
+__END__
 
 =pod
 
@@ -439,7 +440,7 @@ Curses::Toolkit::Object::Coordinates - simple coordinates class
 
 =head1 VERSION
 
-version 0.208
+version 0.209
 
 =head1 DESCRIPTION
 
@@ -699,7 +700,3 @@ This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
-
-
-__END__
-

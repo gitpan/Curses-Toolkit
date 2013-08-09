@@ -11,7 +11,7 @@ use strict;
 
 package POE::Component::Curses::MainLoop;
 {
-  $POE::Component::Curses::MainLoop::VERSION = '0.208';
+  $POE::Component::Curses::MainLoop::VERSION = '0.209';
 }
 
 # ABSTRACT: <FIXME>
@@ -179,6 +179,7 @@ sub event_generic {
 1;
 
 __END__
+
 =pod
 
 =head1 NAME
@@ -187,7 +188,7 @@ POE::Component::Curses::MainLoop - <FIXME>
 
 =head1 VERSION
 
-version 0.208
+version 0.209
 
 =head1 SYNOPSIS
 
@@ -210,4 +211,3 @@ This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
-

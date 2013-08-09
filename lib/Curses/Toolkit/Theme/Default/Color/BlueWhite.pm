@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::Theme::Default::Color::BlueWhite;
 {
-  $Curses::Toolkit::Theme::Default::Color::BlueWhite::VERSION = '0.208';
+  $Curses::Toolkit::Theme::Default::Color::BlueWhite::VERSION = '0.209';
 }
 
 # ABSTRACT: default widget theme with blue-ish foreground on white-ish background
@@ -100,6 +100,7 @@ sub ROOT_COLOR    { return 'blue'; }
 1;
 
 __END__
+
 =pod
 
 =head1 NAME
@@ -108,7 +109,7 @@ Curses::Toolkit::Theme::Default::Color::BlueWhite - default widget theme with bl
 
 =head1 VERSION
 
-version 0.208
+version 0.209
 
 =head1 DESCRIPTION
 
@@ -133,4 +134,3 @@ This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
-

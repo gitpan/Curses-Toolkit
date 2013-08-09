@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::EventListener;
 {
-  $Curses::Toolkit::EventListener::VERSION = '0.208';
+  $Curses::Toolkit::EventListener::VERSION = '0.209';
 }
 
 # ABSTRACT: base class for event listeners
@@ -125,6 +125,7 @@ DESTROY {
 1;
 
 __END__
+
 =pod
 
 =head1 NAME
@@ -133,7 +134,7 @@ Curses::Toolkit::EventListener - base class for event listeners
 
 =head1 VERSION
 
-version 0.208
+version 0.209
 
 =head1 DESCRIPTION
 
@@ -215,4 +216,3 @@ This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
-

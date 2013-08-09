@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::Theme::Default::Color;
 {
-  $Curses::Toolkit::Theme::Default::Color::VERSION = '0.208';
+  $Curses::Toolkit::Theme::Default::Color::VERSION = '0.209';
 }
 
 # ABSTRACT: base class for default coloured widgets themes
@@ -25,6 +25,7 @@ use Curses;
 1;
 
 __END__
+
 =pod
 
 =head1 NAME
@@ -33,7 +34,7 @@ Curses::Toolkit::Theme::Default::Color - base class for default coloured widgets
 
 =head1 VERSION
 
-version 0.208
+version 0.209
 
 =head1 DESCRIPTION
 
@@ -55,4 +56,3 @@ This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
-

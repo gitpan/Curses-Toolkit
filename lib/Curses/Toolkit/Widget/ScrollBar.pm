@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::Widget::ScrollBar;
 {
-  $Curses::Toolkit::Widget::ScrollBar::VERSION = '0.208';
+  $Curses::Toolkit::Widget::ScrollBar::VERSION = '0.209';
 }
 
 use parent qw(Curses::Toolkit::Widget);
@@ -66,6 +66,7 @@ sub get_fill {
 1;
 
 __END__
+
 =pod
 
 =head1 NAME
@@ -74,7 +75,7 @@ Curses::Toolkit::Widget::ScrollBar
 
 =head1 VERSION
 
-version 0.208
+version 0.209
 
 =head1 METHODS
 
@@ -118,4 +119,3 @@ This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
-

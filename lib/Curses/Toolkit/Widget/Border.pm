@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::Widget::Border;
 {
-  $Curses::Toolkit::Widget::Border::VERSION = '0.208';
+  $Curses::Toolkit::Widget::Border::VERSION = '0.209';
 }
 
 # ABSTRACT: a border widget
@@ -169,6 +169,7 @@ sub get_visible_shape_for_children {
 1;
 
 __END__
+
 =pod
 
 =head1 NAME
@@ -177,7 +178,12 @@ Curses::Toolkit::Widget::Border - a border widget
 
 =head1 VERSION
 
-version 0.208
+version 0.209
+
+=head1 SYNOPSIS
+
+my $border = Curses::Toolkit::Widget::Border->new;
+$border->add_widget($some_other_widget);
 
 =head1 DESCRIPTION
 
@@ -244,4 +250,3 @@ This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
-

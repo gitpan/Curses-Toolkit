@@ -34,6 +34,7 @@ examples/conferences/ipw_2011/3_packing_1.pl
 examples/conferences/ipw_2011/4_global.pl
 examples/conferences/ipw_2011/5_twitter.pl
 examples/conferences/ipw_2011/6_progressbar.pl
+examples/for_ribasushi/vertical_scrolling.pl
 examples/simple/simple1.pl
 examples/widgets/box.pl
 examples/widgets/entry.pl

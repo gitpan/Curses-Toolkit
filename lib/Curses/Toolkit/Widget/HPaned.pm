@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::Widget::HPaned;
 {
-  $Curses::Toolkit::Widget::HPaned::VERSION = '0.208';
+  $Curses::Toolkit::Widget::HPaned::VERSION = '0.209';
 }
 
 # ABSTRACT: a container with two panes arranged horizontally
@@ -98,6 +98,7 @@ sub _p13 {
 1;
 
 __END__
+
 =pod
 
 =head1 NAME
@@ -106,7 +107,7 @@ Curses::Toolkit::Widget::HPaned - a container with two panes arranged horizontal
 
 =head1 VERSION
 
-version 0.208
+version 0.209
 
 =head1 DESCRIPTION
 
@@ -190,4 +191,3 @@ This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
-

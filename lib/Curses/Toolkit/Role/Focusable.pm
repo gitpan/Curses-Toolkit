@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::Role::Focusable;
 {
-  $Curses::Toolkit::Role::Focusable::VERSION = '0.208';
+  $Curses::Toolkit::Role::Focusable::VERSION = '0.209';
 }
 
 # ABSTRACT: This role implements the fact that a widget can have focus
@@ -73,9 +73,8 @@ sub is_focused {
 
 1;
 
-
-
 __END__
+
 =pod
 
 =head1 NAME
@@ -84,7 +83,7 @@ Curses::Toolkit::Role::Focusable - This role implements the fact that a widget c
 
 =head1 VERSION
 
-version 0.208
+version 0.209
 
 =head1 DESCRIPTION
 
@@ -130,4 +129,3 @@ This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
-

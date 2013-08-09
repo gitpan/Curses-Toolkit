@@ -11,7 +11,7 @@ use warnings;
 
 package Curses::Toolkit::Types;
 {
-  $Curses::Toolkit::Types::VERSION = '0.208';
+  $Curses::Toolkit::Types::VERSION = '0.209';
 }
 
 # ABSTRACT: various types used within the dist
@@ -22,6 +22,7 @@ sub PROGRESS_BAR_LABEL {
 
 1;
 
+__END__
 
 =pod
 
@@ -31,7 +32,7 @@ Curses::Toolkit::Types - various types used within the dist
 
 =head1 VERSION
 
-version 0.208
+version 0.209
 
 =head1 DESCRIPTION
 
@@ -57,8 +58,3 @@ This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
-
-
-__END__
-
-

@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::Widget::Paned;
 {
-  $Curses::Toolkit::Widget::Paned::VERSION = '0.208';
+  $Curses::Toolkit::Widget::Paned::VERSION = '0.209';
 }
 
 # ABSTRACT: generic paned widget
@@ -306,6 +306,7 @@ sub draw {
 
 1;
 
+__END__
 
 =pod
 
@@ -315,7 +316,7 @@ Curses::Toolkit::Widget::Paned - generic paned widget
 
 =head1 VERSION
 
-version 0.208
+version 0.209
 
 =head1 SYNOPSIS
 
@@ -342,7 +343,3 @@ This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
-
-
-__END__
-

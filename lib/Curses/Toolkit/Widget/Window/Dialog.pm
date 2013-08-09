@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::Widget::Window::Dialog;
 {
-  $Curses::Toolkit::Widget::Window::Dialog::VERSION = '0.208';
+  $Curses::Toolkit::Widget::Window::Dialog::VERSION = '0.209';
 }
 
 # ABSTRACT: a dialog window
@@ -20,6 +20,7 @@ use parent qw(Curses::Toolkit::Widget::Window);
 
 1;
 
+__END__
 
 =pod
 
@@ -29,7 +30,7 @@ Curses::Toolkit::Widget::Window::Dialog - a dialog window
 
 =head1 VERSION
 
-version 0.208
+version 0.209
 
 =head1 SYNOPSIS
 
@@ -51,7 +52,3 @@ This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
-
-
-__END__
-

@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::Widget::ScrollArea;
 {
-  $Curses::Toolkit::Widget::ScrollArea::VERSION = '0.208';
+  $Curses::Toolkit::Widget::ScrollArea::VERSION = '0.209';
 }
 
 # ABSTRACT: a scrollable area
@@ -336,6 +336,7 @@ sub get_child_occupied_space {
 1;
 
 __END__
+
 =pod
 
 =head1 NAME
@@ -344,7 +345,7 @@ Curses::Toolkit::Widget::ScrollArea - a scrollable area
 
 =head1 VERSION
 
-version 0.208
+version 0.209
 
 =head2 get_desired_space
 
@@ -374,4 +375,3 @@ This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
-

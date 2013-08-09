@@ -11,7 +11,7 @@ use warnings;
 
 package Curses::Toolkit::Widget::ProgressBar;
 {
-  $Curses::Toolkit::Widget::ProgressBar::VERSION = '0.208';
+  $Curses::Toolkit::Widget::ProgressBar::VERSION = '0.209';
 }
 
 # ABSTRACT: progress bar widget base class
@@ -111,17 +111,17 @@ sub _get_theme_properties_definition {
     my ($self) = @_;
     return {
         %{ $self->SUPER::_get_theme_properties_definition() },
-        start_enclosing => { optional => 0, type => SCALAR, },
-        end_enclosing => { optional => 0, type => SCALAR, },
-        default_length => { optional => 0, type => SCALAR, },
-        char_done => { optional => 0, type => SCALAR, },
-        char_left => { optional => 0, type => SCALAR, },
+        start_enclosing => { optional => 1, type => SCALAR, },
+        end_enclosing => { optional => 1, type => SCALAR, },
+        default_length => { optional => 1, type => SCALAR, },
+        char_done => { optional => 1, type => SCALAR, },
+        char_left => { optional => 1, type => SCALAR, },
     };
 }
 
 1;
 
-
+__END__
 
 =pod
 
@@ -131,7 +131,7 @@ Curses::Toolkit::Widget::ProgressBar - progress bar widget base class
 
 =head1 VERSION
 
-version 0.208
+version 0.209
 
 =head1 SYNOPSIS
 
@@ -264,7 +264,3 @@ This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
-
-
-__END__
-
