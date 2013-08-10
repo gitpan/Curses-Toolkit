@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::Widget::Window;
 {
-  $Curses::Toolkit::Widget::Window::VERSION = '0.210';
+  $Curses::Toolkit::Widget::Window::VERSION = '0.211';
 }
 
 # ABSTRACT: a window
@@ -663,7 +663,7 @@ Curses::Toolkit::Widget::Window - a window
 
 =head1 VERSION
 
-version 0.210
+version 0.211
 
 =head1 SYNOPSIS
 

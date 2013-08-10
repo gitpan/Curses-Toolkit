@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::Role;
 {
-  $Curses::Toolkit::Role::VERSION = '0.210';
+  $Curses::Toolkit::Role::VERSION = '0.211';
 }
 
 # ABSTRACT: base class for roles
@@ -36,7 +36,7 @@ Curses::Toolkit::Role - base class for roles
 
 =head1 VERSION
 
-version 0.210
+version 0.211
 
 =head1 DESCRIPTION
 

@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::Theme::Default::Test;
 {
-  $Curses::Toolkit::Theme::Default::Test::VERSION = '0.210';
+  $Curses::Toolkit::Theme::Default::Test::VERSION = '0.211';
 }
 
 # ABSTRACT: widget test theme
@@ -95,7 +95,7 @@ sub BLANK_CLICKED { }
 
 package Curses::Toolkit::Theme::Default::Test::CursesMockup;
 {
-  $Curses::Toolkit::Theme::Default::Test::CursesMockup::VERSION = '0.210';
+  $Curses::Toolkit::Theme::Default::Test::CursesMockup::VERSION = '0.211';
 }
 
 sub new { bless { %{$_[1]} }, $_[0] }
@@ -120,7 +120,7 @@ Curses::Toolkit::Theme::Default::Test - widget test theme
 
 =head1 VERSION
 
-version 0.210
+version 0.211
 
 =head1 DESCRIPTION
 

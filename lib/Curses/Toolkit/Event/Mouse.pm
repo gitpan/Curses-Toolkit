@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::Event::Mouse;
 {
-  $Curses::Toolkit::Event::Mouse::VERSION = '0.210';
+  $Curses::Toolkit::Event::Mouse::VERSION = '0.211';
 }
 
 # ABSTRACT: base class for mouse events
@@ -30,7 +30,7 @@ Curses::Toolkit::Event::Mouse - base class for mouse events
 
 =head1 VERSION
 
-version 0.210
+version 0.211
 
 =head1 DESCRIPTION
 

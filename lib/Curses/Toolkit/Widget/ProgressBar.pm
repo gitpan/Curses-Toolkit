@@ -11,7 +11,7 @@ use warnings;
 
 package Curses::Toolkit::Widget::ProgressBar;
 {
-  $Curses::Toolkit::Widget::ProgressBar::VERSION = '0.210';
+  $Curses::Toolkit::Widget::ProgressBar::VERSION = '0.211';
 }
 
 # ABSTRACT: progress bar widget base class
@@ -131,7 +131,7 @@ Curses::Toolkit::Widget::ProgressBar - progress bar widget base class
 
 =head1 VERSION
 
-version 0.210
+version 0.211
 
 =head1 SYNOPSIS
 

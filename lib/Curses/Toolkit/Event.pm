@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::Event;
 {
-  $Curses::Toolkit::Event::VERSION = '0.210';
+  $Curses::Toolkit::Event::VERSION = '0.211';
 }
 
 # ABSTRACT: base class for events
@@ -90,7 +90,7 @@ Curses::Toolkit::Event - base class for events
 
 =head1 VERSION
 
-version 0.210
+version 0.211
 
 =head1 DESCRIPTION
 

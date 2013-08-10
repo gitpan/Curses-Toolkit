@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::Event::Shape;
 {
-  $Curses::Toolkit::Event::Shape::VERSION = '0.210';
+  $Curses::Toolkit::Event::Shape::VERSION = '0.211';
 }
 
 # ABSTRACT: event that is related to root window shape change
@@ -84,7 +84,7 @@ Curses::Toolkit::Event::Shape - event that is related to root window shape chang
 
 =head1 VERSION
 
-version 0.210
+version 0.211
 
 =head1 DESCRIPTION
 

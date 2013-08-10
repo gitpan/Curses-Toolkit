@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::Signal::Focused::Out;
 {
-  $Curses::Toolkit::Signal::Focused::Out::VERSION = '0.210';
+  $Curses::Toolkit::Signal::Focused::Out::VERSION = '0.211';
 }
 
 use parent qw(Curses::Toolkit::Signal::Focused);
@@ -57,7 +57,7 @@ Curses::Toolkit::Signal::Focused::Out
 
 =head1 VERSION
 
-version 0.210
+version 0.211
 
 =head1 DESCRIPTION
 

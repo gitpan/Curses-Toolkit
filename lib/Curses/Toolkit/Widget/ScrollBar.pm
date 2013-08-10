@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::Widget::ScrollBar;
 {
-  $Curses::Toolkit::Widget::ScrollBar::VERSION = '0.210';
+  $Curses::Toolkit::Widget::ScrollBar::VERSION = '0.211';
 }
 
 use parent qw(Curses::Toolkit::Widget);
@@ -75,7 +75,7 @@ Curses::Toolkit::Widget::ScrollBar
 
 =head1 VERSION
 
-version 0.210
+version 0.211
 
 =head1 METHODS
 

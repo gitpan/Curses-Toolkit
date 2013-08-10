@@ -11,7 +11,7 @@ use warnings;
 
 package Curses::Toolkit::Types;
 {
-  $Curses::Toolkit::Types::VERSION = '0.210';
+  $Curses::Toolkit::Types::VERSION = '0.211';
 }
 
 # ABSTRACT: various types used within the dist
@@ -32,7 +32,7 @@ Curses::Toolkit::Types - various types used within the dist
 
 =head1 VERSION
 
-version 0.210
+version 0.211
 
 =head1 DESCRIPTION
 

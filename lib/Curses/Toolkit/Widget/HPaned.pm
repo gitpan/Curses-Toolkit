@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::Widget::HPaned;
 {
-  $Curses::Toolkit::Widget::HPaned::VERSION = '0.210';
+  $Curses::Toolkit::Widget::HPaned::VERSION = '0.211';
 }
 
 # ABSTRACT: a container with two panes arranged horizontally
@@ -107,7 +107,7 @@ Curses::Toolkit::Widget::HPaned - a container with two panes arranged horizontal
 
 =head1 VERSION
 
-version 0.210
+version 0.211
 
 =head1 DESCRIPTION
 
