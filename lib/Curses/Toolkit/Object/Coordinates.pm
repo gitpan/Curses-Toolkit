@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::Object::Coordinates;
 {
-  $Curses::Toolkit::Object::Coordinates::VERSION = '0.209';
+  $Curses::Toolkit::Object::Coordinates::VERSION = '0.210';
 }
 # ABSTRACT: simple coordinates class
 
@@ -440,7 +440,7 @@ Curses::Toolkit::Object::Coordinates - simple coordinates class
 
 =head1 VERSION
 
-version 0.209
+version 0.210
 
 =head1 DESCRIPTION
 

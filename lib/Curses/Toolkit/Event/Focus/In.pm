@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::Event::Focus::In;
 {
-  $Curses::Toolkit::Event::Focus::In::VERSION = '0.209';
+  $Curses::Toolkit::Event::Focus::In::VERSION = '0.210';
 }
 
 # ABSTRACT: event that is related to in-focus
@@ -37,7 +37,7 @@ Curses::Toolkit::Event::Focus::In - event that is related to in-focus
 
 =head1 VERSION
 
-version 0.209
+version 0.210
 
 =head1 DESCRIPTION
 

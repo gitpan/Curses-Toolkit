@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::Theme::Default;
 {
-  $Curses::Toolkit::Theme::Default::VERSION = '0.209';
+  $Curses::Toolkit::Theme::Default::VERSION = '0.210';
 }
 
 # ABSTRACT: default widget theme
@@ -284,7 +284,7 @@ Curses::Toolkit::Theme::Default - default widget theme
 
 =head1 VERSION
 
-version 0.209
+version 0.210
 
 =head1 DESCRIPTION
 

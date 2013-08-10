@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::Widget;
 {
-  $Curses::Toolkit::Widget::VERSION = '0.209';
+  $Curses::Toolkit::Widget::VERSION = '0.210';
 }
 
 # ABSTRACT: base class for widgets
@@ -636,7 +636,7 @@ Curses::Toolkit::Widget - base class for widgets
 
 =head1 VERSION
 
-version 0.209
+version 0.210
 
 =head1 DESCRIPTION
 

@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::Widget::ScrollArea;
 {
-  $Curses::Toolkit::Widget::ScrollArea::VERSION = '0.209';
+  $Curses::Toolkit::Widget::ScrollArea::VERSION = '0.210';
 }
 
 # ABSTRACT: a scrollable area
@@ -345,7 +345,7 @@ Curses::Toolkit::Widget::ScrollArea - a scrollable area
 
 =head1 VERSION
 
-version 0.209
+version 0.210
 
 =head2 get_desired_space
 

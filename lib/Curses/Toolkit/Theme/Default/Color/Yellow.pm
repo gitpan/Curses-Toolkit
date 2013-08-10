@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::Theme::Default::Color::Yellow;
 {
-  $Curses::Toolkit::Theme::Default::Color::Yellow::VERSION = '0.209';
+  $Curses::Toolkit::Theme::Default::Color::Yellow::VERSION = '0.210';
 }
 
 # ABSTRACT: default widget theme with color
@@ -95,7 +95,7 @@ Curses::Toolkit::Theme::Default::Color::Yellow - default widget theme with color
 
 =head1 VERSION
 
-version 0.209
+version 0.210
 
 =head1 DESCRIPTION
 

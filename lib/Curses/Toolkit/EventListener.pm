@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::EventListener;
 {
-  $Curses::Toolkit::EventListener::VERSION = '0.209';
+  $Curses::Toolkit::EventListener::VERSION = '0.210';
 }
 
 # ABSTRACT: base class for event listeners
@@ -134,7 +134,7 @@ Curses::Toolkit::EventListener - base class for event listeners
 
 =head1 VERSION
 
-version 0.209
+version 0.210
 
 =head1 DESCRIPTION
 

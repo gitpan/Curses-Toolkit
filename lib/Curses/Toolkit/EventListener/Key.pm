@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::EventListener::Key;
 {
-  $Curses::Toolkit::EventListener::Key::VERSION = '0.209';
+  $Curses::Toolkit::EventListener::Key::VERSION = '0.210';
 }
 
 # ABSTRACT: event listener listening for a keyboard action
@@ -36,7 +36,7 @@ Curses::Toolkit::EventListener::Key - event listener listening for a keyboard ac
 
 =head1 VERSION
 
-version 0.209
+version 0.210
 
 =head1 DESCRIPTION
 

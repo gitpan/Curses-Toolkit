@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::Widget::Paned;
 {
-  $Curses::Toolkit::Widget::Paned::VERSION = '0.209';
+  $Curses::Toolkit::Widget::Paned::VERSION = '0.210';
 }
 
 # ABSTRACT: generic paned widget
@@ -316,7 +316,7 @@ Curses::Toolkit::Widget::Paned - generic paned widget
 
 =head1 VERSION
 
-version 0.209
+version 0.210
 
 =head1 SYNOPSIS
 

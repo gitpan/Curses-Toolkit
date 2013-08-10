@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::Object::Flags;
 {
-  $Curses::Toolkit::Object::Flags::VERSION = '0.209';
+  $Curses::Toolkit::Object::Flags::VERSION = '0.210';
 }
 
 # ABSTRACT: simple collection of flags
@@ -41,7 +41,7 @@ Curses::Toolkit::Object::Flags - simple collection of flags
 
 =head1 VERSION
 
-version 0.209
+version 0.210
 
 =head1 DESCRIPTION
 

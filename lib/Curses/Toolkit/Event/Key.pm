@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit::Event::Key;
 {
-  $Curses::Toolkit::Event::Key::VERSION = '0.209';
+  $Curses::Toolkit::Event::Key::VERSION = '0.210';
 }
 
 # ABSTRACT: event that is related to keystrokes
@@ -98,7 +98,7 @@ Curses::Toolkit::Event::Key - event that is related to keystrokes
 
 =head1 VERSION
 
-version 0.209
+version 0.210
 
 =head1 DESCRIPTION
 

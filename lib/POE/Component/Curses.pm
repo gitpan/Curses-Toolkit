@@ -11,7 +11,7 @@ use strict;
 
 package POE::Component::Curses;
 {
-  $POE::Component::Curses::VERSION = '0.209';
+  $POE::Component::Curses::VERSION = '0.210';
 }
 
 # ABSTRACT: the ( currently only ) loader for Curses::toolkit
@@ -200,7 +200,7 @@ POE::Component::Curses - the ( currently only ) loader for Curses::toolkit
 
 =head1 VERSION
 
-version 0.209
+version 0.210
 
 =head1 SYNOPSIS
 

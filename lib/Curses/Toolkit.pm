@@ -11,7 +11,7 @@ use strict;
 
 package Curses::Toolkit;
 {
-  $Curses::Toolkit::VERSION = '0.209';
+  $Curses::Toolkit::VERSION = '0.210';
 }
 
 # ABSTRACT: a modern Curses toolkit
@@ -578,7 +578,7 @@ Curses::Toolkit - a modern Curses toolkit
 
 =head1 VERSION
 
-version 0.209
+version 0.210
 
 =head1 SYNOPSIS
 
